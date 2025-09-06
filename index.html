@@ -434,7 +434,17 @@
       // --- LANGUAGE SWITCHER ---
       let translations = {};
 
+      // 获取 logo 元素 (新增)
+      const logoImage = document.querySelector(".logo");
+
       async function applyTranslations(lang) {
+        // 根据语言更换 logo (新增)
+        if (lang === "zh") {
+          logoImage.src = "img/Ayacloud_CN.jpg";
+        } else {
+          logoImage.src = "img/ayacloud.png";
+        }
+
         if (!Object.keys(translations).length) {
           try {
             const response = await fetch("lang.json");
@@ -477,6 +487,7 @@
 </body>
 
 </html>
+
 
 
 
