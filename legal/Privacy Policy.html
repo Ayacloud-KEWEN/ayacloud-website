@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - PinGO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .content-card h1 {
+            font-size: 2.25rem; /* 36px */
+            font-weight: 700;
+            margin-bottom: 0.5rem; /* 8px */
+            color: #111827;
+        }
+        .content-card h2 {
+            font-size: 1.5rem; /* 24px */
+            font-weight: 700;
+            margin-top: 2rem; /* 32px */
+            margin-bottom: 1rem; /* 16px */
+            color: #1f2937;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        .content-card p, .content-card li {
+            line-height: 1.75;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+        .content-card ul {
+            list-style-type: disc;
+            padding-left: 2rem;
+        }
+        .content-card strong {
+            font-weight: 600;
+            color: #111827;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto max-w-4xl py-12 px-4">
+        <div class="content-card bg-white p-8 md:p-12 rounded-lg shadow-md">
+            <!-- Logo Header -->
+            <div class="text-center mb-10">
+                <img src="img/ayacloud.png" alt="AYA Cloud Logo" class="mx-auto h-24 w-auto">
+            </div>
+
+            <header class="text-center">
+                <h1>Privacy Policy for PinGO</h1>
+                <p class="text-gray-500">Last Updated: September 8, 2025</p>
+            </header>
+
+            <section class="mt-8">
+                <p>Ayacloud SAS ("us", "we", or "our") operates the PinGO mobile application (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.</p>
+                <p>Your privacy is critically important to us. PinGO is designed as an offline-first application.</p>
+                <p><strong>Our core privacy promise is simple: We do not collect, store, transmit, or have access to any of your personal data or user-generated content.</strong></p>
+                <p>All information and content you create with PinGO is stored exclusively on your local device.</p>
+
+                <h2>1. Information Collection and Use</h2>
+                <p>We do not collect any personally identifiable information from you. The application does not require you to create an account or provide any personal details to us.</p>
+
+                <h2>2. Data Stored on Your Device</h2>
+                <p>PinGO stores the following types of data, which you create and control, directly on your device:</p>
+                <ul>
+                    <li><strong>Check-In Data:</strong> This includes GPS coordinates (latitude, longitude, altitude), address information (country, city, street, etc.), notes, and timestamps for your travel entries.</li>
+                    <li><strong>Photos:</strong> Photos you either take with the in-app camera or select from your device's photo library are stored within the app's secure storage on your device.</li>
+                    <li><strong>User Profile Information:</strong> Any username or avatar image you choose to set is stored only on your device to personalize your in-app experience. This information is not transmitted to us.</li>
+                </ul>
+
+                <h2>3. Application Permissions</h2>
+                <p>PinGO requests the following permissions to enable its core functionality. This data is used only on your device and is never sent to us.</p>
+                <ul>
+                    <li><strong>Location Services Access:</strong> Required to get your current coordinates when you create a new check-in. Your location is not tracked in the background or shared.</li>
+                    <li><strong>Photo Library Access:</strong> Required to allow you to select existing photos to add to your check-ins. We do not scan or import your photo library; we only access the specific images you choose.</li>
+                    <li><strong>Camera Access:</strong> Required to allow you to take new photos to add to your check-ins.</li>
+                </ul>
+
+                <h2>4. Data Sharing and Exporting</h2>
+                <p>We do not share your data with any third parties because we do not have it.</p>
+                <p>The application includes features that allow you to export and share your own data. When you use the "Export" or "Share" functionality (e.g., to create a JSON, KML, or image file), you are in full control of where that data is sent via the standard iOS share sheet. We do not monitor or intercept this activity.</p>
+
+                <h2>5. GDPR Compliance and Your Rights</h2>
+                <p>For users in the European Economic Area (EEA), we are committed to upholding your rights under the General Data Protection Regulation (GDPR).</p>
+                <p>Because PinGO operates entirely offline and we do not collect or process any of your personal data, you, the user, are the sole controller of your data. The application is designed to give you full control to exercise your GDPR rights directly:</p>
+                <ul>
+                    <li><strong>The Right to Access:</strong> You can access all your data at any time by browsing your check-in list, map, and hierarchical views within the app.</li>
+                    <li><strong>The Right to Rectification:</strong> You can correct or update any of your check-in data using the "Edit" function within the detail view of each entry.</li>
+                    <li><strong>The Right to Erasure:</strong> You can delete individual check-ins at any time, or delete all of your app data at once using the "Initialize data" feature in the settings.</li>
+                    <li><strong>The Right to Data Portability:</strong> The app provides functions to export your data into structured, commonly used, machine-readable formats (such as JSON and KML), allowing you to move it elsewhere.</li>
+                </ul>
+
+                <h2>6. Children's Privacy</h2>
+                <p>Our Service does not address anyone under the age of 13 ("Children"). We do not knowingly collect personally identifiable information from children under 13, and since our application does not collect any data, this policy is inherently compliant.</p>
+
+                <h2>7. Changes to This Privacy Policy</h2>
+                <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date at the top. You are advised to review this Privacy Policy periodically for any changes.</p>
+
+                <h2>8. Contact Us</h2>
+                <p>If you have any questions about this Privacy Policy, please contact us:</p>
+                <p>By email: <span id="email-contact"></span></p>
+
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to protect the email address from simple crawlers
+        const emailUser = 'contact';
+        const emailDomain = 'ayacloud.fr';
+        const emailElement = document.getElementById('email-contact');
+        const emailLink = document.createElement('a');
+        emailLink.href = 'mailto:' + emailUser + '@' + emailDomain;
+        emailLink.textContent = emailUser + '@' + emailDomain;
+        emailLink.classList.add('text-blue-600', 'hover:underline');
+        emailElement.appendChild(emailLink);
+    </script>
+
+</body>
+</html>
+

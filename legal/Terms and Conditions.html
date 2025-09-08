@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Conditions - PinGO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .content-card h1 {
+            font-size: 2.25rem; /* 36px */
+            font-weight: 700;
+            margin-bottom: 0.5rem; /* 8px */
+            color: #111827;
+        }
+        .content-card h2 {
+            font-size: 1.5rem; /* 24px */
+            font-weight: 700;
+            margin-top: 2rem; /* 32px */
+            margin-bottom: 1rem; /* 16px */
+            color: #1f2937;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        .content-card p, .content-card li {
+            line-height: 1.75;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+        .content-card ul {
+            list-style-type: disc;
+            padding-left: 2rem;
+        }
+        .content-card strong {
+            font-weight: 600;
+            color: #111827;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto max-w-4xl py-12 px-4">
+        <div class="content-card bg-white p-8 md:p-12 rounded-lg shadow-md">
+            <!-- Logo Header -->
+            <div class="text-center mb-10">
+                <img src="img/ayacloud.png" alt="AYA Cloud Logo" class="mx-auto h-24 w-auto">
+            </div>
+
+            <header class="text-center">
+                <h1>Terms and Conditions for PinGO</h1>
+                <p class="text-gray-500">Last Updated: September 7, 2025</p>
+            </header>
+
+            <section class="mt-8">
+                <p>Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using the PinGO mobile application (the "Service") operated by Ayacloud SAS ("us", "we", or "our").</p>
+                <p>Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users, and others who access or use the Service.</p>
+                <p>By accessing or using the Service, you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the Service.</p>
+
+                <h2>1. License</h2>
+                <p>We grant you a revocable, non-exclusive, non-transferable, limited license to download, install, and use the PinGO application solely for your personal, non-commercial purposes strictly in accordance with these Terms. As the application is provided free of charge and is planned to be open-source, its use is also governed by the terms of its open-source license, which will be available on our official GitHub repository.</p>
+
+                <h2>2. User-Generated Content</h2>
+                <p>You are solely responsible for the content you create and store within the application, including but not limited to location check-ins, notes, and photos ("User Content").</p>
+                <ul>
+                    <li><strong>Local Storage:</strong> You acknowledge and agree that all User Content is stored locally on your device. We do not have access to, collect, or store any of your User Content on our servers.</li>
+                    <li><strong>Ownership:</strong> You retain full ownership and all rights to your User Content.</li>
+                    <li><strong>Responsibility:</strong> You are responsible for maintaining and backing up your own User Content. We are not responsible for any loss or corruption of data that occurs on your device. The application provides export features to help you back up your data.</li>
+                </ul>
+
+                <h2>3. Prohibited Uses</h2>
+                <p>You agree not to use the application:</p>
+                <ul>
+                    <li>In any way that violates any applicable national or international law or regulation.</li>
+                    <li>For the purpose of exploiting, harming, or attempting to exploit or harm minors in any way.</li>
+                    <li>To create, store, or share any content that is unlawful, defamatory, obscene, or otherwise objectionable.</li>
+                    <li>To engage in any conduct that restricts or inhibits anyone's use or enjoyment of the Service, or which, as determined by us, may harm us or users of the Service.</li>
+                </ul>
+
+                <h2>4. Intellectual Property</h2>
+                <p>The Service and its original content (excluding User Content), features, and functionality are and will remain the exclusive property of Ayacloud SAS and its licensors. The "PinGO" name, logo, and overall design are protected by copyright and trademark laws.</p>
+
+                <h2>5. Disclaimer of Warranties</h2>
+                <p>The Service is provided to you "AS IS" and "AS AVAILABLE" and with all faults and defects without warranty of any kind. To the maximum extent permitted under applicable law, we expressly disclaim all warranties, whether express, implied, statutory, or otherwise, with respect to the Service.</p>
+                <p>Without limitation to the foregoing, we provide no warranty or undertaking, and make no representation of any kind that the Service will meet your requirements, achieve any intended results, be compatible or work with any other software, applications, systems, or services, operate without interruption, meet any performance or reliability standards, or be error-free, or that any errors or defects can or will be corrected.</p>
+
+                <h2>6. Limitation of Liability</h2>
+                <p>To the fullest extent permitted by applicable law, in no event shall we be liable for any special, incidental, indirect, or consequential damages whatsoever (including, but not limited to, damages for loss of profits, for loss of data or other information, for business interruption, for personal injury, for loss of privacy arising out of or in any way related to the use of or inability to use the Service), even if we have been advised of the possibility of such damages.</p>
+                <p>Because all data is stored on your device, you are solely responsible for its security and backup. We shall not be liable for any loss of data.</p>
+
+                <h2>7. Changes to These Terms and Conditions</h2>
+                <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. We will provide notice of any changes by updating the "Last Updated" date of these Terms and Conditions.</p>
+                <p>By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms.</p>
+
+                <h2>8. Contact Us</h2>
+                <p>If you have any questions about these Terms and Conditions, you can contact us:</p>
+                <p>By email: <span id="email-contact"></span></p>
+
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to protect the email address from simple crawlers
+        const emailUser = 'contact';
+        const emailDomain = 'ayacloud.fr';
+        const emailElement = document.getElementById('email-contact');
+        const emailLink = document.createElement('a');
+        emailLink.href = 'mailto:' + emailUser + '@' + emailDomain;
+        emailLink.textContent = emailUser + '@' + emailDomain;
+        emailLink.classList.add('text-blue-600', 'hover:underline');
+        emailElement.appendChild(emailLink);
+    </script>
+
+</body>
+</html>
