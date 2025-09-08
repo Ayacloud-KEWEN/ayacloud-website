@@ -397,7 +397,17 @@
 </section>
   <section id="contact" class="section">
     <h2 data-i18n="contact_title">Contact Us</h2>
-    <p data-i18n="contact_email">Email: contact@ayacloud.com</p>
+        <script>
+        // JavaScript to protect the email address from simple crawlers
+        const emailUser = 'contact';
+        const emailDomain = 'ayacloud.fr';
+        const emailElement = document.getElementById('email-contact');
+        const emailLink = document.createElement('a');
+        emailLink.href = 'mailto:' + emailUser + '@' + emailDomain;
+        emailLink.textContent = emailUser + '@' + emailDomain;
+        emailLink.classList.add('text-blue-600', 'hover:underline');
+        emailElement.appendChild(emailLink);
+    </script>
     <p data-i18n="contact_text">We'd love to hear from you and discuss your project ideas...</p>
     <p data-i18n="support_us"><a href="support.html">Support Us</a></p>
   </section>
@@ -487,6 +497,7 @@
 </body>
 
 </html>
+
 
 
 
