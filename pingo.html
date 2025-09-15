@@ -1,41 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="title">PinGO: Your Ultimate Travel Companion</title>
-  <style>
-    /* 原有样式保持不变 */
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-      color: #333;
-      line-height: 1.6;
-    }
-    /* 语言选择菜单样式 */
-    .language-selector {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      z-index: 1000;
-    }
-    .language-selector select {
-      padding: 0.4rem 0.6rem;
-      font-size: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title data-i18n="title">PinGO: Your Ultimate Travel Companion</title>
+    <style>
+        /* --- 恢复并略微调整的样式 --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            overflow: hidden;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #fff;
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            position: relative; /* <-- 必须，供 language-selector 绝对定位 */
+        }
+        header .app-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 22%;
+            margin-bottom: 1rem;
+        }
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: #583d72;
+        }
+        header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .hero {
+            background: linear-gradient(45deg, #583d72, #7e57c2);
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+        }
+        .hero .container { position: relative; z-index: 1; }
+        .hero h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+
+        section { padding: 4rem 0; text-align: center; }
+        .section-title { font-size: 2.2rem; margin-bottom: 2rem; color: #583d72; }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+        .feature-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            color: #583d72;
+        }
+
+        .image-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        .image-gallery img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            object-fit: cover;
+            flex-grow: 1;
+        }
+
+        .privacy-section { background-color: #333; color: #fff; }
+        .privacy-section .container { max-width: 800px; }
+        .privacy-section h3 { color: #fff; }
+
+        .cta { background-color: #583d72; color: #fff; padding: 4rem 0; }
+        .cta h2 { font-size: 2rem; margin-bottom: 2rem; }
+        .cta-button {
+            display: inline-block;
+            background: #fff;
+            color: #583d72;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 0.5rem;
+            transition: transform 0.2s;
+        }
+        .cta-button:hover { transform: scale(1.05); }
+
+        footer { text-align: center; padding: 2rem 0; background: #333; color: #fff; }
+
+        /* 语言选择下拉微调 */
+        .language-selector {
+            position: absolute;
+            top: 14px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            padding: 6px;
+            border-radius: 6px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+        }
+        .language-selector select {
+            padding: 0.3rem 0.5rem;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background: white;
+        }
+
+        /* 响应式小修 */
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            .hero { padding: 3.5rem 0; }
+        }
+    </style>
 </head>
 <body>
 
   <header>
     <div class="container">
       <!-- 语言选择下拉菜单 -->
-      <div class="language-selector">
-        <select id="language-switcher">
+      <div class="language-selector" aria-hidden="false">
+        <label for="language-switcher" class="sr-only" style="display:none">Language</label>
+        <select id="language-switcher" aria-label="Select language">
           <option value="en">English</option>
           <option value="fr">Français</option>
           <option value="zh">简体中文</option>
@@ -81,6 +192,28 @@
     <section class="gallery-section" id="gallery">
       <div class="container">
         <h2 class="section-title" data-i18n="gallery_title">Capture Your World</h2>
+        <div class="image-gallery" aria-hidden="false">
+          <img src="img/Colosseum.png" alt="Screenshot of PinGO over the Colosseum in Rome">
+          <img src="img/GW.png" alt="Screenshot of PinGO over the Great Wall of China">
+          <img src="img/Giza.png" alt="Screenshot of PinGO over the Pyramids of Giza">
+        </div>
+      </div>
+    </section>
+
+    <section class="privacy-section" id="privacy">
+      <div class="container">
+        <h2 class="section-title" data-i18n="privacy_title">Your Data, Your Control.</h2>
+        <p data-i18n="privacy_text">We believe your memories belong to you. That's why PinGO is built with privacy at its core.</p>
+        <div class="features-grid">
+          <div class="feature-card" style="background: #444; color: #fff;">
+            <h3 data-i18n="privacy_item1_title">Secure On-Device Storage</h3>
+            <p data-i18n="privacy_item1_text">All your data is stored securely on your device, powered by Core Data.</p>
+          </div>
+          <div class="feature-card" style="background: #444; color: #fff;">
+            <h3 data-i18n="privacy_item2_title">Easy Data Export</h3>
+            <p data-i18n="privacy_item2_text">Easily export your travel log in KML, GeoJSON, and JSON.</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -99,33 +232,47 @@
     </div>
   </footer>
 
-  <!-- 国际化脚本 -->
   <script>
     async function loadLanguage(lang) {
-      const response = await fetch('langpingo.json');
-      const translations = await response.json();
-      const elements = document.querySelectorAll('[data-i18n]');
+      try {
+        const res = await fetch('langpingo.json', {cache: "no-store"});
+        if (!res.ok) throw new Error('Could not load langpingo.json: ' + res.status);
+        const translations = await res.json();
 
-      elements.forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang] && translations[lang][key]) {
-          el.textContent = translations[lang][key];
+        // Update DOM nodes
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          const value = translations[lang] && translations[lang][key];
+          if (value !== undefined) {
+            // some elements like inputs would need value, for now use textContent
+            el.textContent = value;
+          }
+        });
+
+        // Update <title> explicitly and html lang
+        if (translations[lang] && translations[lang].title) {
+          document.title = translations[lang].title;
         }
-      });
+        document.documentElement.lang = lang;
+
+      } catch (err) {
+        console.error('i18n load error:', err);
+        // Fail gracefully: 保持原始（英）文本
+      }
     }
 
-    // 初始化
-    document.getElementById('language-switcher').addEventListener('change', (e) => {
+    // Persist and apply selection
+    const switcher = document.getElementById('language-switcher');
+    switcher.addEventListener('change', (e) => {
       const lang = e.target.value;
       loadLanguage(lang);
-      localStorage.setItem('selectedLang', lang); // 记住用户选择
+      localStorage.setItem('selectedLang', lang);
     });
 
-    // 页面加载时设置默认语言
     window.addEventListener('DOMContentLoaded', () => {
-      const savedLang = localStorage.getItem('selectedLang') || 'en';
-      document.getElementById('language-switcher').value = savedLang;
-      loadLanguage(savedLang);
+      const saved = localStorage.getItem('selectedLang') || 'en';
+      switcher.value = saved;
+      loadLanguage(saved);
     });
   </script>
 </body>
