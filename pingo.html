@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n="title">PinGO: Your Ultimate Travel Companion</title>
   <style>
+    /* 原有样式保持不变 */
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       margin: 0;
@@ -13,6 +14,7 @@
       color: #333;
       line-height: 1.6;
     }
+    /* 语言选择菜单样式 */
     .language-selector {
       position: absolute;
       top: 10px;
@@ -31,6 +33,7 @@
 
   <header>
     <div class="container">
+      <!-- 语言选择下拉菜单 -->
       <div class="language-selector">
         <select id="language-switcher">
           <option value="en">English</option>
@@ -96,7 +99,7 @@
     </div>
   </footer>
 
-
+  <!-- 国际化脚本 -->
   <script>
     async function loadLanguage(lang) {
       const response = await fetch('langpingo.json');
@@ -111,14 +114,14 @@
       });
     }
 
-   
+    // 初始化
     document.getElementById('language-switcher').addEventListener('change', (e) => {
       const lang = e.target.value;
       loadLanguage(lang);
-      localStorage.setItem('selectedLang', lang); 
+      localStorage.setItem('selectedLang', lang); // 记住用户选择
     });
 
-   
+    // 页面加载时设置默认语言
     window.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('selectedLang') || 'en';
       document.getElementById('language-switcher').value = savedLang;
