@@ -1,236 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PinGO: Your Ultimate Travel Companion</title>
-    <style>
-        /* Basic CSS for a clean, modern look */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            overflow: hidden;
-            padding: 0 20px;
-        }
-        header {
-            background: #fff;
-            padding: 2rem 0;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-        header .app-logo {
-            width: 120px;
-            height: 120px;
-            border-radius: 22%;
-            margin-bottom: 1rem;
-        }
-        header h1 {
-            font-size: 3rem;
-            margin: 0;
-            color: #583d72; /* Purple from logo */
-        }
-        header p {
-            font-size: 1.2rem;
-            color: #666;
-        }
-        .hero {
-            /* Changed background from single image to a gradient */
-            background: linear-gradient(45deg, #583d72, #7e57c2);
-            color: white;
-            padding: 6rem 0;
-            text-align: center;
-            position: relative;
-        }
-        .hero .container {
-            position: relative;
-            z-index: 1;
-        }
-        .hero h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        section {
-            padding: 4rem 0;
-            text-align: center;
-        }
-        .section-title {
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
-            color: #583d72;
-        }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            text-align: left;
-        }
-        .feature-card {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-top: 0;
-            color: #583d72;
-        }
-        /* New styles for the image gallery */
-        .image-gallery {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 2rem;
-            flex-wrap: wrap; /* Allows images to wrap on smaller screens */
-        }
-        .image-gallery img {
-            width: 100%;
-            max-width: 350px; /* Controls max size */
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            object-fit: cover;
-            flex-grow: 1;
-        }
-        .privacy-section {
-            background-color: #333;
-            color: #fff;
-        }
-        .privacy-section .container {
-            max-width: 800px;
-        }
-        .privacy-section h3 {
-            color: #fff;
-        }
-        .cta {
-            background-color: #583d72;
-            color: #fff;
-            padding: 4rem 0;
-        }
-        .cta h2 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-        .cta-button {
-            display: inline-block;
-            background: #fff;
-            color: #583d72;
-            padding: 1rem 2rem;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin: 0.5rem;
-            transition: transform 0.2s;
-        }
-        .cta-button:hover {
-            transform: scale(1.05);
-        }
-        footer {
-            text-align: center;
-            padding: 2rem 0;
-            background: #333;
-            color: #fff;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title">PinGO: Your Ultimate Travel Companion</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    .language-selector {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .language-selector select {
+      padding: 0.4rem 0.6rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <div class="container">
-            <img src="img/logo 1024.png" alt="PinGO App Logo" class="app-logo">
-            <h1>PinGO</h1>
-            <p>CAPTURE THE MOMENT</p>
+  <header>
+    <div class="container">
+      <div class="language-selector">
+        <select id="language-switcher">
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="zh">简体中文</option>
+        </select>
+      </div>
+
+      <img src="img/logo 1024.png" alt="PinGO App Logo" class="app-logo">
+      <h1 data-i18n="app_name">PinGO</h1>
+      <p data-i18n="tagline">CAPTURE THE MOMENT</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h2 data-i18n="hero_title">Your Ultimate Travel Companion</h2>
+        <p data-i18n="hero_text">PinGO is the ultimate companion for every traveler, designed to help you effortlessly document your journeys with an elegant, minimalist interface. Turn your check-ins into beautiful, interactive travel memories.</p>
+      </div>
+    </section>
+
+    <section id="features" class="container">
+      <h2 class="section-title" data-i18n="features_title">Features That Map Your Memories</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3 data-i18n="feature1_title">Intelligent Check-Ins</h3>
+          <p data-i18n="feature1_text">Simply tap to log your location, complete with precise coordinates, altitude, and a detailed address.</p>
         </div>
-    </header>
-
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h2>Your Ultimate Travel Companion</h2>
-                <p>PinGO is the ultimate companion for every traveler, designed to help you effortlessly document your journeys with an elegant, minimalist interface. Turn your check-ins into beautiful, interactive travel memories.</p>
-            </div>
-        </section>
-
-        <section id="features" class="container">
-            <h2 class="section-title">Features That Map Your Memories</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h3>Intelligent Check-Ins</h3>
-                    <p>Simply tap to log your location, complete with precise coordinates, altitude, and a detailed address. PinGO can even automatically pull the location and date from your photos for seamless logging.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Visualize Your Journey</h3>
-                    <p>See your entire travel history on a single, stunning map. Switch between standard, satellite, and hybrid map styles to get the perfect view of your adventures.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>AI-Powered Note Taking</h3>
-                    <p>Use your camera to instantly scan and digitize text from signs, menus, or monuments. You can also dictate your thoughts and memories hands-free with built-in speech recognition.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Rich Location Data</h3>
-                    <p>Powered by Wikidata and OpenStreetMap, PinGO provides rich, encyclopedic information about the places you visit, turning every check-in into a learning experience.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Share Your Story</h3>
-                    <p>Create stunning, high-resolution map snapshots of your check-ins, perfect for sharing your travel route and highlights on social media.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Personal Statistics & Achievements</h3>
-                    <p>Track your progress as you explore the world. See how many countries, cities, and locations you've visited, and unlock achievements as you go.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="gallery-section" id="gallery">
-            <div class="container">
-                 <h2 class="section-title">Capture Your World</h2>
-                 <div class="image-gallery">
-                    <img src="img/Colosseum.png" alt="Screenshot of PinGO over the Colosseum in Rome">
-                    <img src="img/GW.png" alt="Screenshot of PinGO over the Great Wall of China">
-                    <img src="img/Giza.png" alt="Screenshot of PinGO over the Pyramids of Giza">
-                 </div>
-            </div>
-        </section>
-        <section class="privacy-section" id="privacy">
-            <div class="container">
-                <h2 class="section-title">Your Data, Your Control.</h2>
-                <p>We believe your memories belong to you. That's why PinGO is built with privacy at its core.</p>
-                <div class="features-grid">
-                    <div class="feature-card" style="background: #444; color: #fff;">
-                        <h3>Secure On-Device Storage</h3>
-                        <p>All your data is stored securely on your device, powered by Core Data.</p>
-                    </div>
-                    <div class="feature-card" style="background: #444; color: #fff;">
-                        <h3>Easy Data Export</h3>
-                        <p>Easily export your entire travel log in popular formats like KML, GeoJSON, and JSON, ensuring you always have a backup for tools like Google Earth.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="cta" id="download">
-            <div class="container">
-                <h2>Ready for Your Next Adventure?</h2>
-                <p>Download PinGO today and start turning your travels into timeless stories.</p>
-                <a href="#" class="cta-button">Download on the App Store</a>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 AYA CLOUD SAS. All Rights Reserved.</p>
+        <div class="feature-card">
+          <h3 data-i18n="feature2_title">Visualize Your Journey</h3>
+          <p data-i18n="feature2_text">See your entire travel history on a single, stunning map.</p>
         </div>
-    </footer>
+        <div class="feature-card">
+          <h3 data-i18n="feature3_title">AI-Powered Note Taking</h3>
+          <p data-i18n="feature3_text">Use your camera to instantly scan and digitize text from signs, menus, or monuments.</p>
+        </div>
+        <div class="feature-card">
+          <h3 data-i18n="feature4_title">Rich Location Data</h3>
+          <p data-i18n="feature4_text">Powered by Wikidata and OpenStreetMap, PinGO provides rich, encyclopedic information about the places you visit.</p>
+        </div>
+      </div>
+    </section>
 
+    <section class="gallery-section" id="gallery">
+      <div class="container">
+        <h2 class="section-title" data-i18n="gallery_title">Capture Your World</h2>
+      </div>
+    </section>
+
+    <section class="cta" id="download">
+      <div class="container">
+        <h2 data-i18n="cta_title">Ready for Your Next Adventure?</h2>
+        <p data-i18n="cta_text">Download PinGO today and start turning your travels into timeless stories.</p>
+        <a href="#" class="cta-button" data-i18n="cta_button">Download on the App Store</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p data-i18n="footer_text">&copy; 2025 AYA CLOUD SAS. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+
+  <script>
+    async function loadLanguage(lang) {
+      const response = await fetch('langpingo.json');
+      const translations = await response.json();
+      const elements = document.querySelectorAll('[data-i18n]');
+
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+    }
+
+   
+    document.getElementById('language-switcher').addEventListener('change', (e) => {
+      const lang = e.target.value;
+      loadLanguage(lang);
+      localStorage.setItem('selectedLang', lang); 
+    });
+
+   
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('selectedLang') || 'en';
+      document.getElementById('language-switcher').value = savedLang;
+      loadLanguage(savedLang);
+    });
+  </script>
 </body>
-
 </html>
