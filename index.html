@@ -141,6 +141,8 @@
       font-weight: bold;
       transition: background 0.3s, transform 0.2s;
       display: inline-block;
+      border: none;
+      cursor: pointer;
     }
 
     .btn:hover {
@@ -156,13 +158,13 @@
 
     .section h2 {
       font-size: 2.2rem;
-      margin-bottom: 30px;
+      margin-bottom: 50px; /* Increased margin */
       color: #0a74da;
     }
 
     .section p {
       max-width: 800px;
-      margin: 0 auto;
+      margin: 0 auto 30px;
       font-size: 1.1rem;
       color: #555;
     }
@@ -201,121 +203,90 @@
       margin-top: 50px;
     }
 
-.portfolio-item {
-  background: #e9ecef;
-  padding: 0; 
-  border-radius: 12px;
-  transition: all 0.3s;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden; 
-}
+    .portfolio-item {
+      background: #e9ecef;
+      padding: 0; 
+      border-radius: 12px;
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden; 
+    }
 
-.portfolio-item img {
-  width: 100%; 
-  height: auto;
-  display: block; 
-}
+    .portfolio-item img {
+      width: 100%; 
+      height: auto;
+      display: block; 
+    }
 
-.portfolio-item::after {
-  content: attr(data-content); 
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(10, 116, 218, 0.85);
-  color: white;
-  padding: 15px;
-  transform: translateY(100%);
-  transition: transform 0.3s;
-}
+    .portfolio-item::after {
+      content: attr(data-content); 
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 116, 218, 0.85);
+      color: white;
+      padding: 15px;
+      transform: translateY(100%);
+      transition: transform 0.3s;
+    }
 
-.portfolio-item:hover::after {
-  transform: translateY(0);
-}
+    .portfolio-item:hover::after {
+      transform: translateY(0);
+    }
 
-    /* Contact Section - Updated Styles */
+    /* --- START: Updated Contact Section Styles --- */
     #contact {
       background: #f8f9fa;
-      padding: 100px 60px;
     }
-    
-    .contact-container {
+
+    .contact-icon-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 40px;
-      max-width: 800px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      max-width: 1000px;
       margin: 0 auto;
     }
-    
-    .contact-info {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-    }
-    
-    .contact-item {
-      background: white;
-      padding: 30px;
+
+    .contact-card {
+      background: #fff;
       border-radius: 16px;
+      padding: 40px 20px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
       display: flex;
-      align-items: flex-start;
-      gap: 20px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #333;
       transition: transform 0.3s, box-shadow 0.3s;
     }
-    
-    .contact-item:hover {
-      transform: translateY(-5px);
+
+    .contact-card:hover {
+      transform: translateY(-8px);
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
     }
-    
-    .contact-icon {
-      background: #0a74da;
-      color: white;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-shrink: 0;
-      font-size: 24px;
-    }
-    
-    .contact-details h3 {
-      margin-bottom: 10px;
+
+    .contact-card i {
+      font-size: 3rem;
+      margin-bottom: 20px;
       color: #0a74da;
-      font-size: 20px;
+    }
+
+    .contact-card-info {
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.5;
     }
     
-    .contact-details p, .contact-details a {
-      color: #555;
-      text-decoration: none;
-      line-height: 1.6;
+    .contact-card-info a {
+        color: #333;
+        text-decoration: none;
     }
-    
-    .contact-details a:hover {
-      color: #0a74da;
-      text-decoration: underline;
-    }
-    
-    .support-link {
-      display: inline-block;
-      margin-top: 15px;
-      padding: 12px 24px;
-      background: #0a74da;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s, transform 0.2s;
-    }
-    
-    .support-link:hover {
-      background: #084a91;
-      transform: translateY(-2px);
-    }
+    /* --- END: Updated Contact Section Styles --- */
+
 
     /* Footer */
     footer {
@@ -388,26 +359,27 @@
     body.dark .portfolio-item::after {
       background: rgba(88, 166, 255, 0.85);
     }
+
+    /* --- START: Dark Mode for Updated Contact Section --- */
     body.dark #contact {
       background: #161b22;
     }
-    body.dark .contact-item {
+    body.dark .contact-card {
       background: #21262d;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    }
-    body.dark .contact-details h3 {
-      color: #58a6ff;
-    }
-    body.dark .contact-details p, 
-    body.dark .contact-details a {
       color: #ccc;
     }
-    body.dark .support-link {
-      background: #58a6ff;
+    body.dark .contact-card-info a {
+        color: #ccc;
     }
-    body.dark .support-link:hover {
-      background: #388bfd;
+    body.dark .contact-card:hover {
+        border-color: #58a6ff;
     }
+    body.dark .contact-card i {
+        color: #58a6ff;
+    }
+    /* --- END: Dark Mode for Updated Contact Section --- */
+
     body.dark footer {
       background: #161b22;
       color: #8b949e;
@@ -421,7 +393,7 @@
       .section { padding: 80px 30px; }
       .hero-content { padding: 30px; }
       .hero h1 { font-size: 2.2rem; }
-      .contact-info {
+      .contact-icon-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -432,13 +404,6 @@
       .hero p { font-size: 1rem; }
       #contact {
         padding: 80px 20px;
-      }
-      .contact-item {
-        flex-direction: column;
-        text-align: center;
-      }
-      .contact-icon {
-        align-self: center;
       }
     }
   </style>
@@ -515,61 +480,39 @@
   </div>
 </section>
 
-<!-- Updated Contact Section -->
 <section id="contact" class="section">
   <h2 data-i18n="contact_title">Contact Us</h2>
   
-  <div class="contact-container">
-    <div class="contact-info">
-      <div class="contact-item">
-        <div class="contact-icon">
-          <i class="fas fa-envelope"></i>
-        </div>
-        <div class="contact-details">
-          <h3><span id="email-contact"></span></h3>
-        </div>
-      </div>
-      
-      <div class="contact-item">
-        <div class="contact-icon">
-          <i class="fas fa-map-marker-alt"></i>
-        </div>
-        <div class="contact-details">
-          <h3>60 rue François 1er 75008 Paris</h3>
-        </div>
-      </div>
-      
-      <div class="contact-item">
-        <div class="contact-icon">
-          <i class="fas fa-comment"></i>
-        </div>
-        <div class="contact-details">
-          <p data-i18n="contact_text">We'd love to hear from you and discuss your project ideas...</p>
-        </div>
-      </div>
-      
-      <div class="contact-item">
-        <div class="contact-icon">
-          <i class="fas fa-hands-helping"></i>
-        </div>
-        <div class="contact-details">
-          <p data-i18n="support_us"><a href="support.html" class="support-link">Support Our Work</a></p>
-        </div>
-      </div>
-    </div>
+  <div class="contact-icon-grid">
+    <a href="mailto:contact@ayacloud.fr" class="contact-card">
+      <i class="fas fa-envelope"></i>
+      <span class="contact-card-info" id="email-contact"></span>
+    </a>
+    
+    <a href="https://www.google.com/maps/search/?api=1&query=60+rue+François+1er+75008+Paris" target="_blank" rel="noopener noreferrer" class="contact-card">
+      <i class="fas fa-map-marker-alt"></i>
+      <span class="contact-card-info">60 rue François 1er<br>75008 Paris, France</span>
+    </a>
+    
+    <a href="support.html" class="contact-card">
+      <i class="fas fa-hands-helping"></i>
+      <span class="contact-card-info" data-i18n="support_us">Support Our Work</span>
+    </a>
   </div>
 </section>
-
-      <script>
+<script>
         // JavaScript to protect the email address from simple crawlers
         const emailUser = 'contact';
         const emailDomain = 'ayacloud.fr';
         const emailElement = document.getElementById('email-contact');
-        const emailLink = document.createElement('a');
-        emailLink.href = 'mailto:' + emailUser + '@' + emailDomain;
-        emailLink.textContent = emailUser + '@' + emailDomain;
-        emailLink.classList.add('text-blue-600', 'hover:underline');
-        emailElement.appendChild(emailLink);
+        if (emailElement) {
+            // Clear any existing content
+            emailElement.innerHTML = ''; 
+            const emailLink = document.createElement('a');
+            emailLink.href = 'mailto:' + emailUser + '@' + emailDomain;
+            emailLink.textContent = emailUser + '@' + emailDomain;
+            emailElement.appendChild(emailLink);
+        }
     </script>
   <footer>
     <p data-i18n="footer">© 2025 AYA CLOUD SAS. All rights reserved.</p>
@@ -655,7 +598,3 @@
   </script>
 </body>
 </html>
-
-
-
-
