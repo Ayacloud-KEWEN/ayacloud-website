@@ -6,6 +6,7 @@
    <link rel="icon" href="/favicon.png" type="image/png">
    <link rel="apple-touch-icon" href="/img/Ayacloud.png" type="image/png">
   <title>AYA CLOUD - Map App Studio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Reset */
     * {
@@ -233,9 +234,87 @@
   transform: translateY(0);
 }
 
-    /* Contact */
+    /* Contact Section - Updated Styles */
     #contact {
       background: #f8f9fa;
+      padding: 100px 60px;
+    }
+    
+    .contact-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .contact-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+    }
+    
+    .contact-item {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .contact-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+    
+    .contact-icon {
+      background: #0a74da;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      font-size: 24px;
+    }
+    
+    .contact-details h3 {
+      margin-bottom: 10px;
+      color: #0a74da;
+      font-size: 20px;
+    }
+    
+    .contact-details p, .contact-details a {
+      color: #555;
+      text-decoration: none;
+      line-height: 1.6;
+    }
+    
+    .contact-details a:hover {
+      color: #0a74da;
+      text-decoration: underline;
+    }
+    
+    .support-link {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 24px;
+      background: #0a74da;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s, transform 0.2s;
+    }
+    
+    .support-link:hover {
+      background: #084a91;
+      transform: translateY(-2px);
     }
 
     /* Footer */
@@ -312,6 +391,23 @@
     body.dark #contact {
       background: #161b22;
     }
+    body.dark .contact-item {
+      background: #21262d;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+    body.dark .contact-details h3 {
+      color: #58a6ff;
+    }
+    body.dark .contact-details p, 
+    body.dark .contact-details a {
+      color: #ccc;
+    }
+    body.dark .support-link {
+      background: #58a6ff;
+    }
+    body.dark .support-link:hover {
+      background: #388bfd;
+    }
     body.dark footer {
       background: #161b22;
       color: #8b949e;
@@ -325,12 +421,25 @@
       .section { padding: 80px 30px; }
       .hero-content { padding: 30px; }
       .hero h1 { font-size: 2.2rem; }
+      .contact-info {
+        grid-template-columns: 1fr;
+      }
     }
     @media (max-width: 768px) {
       header { flex-direction: column; padding: 15px; }
       .nav-links { margin-top: 15px; flex-wrap: wrap; justify-content: center; }
       .hero h1 { font-size: 1.8rem; }
       .hero p { font-size: 1rem; }
+      #contact {
+        padding: 80px 20px;
+      }
+      .contact-item {
+        flex-direction: column;
+        text-align: center;
+      }
+      .contact-icon {
+        align-self: center;
+      }
     }
   </style>
 </head>
@@ -401,13 +510,56 @@
 
   </div>
 </section>
-  <section id="contact" class="section">
-    <h2 data-i18n="contact_title">Contact Us</h2>
-    <span id="email-contact"></span>
-    <p data-i18n="contact_address">60 rue François 1er 75008 Paris</p>
-    <p data-i18n="contact_text" style="font-size: 14px; line-height: 1.4;">We'd love to hear from you and discuss your project ideas...</p>
-    <p data-i18n="support_us"><a href="support.html">Support Us</a></p>
-  </section>
+
+<!-- Updated Contact Section -->
+<section id="contact" class="section">
+  <h2 data-i18n="contact_title">Contact Us</h2>
+  
+  <div class="contact-container">
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="contact-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <div class="contact-details">
+          <h3>Email</h3>
+          <span id="email-contact"></span>
+        </div>
+      </div>
+      
+      <div class="contact-item">
+        <div class="contact-icon">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <div class="contact-details">
+          <h3>Address</h3>
+          <p data-i18n="contact_address">60 rue François 1er 75008 Paris</p>
+        </div>
+      </div>
+      
+      <div class="contact-item">
+        <div class="contact-icon">
+          <i class="fas fa-comment"></i>
+        </div>
+        <div class="contact-details">
+          <h3>Get In Touch</h3>
+          <p data-i18n="contact_text">We'd love to hear from you and discuss your project ideas...</p>
+        </div>
+      </div>
+      
+      <div class="contact-item">
+        <div class="contact-icon">
+          <i class="fas fa-hands-helping"></i>
+        </div>
+        <div class="contact-details">
+          <h3>Support Us</h3>
+          <p data-i18n="support_us"><a href="support.html" class="support-link">Support Our Work</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
       <script>
         // JavaScript to protect the email address from simple crawlers
         const emailUser = 'contact';
@@ -451,7 +603,6 @@
 
       // --- LANGUAGE SWITCHER ---
       let translations = {};
-
 
       const logoImage = document.querySelector(".logo");
 
@@ -503,28 +654,4 @@
     });
   </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
