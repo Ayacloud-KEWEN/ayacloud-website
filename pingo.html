@@ -111,7 +111,26 @@
         }
         .cta-button:hover { transform: scale(1.05); }
 
-        footer { text-align: center; padding: 2rem 0; background: #333; color: #fff; }
+        footer { 
+            text-align: center; 
+            padding: 2rem 0; 
+            background: #333; 
+            color: #fff; 
+        }
+        
+        .footer-link {
+            color: inherit; 
+            text-decoration: none;
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+        
+        .footer-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            text-decoration: underline;
+        }
 
         /* 语言选择下拉微调 */
         .language-selector {
@@ -211,7 +230,7 @@
           </div>
           <div class="feature-card" style="background: #444; color: #fff;">
             <h3 data-i18n="privacy_item2_title">Easy Data Export</h3>
-            <p data-i18n="privacy_item2_text">Easily export your travel log in KML, GeoJSON, and JSON.</p>
+            <p data-i18n="privacy_item2_text">Easy export your travel log in KML, GeoJSON, and JSON.</p>
           </div>
         </div>
       </div>
@@ -228,7 +247,7 @@
 
   <footer>
     <div class="container">
-      <p data-i18n="footer_text">&copy; 2025 <a href="index.html" style="color: inherit; text-decoration: none;" data-i18n="company_name">AYA CLOUD SAS</a>. All Rights Reserved.</p>
+      <p data-i18n="footer_text">&copy; 2025 <a href="index.html" class="footer-link" data-i18n="company_name">AYA CLOUD SAS</a>. All Rights Reserved.</p>
     </div>
   </footer>
 
@@ -277,5 +296,3 @@
   </script>
 </body>
 </html>
-
-
