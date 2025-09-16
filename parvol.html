@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ParVol: Your Smart Golf Companion</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            overflow: hidden;
+            padding: 0 20px;
+        }
+        header {
+            background: #fff;
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        header .app-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 22%;
+            margin-bottom: 1rem;
+            background-color: #e8e8e8; /* Placeholder color */
+        }
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: #2e7d32; /* Grass Green */
+        }
+        header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+        .hero {
+            background: linear-gradient(45deg, #2e7d32, #4caf50); /* Grass Green Gradient */
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+        }
+        .hero h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        section { padding: 4rem 0; text-align: center; }
+        .section-title { font-size: 2.2rem; margin-bottom: 2rem; color: #2e7d32; }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+        .feature-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .feature-card .why-it-matters {
+            margin-top: 1rem;
+            font-style: italic;
+            color: #555;
+            border-left: 3px solid #4caf50;
+            padding-left: 1rem;
+        }
+        .image-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        .image-gallery img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            object-fit: cover;
+            flex-grow: 1;
+            background-color: #ccc; /* Placeholder color */
+        }
+        .cta { background-color: #2e7d32; color: #fff; padding: 4rem 0; }
+        .cta h2 { font-size: 2rem; margin-bottom: 2rem; }
+        .cta-button {
+            display: inline-block;
+            background: #fff;
+            color: #2e7d32;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 0.5rem;
+            transition: transform 0.2s;
+        }
+        .cta-button:hover { transform: scale(1.05); }
+        footer { text-align: center; padding: 2rem 0; background: #333; color: #fff; }
+        @media (max-width: 600px) {
+            header h1 { font-size: 2.5rem; }
+            .hero { padding: 3.5rem 0; }
+        }
+    </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <img src="/img/egree logo.png" alt="ParVol App Logo" class="app-logo">
+      <h1>ParVol</h1>
+      <p>Your Smart Golf Companion</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h2>The ultimate golf assistant app designed to make every round smarter, simpler, and more fun.</h2>
+        <p>With powerful GPS, AR, and AI features, ParVol replaces expensive devices and brings pro-level tools right to your phone.</p>
+      </div>
+    </section>
+
+    <section id="features" class="container">
+      <h2 class="section-title">Key Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>GPS Course Maps & Distance</h3>
+          <p>Access 2D overhead maps for tens of thousands of courses. See your real-time position, measure any distance, and view automatic front, middle, and back green distances.</p>
+          <p class="why-it-matters">Replace expensive rangefinders and make better strategic decisions.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Digital Scorecard</h3>
+          <p>An easy interface for up to 4 players. Quickly record strokes, putts, and fairway hits, with automatic calculations for score vs. par and net scores.</p>
+          <p class="why-it-matters">Streamline scoring and track performance digitally.</p>
+        </div>
+        <div class="feature-card">
+          <h3>AR Green Distance Finder</h3>
+          <p>Use your phone’s camera to see accurate distances overlaid directly on the green. AR identifies the hole and provides precise, real-time measurements.</p>
+           <p class="why-it-matters">Get more precise readings than GPS alone, perfect for your short game.</p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="advanced-features" class="container" style="background-color: #ffffff; padding-top: 4rem; padding-bottom: 4rem;">
+      <h2 class="section-title">Advanced & Social Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Personal Swing Stats</h3>
+          <p>Automatically analyze your scorecard data with visual charts for average strokes, putts, GIR, and performance on Par 3, 4, and 5 holes.</p>
+          <p class="why-it-matters">Identify strengths and weaknesses for targeted practice.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Club Management</h3>
+          <p>Record your clubs, track their average/max distances, and get smart recommendations based on your target distance while playing.</p>
+          <p class="why-it-matters">Make smarter club selections and improve decision-making.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Friends & Tournaments</h3>
+          <p>Add friends, create mini-tournaments with live scorecards, and host private competitions in Stroke Play or Stableford formats.</p>
+           <p class="why-it-matters">Turn solo rounds into social, competitive fun.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="pro-features" class="container">
+        <h2 class="section-title">Pro-Level Features</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <h3>AR Green Reading</h3>
+            <p>A revolutionary putting aid. Scan the green with your camera to display slope and break direction using heatmaps and arrows, providing a visual guide for your putt.</p>
+            <p class="why-it-matters">A revolutionary putting aid for golfers of all skill levels.</p>
+          </div>
+          <div class="feature-card">
+            <h3>AI Rules Assistant</h3>
+            <p>Get instant answers to any golf rule question using AI. It supports text, image, and voice queries, and even works offline.</p>
+            <p class="why-it-matters">Acts as a low-cost, professional rules referee right in your pocket.</p>
+          </div>
+        </div>
+      </section>
+
+    <section class="gallery-section" id="gallery" style="background-color: #e8f5e9;">
+      <div class="container">
+        <h2 class="section-title">Picture Your Perfect Round</h2>
+        <div class="image-gallery">
+          <img src="/img/pvbg01.png" alt="Screenshot of ParVol's GPS map view on a golf course">
+          <img src="/img/pvbg02.png" alt="Screenshot of the AR Green Reading feature showing slopes">
+          <img src="/img/pvbg03.jpg" alt="Screenshot of the digital scorecard with four players">
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="download">
+      <div class="container">
+        <h2>Ready to Elevate Your Game?</h2>
+        <p>Whether you’re a casual player or a serious competitor, ParVol helps you play smarter, improve faster, and have more fun on the course.</p>
+        <a href="#" class="cta-button">Download on the App Store</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 AYA CLOUD All Rights Reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
