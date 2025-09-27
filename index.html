@@ -406,6 +406,52 @@ body.dark .hero {
         padding: 80px 20px;
       }
     }
+
+    /* --- START: About Us Section --- */
+    .about-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 50px;
+      margin-top: 50px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    .about-image {
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .about-text {
+      flex: 1.5; /* 让文本区域占据更多空间 */
+    }
+    
+    body.dark .about-image img {
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    }
+
+    /* 响应式设计: 在较小的屏幕上，将两栏布局变为单栏堆叠 */
+    @media (max-width: 900px) {
+      .about-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+      }
+      .about-text {
+        text-align: left; /* 在移动端保持文本左对齐以获得更好的可读性 */
+      }
+    }
+    /* --- END: About Us Section --- */
   </style>
 </head>
 <body>
@@ -443,10 +489,14 @@ body.dark .hero {
   </section>
 <section id="about" class="section">
     <h2 data-i18n="about_title">About Us</h2>
-    
-    <p data-i18n="about_text" style="text-align: left; max-width: 800px; margin: 0 auto; white-space: pre-wrap;">
-      </p>
-
+    <div class="about-container">
+      <div class="about-image">
+        <img src="img/about-us.png" alt="Our Team">
+      </div>
+      <div class="about-text">
+        <p data-i18n="about_text" style="white-space: pre-wrap;"></p>
+      </div>
+    </div>
 </section>
   <section id="services" class="section">
     <h2 data-i18n="services_title">Our Services</h2>
@@ -607,6 +657,7 @@ body.dark .hero {
   </script>
 </body>
 </html>
+
 
 
 
