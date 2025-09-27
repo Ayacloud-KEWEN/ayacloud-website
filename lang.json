@@ -23,6 +23,7 @@
     "portfolio_item1": "Exploration and Navigation",
     "portfolio_item2": "Digital Twin",
     "portfolio_item3": "Sports and Tourism",
+    "portfolio_item4": "Digital Energy and Photovoltaics",
     "contact_title": "Contact Us",
     "contact_email": "Email: contact@ayacloud.com",
     "contact_text": "We'd love to hear from you and discuss your project ideas...",
@@ -52,6 +53,7 @@
     "portfolio_item1": "探索与航行",
     "portfolio_item2": "数字孪生",
     "portfolio_item3": "运动和旅游",
+    "portfolio_item4": "数值能源与光伏",
     "contact_title": "联系我们",
     "contact_email": "邮箱: contact@ayacloud.com",
     "contact_text": "我们很乐意听取您的意见并讨论您的项目想法...",
@@ -81,6 +83,7 @@
     "portfolio_item1": "Exploration et Navigation",
     "portfolio_item2": "Jumeau Numérique",
     "portfolio_item3": "Sports et Tourisme",
+    "portfolio_item4": "Énergie numérique et photovoltaïque",
     "contact_title": "Contactez-nous",
     "contact_email": "Email: contact@ayacloud.com",
     "contact_text": "Nous serions ravis de vous entendre et de discuter de vos idées de projet...",
@@ -110,6 +113,7 @@
     "portfolio_item1": "Exploración y Navegación",
     "portfolio_item2": "Gemelo Digital",
     "portfolio_item3": "Deportes y Turismo",
+    "portfolio_item4": "Energía digital y fotovoltaica",
     "contact_title": "Contáctenos",
     "contact_email": "Email: contact@ayacloud.com",
     "contact_text": "Nos encantaría saber de usted y discutir sus ideas de proyectos...",
@@ -139,12 +143,14 @@
     "portfolio_item1": "Erkundung und Navigation",
     "portfolio_item2": "Digitaler Zwilling",
     "portfolio_item3": "Sport und Tourismus",
+    "portfolio_item4": "Digitale Energie und Photovoltaik",
     "contact_title": "Kontaktieren Sie uns",
     "contact_email": "Email: contact@ayacloud.com",
     "contact_text": "Wir würden uns freuen, von Ihnen zu hören und Ihre Projektideen zu besprechen...",
     "footer": "© 2025 AYA CLOUD. Alle Rechte vorbehalten."
   }
 }
+
 
 
 
