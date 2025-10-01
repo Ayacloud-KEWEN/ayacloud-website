@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centre d'aide PinGo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        header h1 {
+            color: #6a0dad;
+            font-size: 2.5em;
+            margin: 0;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        nav a {
+            text-decoration: none;
+            color: #6a0dad;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        nav a:hover {
+            color: #9e6cf2;
+        }
+        .language-switcher {
+            text-align: right;
+            padding: 10px 20px;
+            background-color: #ffffff;
+        }
+        .language-switcher a {
+            text-decoration: none;
+            color: #6a0dad;
+            font-weight: 600;
+            padding: 5px 10px;
+            border: 1px solid #6a0dad;
+            border-radius: 5px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .language-switcher a:hover {
+            background-color: #6a0dad;
+            color: #ffffff;
+        }
+        section {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        h2 {
+            color: #6a0dad;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h3 {
+            color: #333333;
+            margin-top: 20px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .faq-item {
+            margin-bottom: 20px;
+        }
+        .faq-question {
+            font-weight: 600;
+            color: #333333;
+            cursor: pointer;
+        }
+        .faq-answer {
+            display: none;
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 2px solid #6a0dad;
+        }
+        .faq-answer.show {
+            display: block;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #8e8e93;
+            font-size: 0.9em;
+        }
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+        .tab-icon {
+            font-size: 1.5em;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Centre d'aide PinGo</h1>
+    <p>Votre journal de voyage et de vie personnel</p>
+</header>
+
+<nav>
+    <a href="#getting-started">Démarrage rapide</a>
+    <a href="#features">Fonctionnalités clés</a>
+    <a href="#faq">FAQ</a>
+</nav>
+
+<div class="container">
+    <section id="getting-started">
+        <h2>Démarrage rapide</h2>
+        <p>PinGo est conçu pour vous aider à enregistrer facilement chaque moment. Voici un guide rapide pour créer votre première épingle.</p>
+        
+        <h3>Aperçu de l'interface principale</h3>
+        <p>L'application dispose de cinq onglets principaux en bas :</p>
+        <ul>
+            <li><span class="tab-icon">📋</span> **Liste**: Vos épingles sont affichées ici par ordre chronologique inversé.</li>
+            <li><span class="tab-icon">🗂️</span> **Hiérarchie**: Vos voyages sont organisés par niveaux géographiques, tels que pays, province et ville.</li>
+            <li><span class="tab-icon">📍</span> **Ajouter une épingle**: Appuyez sur ce bouton central pour créer un nouvel enregistrement basé sur votre emplacement actuel.</li>
+            <li><span class="tab-icon">🗺️</span> **Carte**: Visualisez toutes vos épingles sur une carte.</li>
+            <li><span class="tab-icon">⚙️</span> **Paramètres**: Gérez votre profil, vos réalisations et les paramètres de l'application.</li>
+        </ul>
+
+        <h3>Comment créer votre première épingle</h3>
+        <ol>
+            <li><strong>Appuyez sur le bouton "Ajouter une épingle"</strong> au centre de la barre de navigation.</li>
+            <li><strong>Capture automatique de l'emplacement</strong>: L'application obtient automatiquement votre emplacement via GPS et le réseau, remplissant les détails d'adresse. Vous pouvez modifier manuellement ces informations si nécessaire.</li>
+            <li><strong>Personnalisez votre épingle</strong>:
+                <ul>
+                    <li>Nommez votre épingle.</li>
+                    <li>Choisissez un emoji pour la classer, comme <span class="emoji">🍽️</span> ou <span class="emoji">🏞️</span>.</li>
+                    <li>Ajoutez vos notes de voyage ou vos entrées de journal.</li>
+                </ul>
+            </li>
+            <li><strong>Ajouter des photos</strong>: Sélectionnez jusqu'à 9 photos de votre bibliothèque. Vous pouvez également appuyer sur **"Extraire l'emplacement et la date de la photo"** pour remplir automatiquement les détails à partir des métadonnées d'une photo.</li>
+            <li><strong>Enregistrer</strong>: Appuyez sur le bouton **"Enregistrer"** en haut à droite pour terminer votre épingle.</li>
+        </ol>
+    </section>
+
+    <section id="features">
+        <h2>Fonctionnalités clés</h2>
+        <h3>Réalisations</h3>
+        <p>PinGo comprend un système de réalisations pour suivre les étapes de votre voyage.</p>
+        <ul>
+            <li><strong>Réalisation nationale</strong>: Garde une trace du nombre de pays que vous avez visités.</li>
+            <li><strong>Merveille du monde</strong>: Cette réalisation est déverrouillée automatiquement lorsque vous créez une épingle près de l'une des merveilles du monde prédéfinies.</li>
+        </ul>
+        <p>Vous pouvez accéder à vos réalisations depuis les vues "Paramètres" ou "Hiérarchie".</p>
+
+        <h3>Gestion des données et exportation</h3>
+        <p>Toutes vos données sont stockées en toute sécurité sur votre appareil, et vous pouvez les exporter à tout moment pour les sauvegarder.</p>
+        <ul>
+            <li><strong>Exporter une seule épingle</strong>: Sur la page de détails de l'épingle, appuyez sur le bouton "Exporter" pour enregistrer l'enregistrement en tant que **PDF** ou **Image**.</li>
+            <li><strong>Exporter un lot d'épingles</strong>: Dans la vue "Liste", utilisez le filtre pour sélectionner les épingles, puis appuyez sur le bouton "Exporter" pour exporter la liste filtrée entière sous la forme d'un seul fichier **PDF**.</li>
+        </ul>
+    </section>
+
+    <section id="faq">
+        <h2>Foire aux questions</h2>
+        <div class="faq-item">
+            <h3 class="faq-question">Q1: Pourquoi ne puis-je pas obtenir mon emplacement ou mon adresse actuelle ?</h3>
+            <div class="faq-answer">
+                <p><strong>Autorisations de localisation :</strong> Assurez-vous d'avoir accordé à PinGo l'accès à la localisation. Vous pouvez vérifier cela dans les **Paramètres > Confidentialité et sécurité > Service de localisation** de votre appareil.</p>
+                <p><strong>Signal réseau/GPS :</strong> Le géocodage nécessite une connexion réseau, et les services de localisation ont besoin d'un bon signal GPS. Vous pouvez toujours saisir manuellement l'adresse si le signal est faible.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">Q2: Mes données sont-elles en sécurité ?</h3>
+            <div class="faq-answer">
+                <p>Oui, toutes vos épingles et photos sont stockées uniquement sur votre appareil. Elles ne sont pas téléchargées sur des serveurs externes, garantissant que vos données restent totalement privées.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">Q3: Pourquoi l'emplacement d'une épingle sur la carte semble-t-il légèrement décalé ?</h3>
+            <div class="faq-answer">
+                <p>En Chine continentale, PinGo utilise le système de coordonnées GCJ-02 pour une meilleure compatibilité avec les services de cartes locaux. Dans d'autres régions, il utilise le système standard WGS-84 pour assurer la précision à l'échelle mondiale.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">Q4: Que se passe-t-il si je supprime une épingle ?</h3>
+            <div class="faq-answer">
+                <p>La suppression est une action permanente et ne peut pas être annulée. Si l'épingle vous a aidé à déverrouiller une réalisation "Merveille du monde", son statut sera réinitialisé si c'était la seule épingle enregistrée pour cet emplacement.</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>&copy; 2025 PinGo. Tous droits réservés.</p>
+</footer>
+
+<script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+        item.addEventListener('click', event => {
+            const answer = item.nextElementSibling;
+            answer.classList.toggle('show');
+        });
+    });
+</script>
+
+</body>
+</html>
