@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PinGo Help Center</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        header h1 {
+            color: #6a0dad;
+            font-size: 2.5em;
+            margin: 0;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        nav a {
+            text-decoration: none;
+            color: #6a0dad;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        nav a:hover {
+            color: #9e6cf2;
+        }
+        .language-switcher {
+            text-align: right;
+            padding: 10px 20px;
+            background-color: #ffffff;
+        }
+        .language-switcher a {
+            text-decoration: none;
+            color: #6a0dad;
+            font-weight: 600;
+            padding: 5px 10px;
+            border: 1px solid #6a0dad;
+            border-radius: 5px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .language-switcher a:hover {
+            background-color: #6a0dad;
+            color: #ffffff;
+        }
+        section {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        h2 {
+            color: #6a0dad;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h3 {
+            color: #333333;
+            margin-top: 20px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .faq-item {
+            margin-bottom: 20px;
+        }
+        .faq-question {
+            font-weight: 600;
+            color: #333333;
+            cursor: pointer;
+        }
+        .faq-answer {
+            display: none;
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 2px solid #6a0dad;
+        }
+        .faq-answer.show {
+            display: block;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #8e8e93;
+            font-size: 0.9em;
+        }
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+        .tab-icon {
+            font-size: 1.5em;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+<div class="language-switcher">
+    <a href="help-fr.html">Français</a>
+</div>
+
+<header>
+    <h1>PinGo Help Center</h1>
+    <p>Your Personal Travel & Life Log</p>
+</header>
+
+<nav>
+    <a href="#getting-started">Getting Started</a>
+    <a href="#features">Key Features</a>
+    <a href="#faq">FAQ</a>
+</nav>
+
+<div class="container">
+    <section id="getting-started">
+        <h2>Getting Started</h2>
+        <p>PinGo is designed to help you easily record every moment. Here's a quick guide to creating your first pin.</p>
+        
+        <h3>Main Interface Overview</h3>
+        <p>The app has five main tabs at the bottom:</p>
+        <ul>
+            <li><span class="tab-icon">📋</span> **List**: Your pins are displayed here in reverse chronological order.</li>
+            <li><span class="tab-icon">🗂️</span> **Hierarchy**: Your travels are organized by geographical levels, such as country, province, and city.</li>
+            <li><span class="tab-icon">📍</span> **Add Pin**: Tap this central button to create a new record based on your current location.</li>
+            <li><span class="tab-icon">🗺️</span> **Map**: Visualize all your pins on a map.</li>
+            <li><span class="tab-icon">⚙️</span> **Settings**: Manage your profile, achievements, and app settings.</li>
+        </ul>
+
+        <h3>How to Create Your First Pin</h3>
+        <ol>
+            <li><strong>Tap the "Add Pin" button</strong> in the center of the navigation bar.</li>
+            <li><strong>Automatic Location Capture</strong>: The app automatically gets your location via GPS and network, filling in address details. You can manually edit this information if needed.</li>
+            <li><strong>Customize Your Pin</strong>:
+                <ul>
+                    <li>Name your pin.</li>
+                    <li>Choose an emoji to categorize it, like <span class="emoji">🍽️</span> or <span class="emoji">🏞️</span>.</li>
+                    <li>Add your travel notes or journal entries.</li>
+                </ul>
+            </li>
+            <li><strong>Add Photos</strong>: Select up to 9 photos from your library. You can also tap **"Extract Location & Date from Photo"** to automatically fill in details from a photo's metadata.</li>
+            <li><strong>Save</strong>: Tap the **"Save"** button in the top right corner to complete your pin.</li>
+        </ol>
+    </section>
+
+    <section id="features">
+        <h2>Key Features</h2>
+        <h3>Achievements</h3>
+        <p>PinGo includes an achievement system to track your journey milestones.</p>
+        <ul>
+            <li><strong>National Achievement</strong>: Keeps track of the number of countries you've visited.</li>
+            <li><strong>Wonder of the World Achievement</strong>: This is unlocked automatically when you create a pin near one of the pre-defined world wonders.</li>
+        </ul>
+        <p>You can access your achievements from the "Settings" or "Hierarchy" views.</p>
+
+        <h3>Data Management & Export</h3>
+        <p>All your data is stored securely on your device, and you can export it anytime for backup.</p>
+        <ul>
+            <li><strong>Export a Single Pin</strong>: On the pin detail page, tap the "Export" button to save the record as a **PDF** or an **Image**.</li>
+            <li><strong>Batch Export Pins</strong>: In the "List" view, use the filter to select pins, then tap the "Export" button to export the entire filtered list as a single **PDF** file.</li>
+        </ul>
+    </section>
+
+    <section id="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <h3 class="faq-question">Q1: Why can't I get my current location or address?</h3>
+            <div class="faq-answer">
+                <p><strong>Location Permissions:</strong> Make sure you have granted PinGo location access. You can check this in your device's **Settings > Privacy & Security > Location Services**.</p>
+                <p><strong>Network/GPS Signal:</strong> Geocoding requires a network connection, and location services need a good GPS signal. You can always manually enter the address if the signal is weak.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">Q2: Is my data safe?</h3>
+            <div class="faq-answer">
+                <p>Yes, all your pins and photos are stored only on your device. They are not uploaded to any external servers, ensuring your data remains completely private.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">Q3: Why does a pin's location on the map seem slightly off?</h3>
+            <div class="faq-answer">
+                <p>In mainland China, PinGo uses the GCJ-02 coordinate system for better compatibility with local map services. In other regions, it uses the standard WGS-84 system to ensure accuracy globally.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <h3 class="faq-question">Q4: What happens if I delete a pin?</h3>
+            <div class="faq-answer">
+                <p>Deletion is permanent and cannot be undone. If the pin helped you unlock a "Wonder of the World" achievement, its status will be reset if it was the only pin for that location.</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>&copy; 2025 PinGo. All rights reserved.</p>
+</footer>
+
+<script>
+    document.querySelectorAll('.faq-question').forEach(item => {
+        item.addEventListener('click', event => {
+            const answer = item.nextElementSibling;
+            answer.classList.toggle('show');
+        });
+    });
+</script>
+
+</body>
+</html>
