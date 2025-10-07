@@ -22,8 +22,10 @@
     "portfolio_title": "Portfolio Showcase",
     "portfolio_item1": "Exploration and Navigation",
     "portfolio_item2": "Digital Twin",
-    "portfolio_item3": "Sports and Tourism",
+    "portfolio_item3": "Map Web",
     "portfolio_item4": "Digital Energy and Photovoltaics",
+    "portfolio_item5": "Radio Map",
+    "portfolio_item6": "Digital Twin",
     "contact_title": "Contact Us",
     "contact_email": "Email: contact@ayacloud.com",
     "contact_text": "We'd love to hear from you and discuss your project ideas...",
@@ -150,6 +152,7 @@
     "footer": "© 2025 AYA CLOUD. Alle Rechte vorbehalten."
   }
 }
+
 
 
 
