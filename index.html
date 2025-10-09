@@ -465,6 +465,17 @@
         gap: 20px;
       }
 
+      /* 确保地球框换行到第二行 */
+      .holo {
+        order: 2;
+        /* 强制地球框在第二行 */
+      }
+
+      .hero-panel>div:first-child {
+        order: 1;
+        /* 文本内容在第一行 */
+      }
+
       .hero-title {
         font-size: 32px;
         line-height: 1.1;
@@ -590,7 +601,13 @@
       }
 
       .hero-panel {
+        grid-template-columns: 1fr;
         padding: 20px;
+        gap: 15px;
+      }
+
+      .holo {
+        order: 2;
       }
 
       .kicker {
@@ -626,6 +643,11 @@
       .hero-panel {
         grid-template-columns: 1fr 1fr;
       }
+
+      .holo {
+        order: unset;
+        /* 恢复默认顺序 */
+      }
     }
 
     /* 触摸设备优化 */
@@ -637,7 +659,7 @@
       .nav-links a {
         padding: 16px 20px;
       }
-      
+
       /* 移动端语言选择器优化 */
       .language-selector .lang-dropdown {
         position: static;
@@ -647,23 +669,25 @@
         margin-top: 10px;
         display: none;
       }
-      
+
       .language-selector.active .lang-dropdown {
         display: block;
       }
     }
 
-    @media(max-width:980px) {
+    @media (max-width: 980px) and (min-width: 769px) {
       .hero-panel {
-        grid-template-columns: 1fr 1fr
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
       }
 
       .holo {
-        order: 2
+        order: 2;
+        /* 在中等屏幕也保持地球在右侧 */
       }
 
-      .hero-left {
-        order: 1
+      .hero-panel>div:first-child {
+        order: 1;
       }
     }
 
@@ -695,7 +719,7 @@
         <li><a href="#portfolio" data-i18n="portfolio">Portfolio</a></li>
         <li><a href="#contact" data-i18n="contact">Contact</a></li>
       </ul>
-      
+
       <!-- 语言选择器 -->
       <div class="language-selector">
         <div class="current-lang">
@@ -743,14 +767,15 @@
         <div>
           <div class="kicker">Exploration • AI • Maps</div>
           <h1 class="hero-title" data-i18n="hero_title">Designing the Future of Map Apps</h1>
-          <p class="hero-sub" data-i18n="hero_desc">We craft elegant, high-performance map experiences powered by AI and spatial data.</p>
+          <p class="hero-sub" data-i18n="hero_desc">We craft elegant, high-performance map experiences powered by AI and
+            spatial data.</p>
 
           <div class="cta-row">
             <a href="#services" class="cta-link">
               <button class="cta" data-i18n="hero_cta">Explore Our Services</button>
             </a>
             <a href="#services" class="cta-link">
-            <button class="cta secondary">Live Demo</button>
+              <button class="cta secondary">Live Demo</button>
             </a>
           </div>
         </div>
@@ -781,7 +806,8 @@
             style="width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.03)">
         </div>
         <div style="flex:1.6;min-width:260px;color:rgba(220,230,255,0.9)">
-          <p style="line-height:1.6" data-i18n="about_text">AYA CLOUD is a studio focused on AI-driven map applications and spatial UX. We
+          <p style="line-height:1.6" data-i18n="about_text">AYA CLOUD is a studio focused on AI-driven map applications
+            and spatial UX. We
             build tools that help businesses explore the world, visualize data, and create immersive digital twins. Our
             work blends design, performance engineering and geospatial research to deliver product-ready solutions.</p>
         </div>
@@ -794,7 +820,8 @@
         <div class="service-card"
           style="background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:22px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)">
           <h3 style="font-family:Orbitron;margin-bottom:8px" data-i18n="service1_title">App Design</h3>
-          <p data-i18n="service1_text">Interface & interaction design tailored for spatial products and AR experiences.</p>
+          <p data-i18n="service1_text">Interface & interaction design tailored for spatial products and AR experiences.
+          </p>
         </div>
         <div class="service-card"
           style="background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:22px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)">
@@ -1461,10 +1488,10 @@
             element.textContent = translations[key];
           }
         });
-        
+
         // 更新当前语言显示
         document.getElementById('current-lang').textContent = getLangCode(currentLang);
-        
+
         // 更新语言选项的激活状态
         document.querySelectorAll('.lang-option').forEach(option => {
           if (option.getAttribute('data-lang') === currentLang) {
@@ -1500,7 +1527,7 @@
           e.preventDefault();
           const lang = option.getAttribute('data-lang');
           switchLanguage(lang);
-          
+
           // 移动端点击后关闭下拉菜单
           if (window.innerWidth <= 768) {
             document.querySelector('.language-selector').classList.remove('active');
@@ -1514,7 +1541,7 @@
           e.stopPropagation();
           document.querySelector('.language-selector').classList.toggle('active');
         });
-        
+
         // 点击其他地方关闭语言选择器
         document.addEventListener('click', () => {
           document.querySelector('.language-selector').classList.remove('active');
