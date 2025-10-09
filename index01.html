@@ -10,7 +10,7 @@
 
   <!-- 预加载关键资源 -->
   <link rel="preload" href="img/ayacloud.png" as="image">
-  <link rel="preload" href="img/earth.jpg" as="image">
+  <link rel="preload" href="img/earth.jpg" as="image" crossorigin="anonymous">
 
   <!-- Fonts + Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
@@ -112,7 +112,12 @@
       text-decoration: none;
       font-weight: 600;
       padding: 8px 12px;
-      border-radius: 8px
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .hero {
@@ -176,13 +181,23 @@
       font-weight: 700;
       border: none;
       cursor: pointer;
-      box-shadow: 0 0 30px rgba(0, 123, 255, 0.25)
+      box-shadow: 0 0 30px rgba(0, 123, 255, 0.25);
+      transition: all 0.3s ease;
+    }
+
+    .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(0, 123, 255, 0.4);
     }
 
     .cta.secondary {
       background: transparent;
       color: #dbeafe;
       border: 1px solid rgba(255, 255, 255, 0.08)
+    }
+
+    .cta.secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .holo {
@@ -222,6 +237,12 @@
 
     .contact-link {
       text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .contact-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 123, 255, 0.2);
     }
 
     /* 汉堡菜单样式 */
@@ -232,10 +253,18 @@
       cursor: pointer;
       padding: 8px;
       z-index: 50;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
     /* 移动端适配样式 */
     @media (max-width: 768px) {
+
       /* 头部导航 */
       header {
         left: 12px;
@@ -253,11 +282,11 @@
         height: 48px;
       }
 
-      .logo-row div:first-child + div {
+      .logo-row div:first-child+div {
         font-size: 14px;
       }
 
-      .logo-row div:first-child + div div:last-child {
+      .logo-row div:first-child+div div:last-child {
         font-size: 10px;
       }
 
@@ -266,32 +295,65 @@
         display: block;
       }
 
+      /* 桌面导航隐藏 */
       nav {
         position: fixed;
-        top: 80px;
-        right: -100%;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
         background: var(--bg-dark);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 20px;
-        transition: right 0.3s ease;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 80px 20px 20px;
+        transition: left 0.3s ease;
         backdrop-filter: blur(10px);
         z-index: 45;
+        flex-direction: column;
+        justify-content: flex-start;
       }
 
       nav.active {
-        right: 20px;
+        left: 0;
       }
 
       .nav-links {
         flex-direction: column;
-        gap: 12px;
+        gap: 0;
+        width: 100%;
+      }
+
+      .nav-links li {
+        width: 100%;
       }
 
       .nav-links a {
-        padding: 12px 20px;
+        padding: 16px 20px;
         display: block;
-        text-align: center;
+        text-align: left;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .nav-links a:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* 遮罩层 */
+      .nav-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 44;
+      }
+
+      .nav-overlay.active {
+        display: block;
       }
 
       /* 英雄区域 */
@@ -339,12 +401,12 @@
         height: 240px;
       }
 
-      .holo > div {
+      .holo>div {
         justify-content: center;
         flex-wrap: wrap;
       }
 
-      .holo > div > div {
+      .holo>div>div {
         font-size: 11px;
         padding: 6px 10px;
       }
@@ -361,12 +423,12 @@
       }
 
       /* 关于我们 */
-      #about > div {
+      #about>div {
         flex-direction: column;
         gap: 20px;
       }
 
-      #about > div > div {
+      #about>div>div {
         min-width: 100%;
       }
 
@@ -391,7 +453,7 @@
         height: 160px;
       }
 
-      .portfolio-item > div {
+      .portfolio-item>div {
         left: 10px;
         bottom: 8px;
         padding: 6px 10px;
@@ -448,13 +510,12 @@
       }
 
       nav {
-        top: 70px;
-        right: 12px;
-        left: 12px;
+        width: 100%;
+        left: -100%;
       }
 
       nav.active {
-        right: 12px;
+        left: 0;
       }
     }
 
@@ -464,7 +525,7 @@
         min-height: 120vh;
         padding-top: 80px;
       }
-      
+
       .hero-panel {
         grid-template-columns: 1fr 1fr;
       }
@@ -475,9 +536,9 @@
       .cta {
         min-height: 44px;
       }
-      
+
       .nav-links a {
-        padding: 12px 16px;
+        padding: 16px 20px;
       }
     }
 
@@ -529,6 +590,9 @@
     <div class="mobile-menu-toggle">
       <i class="fas fa-bars"></i>
     </div>
+
+    <!-- 导航遮罩层 -->
+    <div class="nav-overlay"></div>
   </header>
 
   <main>
@@ -638,11 +702,13 @@
 
     <section id="contact">
       <h2 class="section-title">Contact Us</h2>
-      <div class="contact-icon-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div class="contact-icon-grid"
+        style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:18px;align-items:stretch">
         <a href="mailto:contact@ayacloud.fr" class="contact-card contact-link"
           style="padding:26px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);text-align:center">
           <i class="fas fa-envelope" style="font-size:28px;color:var(--neon-1)"></i>
-          <div style="margin-top:12px;font-weight:700;color:white">contact@ayacloud.fr</div>
+          <div style="margin-top:12px;font-weight:700;color:white;word-break: break-word; line-height: 1.4">
+            contact@ayacloud.fr</div>
         </a>
 
         <a href="https://www.google.com/maps/search/?api=1&query=60+rue+François+1er+75008+Paris" target="_blank"
@@ -744,7 +810,7 @@
           alpha: true,
           antialias: !isMobile // 移动端关闭抗锯齿提升性能
         });
-        
+
         // 移动端降低分辨率
         if (isMobile) {
           renderer.setPixelRatio(1);
@@ -767,7 +833,7 @@
         // 移动端简化几何体
         const segments = isMobile ? 32 : 64;
         const geometry = new THREE.SphereGeometry(1, segments, segments);
-        
+
         // 创建地球
         const material = new THREE.MeshStandardMaterial({
           color: 0xffffff, // 改为白色，不覆盖纹理颜色
@@ -988,31 +1054,43 @@
     function initMobileMenu() {
       const mobileToggle = document.querySelector('.mobile-menu-toggle');
       const nav = document.querySelector('nav');
-      
-      if (mobileToggle && nav) {
-        mobileToggle.addEventListener('click', function() {
+      const navOverlay = document.querySelector('.nav-overlay');
+
+      if (mobileToggle && nav && navOverlay) {
+        // 切换菜单显示/隐藏
+        function toggleMenu() {
           nav.classList.toggle('active');
+          navOverlay.classList.toggle('active');
           const icon = mobileToggle.querySelector('i');
           if (nav.classList.contains('active')) {
             icon.className = 'fas fa-times';
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
           } else {
             icon.className = 'fas fa-bars';
+            document.body.style.overflow = ''; // 恢复滚动
           }
-        });
-        
+        }
+
+        // 点击汉堡菜单
+        mobileToggle.addEventListener('click', toggleMenu);
+
+        // 点击遮罩层关闭菜单
+        navOverlay.addEventListener('click', toggleMenu);
+
         // 点击导航链接后关闭菜单
         document.querySelectorAll('.nav-links a').forEach(link => {
           link.addEventListener('click', () => {
             nav.classList.remove('active');
+            navOverlay.classList.remove('active');
             mobileToggle.querySelector('i').className = 'fas fa-bars';
+            document.body.style.overflow = ''; // 恢复滚动
           });
         });
 
-        // 点击页面其他区域关闭菜单
-        document.addEventListener('click', function(event) {
-          if (!event.target.closest('nav') && !event.target.closest('.mobile-menu-toggle')) {
-            nav.classList.remove('active');
-            mobileToggle.querySelector('i').className = 'fas fa-bars';
+        // ESC键关闭菜单
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape' && nav.classList.contains('active')) {
+            toggleMenu();
           }
         });
       }
