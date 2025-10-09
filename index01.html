@@ -3,10 +3,14 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>AYA CLOUD — Map App Studio (Blue-Black Sci-Fi)</title>
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/img/Ayacloud.png" type="image/png">
+
+  <!-- 预加载关键资源 -->
+  <link rel="preload" href="img/ayacloud.png" as="image">
+  <link rel="preload" href="img/earth.jpg" as="image">
 
   <!-- Fonts + Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
@@ -216,6 +220,267 @@
       color: rgba(200, 210, 230, 0.6)
     }
 
+    .contact-link {
+      text-decoration: none;
+    }
+
+    /* 汉堡菜单样式 */
+    .mobile-menu-toggle {
+      display: none;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 50;
+    }
+
+    /* 移动端适配样式 */
+    @media (max-width: 768px) {
+      /* 头部导航 */
+      header {
+        left: 12px;
+        right: 12px;
+        top: 12px;
+      }
+
+      .logo {
+        width: 50px;
+        height: 50px;
+      }
+
+      .logo img {
+        width: 48px;
+        height: 48px;
+      }
+
+      .logo-row div:first-child + div {
+        font-size: 14px;
+      }
+
+      .logo-row div:first-child + div div:last-child {
+        font-size: 10px;
+      }
+
+      /* 汉堡菜单 */
+      .mobile-menu-toggle {
+        display: block;
+      }
+
+      nav {
+        position: fixed;
+        top: 80px;
+        right: -100%;
+        background: var(--bg-dark);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        transition: right 0.3s ease;
+        backdrop-filter: blur(10px);
+        z-index: 45;
+      }
+
+      nav.active {
+        right: 20px;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .nav-links a {
+        padding: 12px 20px;
+        display: block;
+        text-align: center;
+      }
+
+      /* 英雄区域 */
+      .hero {
+        padding: 100px 16px 40px;
+        min-height: 90vh;
+      }
+
+      .hero-panel {
+        grid-template-columns: 1fr;
+        padding: 24px;
+        gap: 20px;
+      }
+
+      .hero-title {
+        font-size: 32px;
+        line-height: 1.1;
+      }
+
+      .hero-sub {
+        font-size: 14px;
+        margin-top: 12px;
+      }
+
+      .cta-row {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 20px;
+      }
+
+      .cta {
+        padding: 12px 16px;
+        font-size: 14px;
+        text-align: center;
+        min-height: 44px;
+      }
+
+      /* 全息地球容器 */
+      .holo {
+        order: -1;
+        padding: 10px;
+      }
+
+      .holo canvas {
+        height: 240px;
+      }
+
+      .holo > div {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .holo > div > div {
+        font-size: 11px;
+        padding: 6px 10px;
+      }
+
+      /* 内容区域 */
+      section {
+        padding: 50px 16px;
+      }
+
+      .section-title {
+        font-size: 22px;
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      /* 关于我们 */
+      #about > div {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      #about > div > div {
+        min-width: 100%;
+      }
+
+      /* 服务网格 */
+      .services-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .service-card {
+        padding: 18px;
+        text-align: center;
+      }
+
+      /* 作品集网格 */
+      .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .portfolio-item img {
+        height: 160px;
+      }
+
+      .portfolio-item > div {
+        left: 10px;
+        bottom: 8px;
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+
+      /* 联系网格 */
+      .contact-icon-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .contact-card {
+        padding: 20px;
+      }
+
+      .contact-card i {
+        font-size: 24px;
+      }
+
+      .contact-card div {
+        font-size: 14px;
+        margin-top: 8px;
+      }
+
+      /* 页脚 */
+      footer {
+        padding: 20px 16px;
+        font-size: 12px;
+      }
+    }
+
+    /* 小屏手机适配 */
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 26px;
+      }
+
+      .hero-panel {
+        padding: 20px;
+      }
+
+      .kicker {
+        font-size: 10px;
+        text-align: center;
+      }
+
+      section {
+        padding: 40px 12px;
+      }
+
+      .holo canvas {
+        height: 200px;
+      }
+
+      nav {
+        top: 70px;
+        right: 12px;
+        left: 12px;
+      }
+
+      nav.active {
+        right: 12px;
+      }
+    }
+
+    /* 横屏适配 */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .hero {
+        min-height: 120vh;
+        padding-top: 80px;
+      }
+      
+      .hero-panel {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* 触摸设备优化 */
+    @media (hover: none) and (pointer: coarse) {
+      .cta {
+        min-height: 44px;
+      }
+      
+      .nav-links a {
+        padding: 12px 16px;
+      }
+    }
+
     @media(max-width:980px) {
       .hero-panel {
         grid-template-columns: 1fr 1fr
@@ -231,22 +496,9 @@
     }
 
     @media(max-width:640px) {
-      header {
-        left: 12px;
-        right: 12px
-      }
-
-      nav {
-        display: none
-      }
-
       .hero-title {
         font-size: 28px
       }
-    }
-
-    .contact-link {
-      text-decoration: none;
     }
   </style>
 </head>
@@ -272,6 +524,11 @@
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
+
+    <!-- 移动端汉堡菜单 -->
+    <div class="mobile-menu-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
   </header>
 
   <main>
@@ -406,15 +663,7 @@
 
   <footer>© 2025 AYA CLOUD SAS. All rights reserved.</footer>
 
-  <!-- ============================
-       Scripts
-       - background particles
-       - holo earth (Three.js)
-       - anime text effects
-       ============================ -->
-  <!-- 首先在head中添加Three.js的全局脚本 -->
   <script>
-
     // 背景粒子效果 - 立即执行
     (function initParticles() {
       const canvas = document.getElementById('bg-canvas');
@@ -473,10 +722,11 @@
       draw();
     })();
 
-    // 地球效果 - 等待DOM加载完成后执行
+    // 地球效果和动画 - 等待DOM加载完成后执行
     document.addEventListener('DOMContentLoaded', function () {
       initEarth();
       initAnimations();
+      initMobileMenu();
     });
 
     function initEarth() {
@@ -487,12 +737,20 @@
       }
 
       try {
+        // 移动端性能优化
+        const isMobile = window.innerWidth <= 768;
         const renderer = new THREE.WebGLRenderer({
           canvas: canvas,
           alpha: true,
-          antialias: true
+          antialias: !isMobile // 移动端关闭抗锯齿提升性能
         });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        
+        // 移动端降低分辨率
+        if (isMobile) {
+          renderer.setPixelRatio(1);
+        } else {
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        }
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
@@ -506,8 +764,11 @@
         directionalLight.position.set(3, 2, 2);
         scene.add(directionalLight);
 
+        // 移动端简化几何体
+        const segments = isMobile ? 32 : 64;
+        const geometry = new THREE.SphereGeometry(1, segments, segments);
+        
         // 创建地球
-        const geometry = new THREE.SphereGeometry(1, 64, 64);
         const material = new THREE.MeshStandardMaterial({
           color: 0xffffff, // 改为白色，不覆盖纹理颜色
           metalness: 0.2,  // 降低金属度
@@ -605,23 +866,28 @@
           canvas.style.cursor = 'grab';
         }
 
+        // 移动端触摸交互优化
+        function onTouchStart(event) {
+          event.preventDefault();
+          if (event.touches.length === 1) {
+            onMouseDown(event.touches[0]);
+          }
+        }
+
+        function onTouchMove(event) {
+          event.preventDefault();
+          if (event.touches.length === 1) {
+            onMouseMove(event.touches[0]);
+          }
+        }
+
         canvas.addEventListener('mousedown', onMouseDown);
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', onMouseUp);
 
         // 触摸支持
-        canvas.addEventListener('touchstart', (e) => {
-          if (e.touches.length === 1) {
-            onMouseDown(e.touches[0]);
-          }
-        }, { passive: true });
-
-        canvas.addEventListener('touchmove', (e) => {
-          if (e.touches.length === 1) {
-            onMouseMove(e.touches[0]);
-          }
-        }, { passive: true });
-
+        canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', onTouchMove, { passive: false });
         canvas.addEventListener('touchend', onMouseUp);
 
         canvas.style.cursor = 'grab';
@@ -717,6 +983,39 @@
           duration: 700,
           offset: '-=400'
         });
+    }
+
+    function initMobileMenu() {
+      const mobileToggle = document.querySelector('.mobile-menu-toggle');
+      const nav = document.querySelector('nav');
+      
+      if (mobileToggle && nav) {
+        mobileToggle.addEventListener('click', function() {
+          nav.classList.toggle('active');
+          const icon = mobileToggle.querySelector('i');
+          if (nav.classList.contains('active')) {
+            icon.className = 'fas fa-times';
+          } else {
+            icon.className = 'fas fa-bars';
+          }
+        });
+        
+        // 点击导航链接后关闭菜单
+        document.querySelectorAll('.nav-links a').forEach(link => {
+          link.addEventListener('click', () => {
+            nav.classList.remove('active');
+            mobileToggle.querySelector('i').className = 'fas fa-bars';
+          });
+        });
+
+        // 点击页面其他区域关闭菜单
+        document.addEventListener('click', function(event) {
+          if (!event.target.closest('nav') && !event.target.closest('.mobile-menu-toggle')) {
+            nav.classList.remove('active');
+            mobileToggle.querySelector('i').className = 'fas fa-bars';
+          }
+        });
+      }
     }
   </script>
 </body>
