@@ -8,18 +8,15 @@
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/img/Ayacloud.png" type="image/png">
 
-  <!-- 预加载关键资源 -->
   <link rel="preload" href="img/ayacloud.png" as="image">
   <link rel="preload" href="img/earth.jpg" as="image" crossorigin="anonymous">
 
   <script defer src="https://cloud.umami.is/script.js" data-website-id="8c0782cb-78ad-4663-8927-63500ed19af6"></script>
 
-  <!-- Fonts + Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- 使用更新的Three.js版本 -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js"></script>
 
@@ -55,7 +52,7 @@
       overflow-x: hidden;
     }
 
-    /* background particles canvas */
+
     #bg-canvas {
       position: fixed;
       inset: 0;
@@ -123,7 +120,6 @@
       background: rgba(255, 255, 255, 0.1);
     }
 
-    /* 语言选择器样式 */
     .language-selector {
       position: relative;
       display: flex;
@@ -329,7 +325,6 @@
       box-shadow: 0 10px 25px rgba(0, 123, 255, 0.2);
     }
 
-    /* 汉堡菜单样式 */
     .mobile-menu-toggle {
       display: none;
       font-size: 20px;
@@ -346,10 +341,8 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
-    /* 移动端适配样式 */
     @media (max-width: 768px) {
 
-      /* 头部导航 */
       header {
         left: 12px;
         right: 12px;
@@ -374,12 +367,10 @@
         font-size: 10px;
       }
 
-      /* 汉堡菜单 */
       .mobile-menu-toggle {
         display: block;
       }
 
-      /* 桌面导航隐藏 */
       nav {
         position: fixed;
         top: 0;
@@ -423,7 +414,6 @@
         background: rgba(255, 255, 255, 0.1);
       }
 
-      /* 语言选择器移动端适配 */
       .language-selector {
         margin-top: 20px;
         width: 100%;
@@ -436,7 +426,6 @@
         left: 0;
       }
 
-      /* 遮罩层 */
       .nav-overlay {
         display: none;
         position: fixed;
@@ -453,7 +442,6 @@
         display: block;
       }
 
-      /* 英雄区域 */
       .hero {
         padding: 100px 16px 40px;
         min-height: 90vh;
@@ -465,15 +453,13 @@
         gap: 20px;
       }
 
-      /* 确保地球框换行到第二行 */
+
       .holo {
         order: 2;
-        /* 强制地球框在第二行 */
       }
 
       .hero-panel>div:first-child {
         order: 1;
-        /* 文本内容在第一行 */
       }
 
       .hero-title {
@@ -499,7 +485,6 @@
         min-height: 44px;
       }
 
-      /* 全息地球容器 */
       .holo {
         order: -1;
         padding: 10px;
@@ -519,7 +504,6 @@
         padding: 6px 10px;
       }
 
-      /* 内容区域 */
       section {
         padding: 50px 16px;
       }
@@ -530,7 +514,6 @@
         margin-bottom: 24px;
       }
 
-      /* 关于我们 */
       #about>div {
         flex-direction: column;
         gap: 20px;
@@ -540,7 +523,6 @@
         min-width: 100%;
       }
 
-      /* 服务网格 */
       .services-grid {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -551,7 +533,6 @@
         text-align: center;
       }
 
-      /* 作品集网格 */
       .portfolio-grid {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -568,7 +549,6 @@
         font-size: 13px;
       }
 
-      /* 联系网格 */
       .contact-icon-grid {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -587,14 +567,12 @@
         margin-top: 8px;
       }
 
-      /* 页脚 */
       footer {
         padding: 20px 16px;
         font-size: 12px;
       }
     }
 
-    /* 小屏手机适配 */
     @media (max-width: 480px) {
       .hero-title {
         font-size: 26px;
@@ -633,7 +611,6 @@
       }
     }
 
-    /* 横屏适配 */
     @media (max-height: 500px) and (orientation: landscape) {
       .hero {
         min-height: 120vh;
@@ -646,11 +623,10 @@
 
       .holo {
         order: unset;
-        /* 恢复默认顺序 */
       }
     }
 
-    /* 触摸设备优化 */
+
     @media (hover: none) and (pointer: coarse) {
       .cta {
         min-height: 44px;
@@ -660,7 +636,7 @@
         padding: 16px 20px;
       }
 
-      /* 移动端语言选择器优化 */
+
       .language-selector .lang-dropdown {
         position: static;
         opacity: 1;
@@ -683,7 +659,6 @@
 
       .holo {
         order: 2;
-        /* 在中等屏幕也保持地球在右侧 */
       }
 
       .hero-panel>div:first-child {
@@ -720,7 +695,7 @@
         <li><a href="#contact" data-i18n="contact">Contact</a></li>
       </ul>
 
-      <!-- 语言选择器 -->
+
       <div class="language-selector">
         <div class="current-lang">
           <div class="lang-flag" id="current-flag"></div>
@@ -752,12 +727,10 @@
       </div>
     </nav>
 
-    <!-- 移动端汉堡菜单 -->
     <div class="mobile-menu-toggle">
       <i class="fas fa-bars"></i>
     </div>
 
-    <!-- 导航遮罩层 -->
     <div class="nav-overlay"></div>
   </header>
 
@@ -789,7 +762,7 @@
               Realtime</div>
             <div
               style="padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);font-size:13px">
-              Vector Tiles</div>
+              AI</div>
             <div
               style="padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);font-size:13px">
               3D Tiles</div>
@@ -927,7 +900,7 @@
   <footer data-i18n="footer">© 2025 AYA CLOUD SAS. All rights reserved.</footer>
 
   <script>
-    // 背景粒子效果 - 立即执行
+
     (function initParticles() {
       const canvas = document.getElementById('bg-canvas');
       if (!canvas) return;
@@ -985,7 +958,7 @@
       draw();
     })();
 
-    // 地球效果和动画 - 等待DOM加载完成后执行
+ 
     document.addEventListener('DOMContentLoaded', function () {
       initEarth();
       initAnimations();
@@ -1001,15 +974,14 @@
       }
 
       try {
-        // 移动端性能优化
         const isMobile = window.innerWidth <= 768;
         const renderer = new THREE.WebGLRenderer({
           canvas: canvas,
           alpha: true,
-          antialias: !isMobile // 移动端关闭抗锯齿提升性能
+          antialias: !isMobile 
         });
 
-        // 移动端降低分辨率
+
         if (isMobile) {
           renderer.setPixelRatio(1);
         } else {
@@ -1020,7 +992,7 @@
         const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
         camera.position.set(0, 0, 2.6);
 
-        // 灯光设置
+
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
         scene.add(ambientLight);
 
@@ -1028,23 +1000,23 @@
         directionalLight.position.set(3, 2, 2);
         scene.add(directionalLight);
 
-        // 移动端简化几何体
+  
         const segments = isMobile ? 32 : 64;
         const geometry = new THREE.SphereGeometry(1, segments, segments);
 
-        // 创建地球
+
         const material = new THREE.MeshStandardMaterial({
-          color: 0xffffff, // 改为白色，不覆盖纹理颜色
-          metalness: 0.2,  // 降低金属度
-          roughness: 0.7,  // 调整粗糙度
-          emissive: 0x000000, // 移除自发光或设为黑色
+          color: 0xffffff, 
+          metalness: 0.2,  
+          roughness: 0.7,  
+          emissive: 0x000000, 
           emissiveIntensity: 0
         });
 
         const earth = new THREE.Mesh(geometry, material);
         scene.add(earth);
 
-        // 尝试加载纹理
+   
         const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
           'img/earth.jpg',
@@ -1055,7 +1027,7 @@
           undefined,
           (error) => {
             console.log('Earth texture not available, using default material');
-            // 添加线框效果
+    
             const wireframeGeometry = new THREE.SphereGeometry(1, 32, 32);
             const wireframeMaterial = new THREE.MeshBasicMaterial({
               color: 0x00b7ff,
@@ -1069,7 +1041,7 @@
           }
         );
 
-        // 大气效果
+    
         const atmosphereMaterial = new THREE.SpriteMaterial({
           color: 0x00b7ff,
           opacity: 0.03,
@@ -1079,10 +1051,10 @@
         atmosphere.scale.set(3.8, 3.8, 1);
         scene.add(atmosphere);
 
-        // 添加经纬线
+
         addGridLines(scene);
 
-        // 调整尺寸
+     
         function handleResize() {
           const rect = canvas.getBoundingClientRect();
           const width = Math.max(1, Math.floor(rect.width));
@@ -1098,7 +1070,7 @@
         window.addEventListener('resize', handleResize);
         handleResize();
 
-        // 交互控制
+     
         let targetRotationY = 0;
         let targetRotationX = 0;
         let isDragging = false;
@@ -1130,7 +1102,7 @@
           canvas.style.cursor = 'grab';
         }
 
-        // 移动端触摸交互优化
+     
         function onTouchStart(event) {
           event.preventDefault();
           if (event.touches.length === 1) {
@@ -1149,14 +1121,14 @@
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', onMouseUp);
 
-        // 触摸支持
+     
         canvas.addEventListener('touchstart', onTouchStart, { passive: false });
         canvas.addEventListener('touchmove', onTouchMove, { passive: false });
         canvas.addEventListener('touchend', onMouseUp);
 
         canvas.style.cursor = 'grab';
 
-        // 动画循环
+     
         const autoRotationSpeed = 0.0022;
 
         function animate() {
@@ -1164,12 +1136,12 @@
 
           handleResize();
 
-          // 自动旋转 + 平滑跟随鼠标
+
           earth.rotation.y += autoRotationSpeed;
           earth.rotation.y += (targetRotationY - earth.rotation.y) * 0.06;
           earth.rotation.x += (targetRotationX - earth.rotation.x) * 0.06;
 
-          // 限制X轴旋转角度
+ 
           earth.rotation.x = Math.max(-0.8, Math.min(0.8, earth.rotation.x));
 
           renderer.render(scene, camera);
@@ -1189,7 +1161,7 @@
         opacity: 0.06
       });
 
-      // 纬度线
+
       for (let lat = -75; lat <= 75; lat += 30) {
         const phi = (lat * Math.PI) / 180;
         const radius = Math.cos(phi);
@@ -1209,7 +1181,7 @@
         scene.add(new THREE.Line(geometry, lineMaterial));
       }
 
-      // 经度线
+ 
       for (let lon = 0; lon < 360; lon += 30) {
         const theta = (lon * Math.PI) / 180;
         const points = [];
@@ -1230,7 +1202,6 @@
     }
 
     function initAnimations() {
-      // 文本动画
       anime.timeline({ loop: false })
         .add({
           targets: '.hero-title',
@@ -1255,37 +1226,32 @@
       const navOverlay = document.querySelector('.nav-overlay');
 
       if (mobileToggle && nav && navOverlay) {
-        // 切换菜单显示/隐藏
         function toggleMenu() {
           nav.classList.toggle('active');
           navOverlay.classList.toggle('active');
           const icon = mobileToggle.querySelector('i');
           if (nav.classList.contains('active')) {
             icon.className = 'fas fa-times';
-            document.body.style.overflow = 'hidden'; // 防止背景滚动
+            document.body.style.overflow = 'hidden'; 
           } else {
             icon.className = 'fas fa-bars';
-            document.body.style.overflow = ''; // 恢复滚动
+            document.body.style.overflow = ''; 
           }
         }
 
-        // 点击汉堡菜单
         mobileToggle.addEventListener('click', toggleMenu);
 
-        // 点击遮罩层关闭菜单
         navOverlay.addEventListener('click', toggleMenu);
 
-        // 点击导航链接后关闭菜单
         document.querySelectorAll('.nav-links a').forEach(link => {
           link.addEventListener('click', () => {
             nav.classList.remove('active');
             navOverlay.classList.remove('active');
             mobileToggle.querySelector('i').className = 'fas fa-bars';
-            document.body.style.overflow = ''; // 恢复滚动
+            document.body.style.overflow = ''; 
           });
         });
 
-        // ESC键关闭菜单
         document.addEventListener('keydown', function (event) {
           if (event.key === 'Escape' && nav.classList.contains('active')) {
             toggleMenu();
@@ -1294,12 +1260,10 @@
       }
     }
 
-    // 多语言支持
     function initLanguageSelector() {
       let currentLang = 'en';
       let translations = {};
 
-      // 默认翻译数据
       const defaultTranslations = {
         en: {
           home: "Home",
@@ -1458,10 +1422,8 @@
         }
       };
 
-      // 加载语言文件
       function loadTranslations(lang) {
         try {
-          // 使用默认翻译数据
           translations = defaultTranslations[lang] || defaultTranslations['en'];
           applyTranslations();
         } catch (error) {
@@ -1471,7 +1433,6 @@
         }
       }
 
-      // 应用翻译
       function applyTranslations() {
         document.querySelectorAll('[data-i18n]').forEach(element => {
           const key = element.getAttribute('data-i18n');
@@ -1480,10 +1441,8 @@
           }
         });
 
-        // 更新当前语言显示
         document.getElementById('current-lang').textContent = getLangCode(currentLang);
 
-        // 更新语言选项的激活状态
         document.querySelectorAll('.lang-option').forEach(option => {
           if (option.getAttribute('data-lang') === currentLang) {
             option.classList.add('active');
@@ -1493,7 +1452,6 @@
         });
       }
 
-      // 获取语言代码
       function getLangCode(lang) {
         const codes = {
           en: 'EN',
@@ -1505,41 +1463,35 @@
         return codes[lang] || 'EN';
       }
 
-      // 切换语言
       function switchLanguage(lang) {
         currentLang = lang;
         loadTranslations(lang);
         localStorage.setItem('preferredLanguage', lang);
       }
 
-      // 语言选择器事件
       document.querySelectorAll('.lang-option').forEach(option => {
         option.addEventListener('click', (e) => {
           e.preventDefault();
           const lang = option.getAttribute('data-lang');
           switchLanguage(lang);
 
-          // 移动端点击后关闭下拉菜单
           if (window.innerWidth <= 768) {
             document.querySelector('.language-selector').classList.remove('active');
           }
         });
       });
 
-      // 移动端语言选择器点击事件
       if (window.innerWidth <= 768) {
         document.querySelector('.language-selector').addEventListener('click', (e) => {
           e.stopPropagation();
           document.querySelector('.language-selector').classList.toggle('active');
         });
 
-        // 点击其他地方关闭语言选择器
         document.addEventListener('click', () => {
           document.querySelector('.language-selector').classList.remove('active');
         });
       }
 
-      // 初始化语言
       const savedLang = localStorage.getItem('preferredLanguage') || 'en';
       switchLanguage(savedLang);
     }
