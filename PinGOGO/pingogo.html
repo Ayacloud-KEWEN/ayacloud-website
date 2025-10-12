@@ -224,7 +224,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 20px;
     }
 
     .cta-fixed-bar .container {
@@ -234,9 +233,7 @@
       gap: 20px;
       padding: 0 20px;
       width: 100%;
-      /* 确保容器宽度正确 */
       max-width: 1100px;
-      /* 与主体内容容器保持一致 */
     }
 
     .cta-text-prompt {
@@ -245,32 +242,33 @@
       margin: 0;
     }
 
-    /* 下载按钮样式 */
+    /* 包含按钮和二维码的容器 */
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      /* 按钮和二维码之间的间距 */
+    }
+
+    /* 下载按钮样式 (保持不变) */
     .cta-button {
       display: inline-flex;
-      /* 使图标和文本并排 */
       align-items: center;
-      /* 垂直居中 */
       background: #fff;
       color: #583d72;
       padding: 10px 20px;
       text-decoration: none;
       border-radius: 8px;
-      /* 更大的圆角 */
       font-weight: bold;
       border: 2px solid #fff;
-      /* 边框 */
       transition: all 0.2s ease-in-out;
-      /* 平滑过渡效果 */
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      /* 轻微阴影 */
     }
 
     .cta-button:hover {
       background-color: #f0f0f0;
       border-color: #7e57c2;
       transform: translateY(-2px);
-      /* 悬停时向上浮动 */
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
@@ -278,9 +276,31 @@
       width: 24px;
       height: 24px;
       margin-right: 10px;
-      /* 图标和文本之间的间距 */
       fill: #583d72;
-      /* 如果是SVG，可以改变颜色 */
+    }
+
+    /* 二维码容器及图片样式 */
+    .qr-code-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .qr-code {
+      width: 50px;
+      /* 调整二维码大小 */
+      height: 50px;
+      background-color: #fff;
+      border-radius: 4px;
+      padding: 5px;
+      /* 为二维码添加一些内边距 */
+    }
+
+    .qr-label {
+      font-size: 0.8rem;
+      color: #fff;
+      margin-top: 5px;
+      /* 调整标签与二维码之间的间距 */
     }
 
     /* 手机端响应式样式调整 */
@@ -292,7 +312,16 @@
 
       .cta-text-prompt {
         display: none;
-        /* 隐藏提示文本以节省空间 */
+      }
+
+      .cta-actions {
+        flex-direction: column;
+        /* 在小屏幕上，按钮和二维码垂直排列 */
+      }
+
+      .qr-code-wrapper {
+        display: none;
+        /* 在手机上可以隐藏二维码，因为用户无法扫描自己手机上的码 */
       }
     }
   </style>
@@ -389,10 +418,16 @@
   <div id="fixed-download-bar" class="cta-fixed-bar">
     <div class="container">
       <span data-i18n="cta_title" class="cta-text-prompt">Ready for Your Next Adventure?</span>
-      <a href="https://apps.apple.com/us/app/pingogo/id6752650066" class="cta-button">
-        <img src="img/app-store-icon.png" alt="App Store Icon" class="app-store-icon">
-        <span data-i18n="cta_button">Download on the App Store</span>
-      </a>
+      <div class="cta-actions">
+        <a href="#" class="cta-button">
+          <img src="img/app-store-icon.png" alt="App Store Icon" class="app-store-icon">
+          <span data-i18n="cta_button">Download on the App Store</span>
+        </a>
+        <div class="qr-code-wrapper">
+          <img src="img/QR.gif" alt="PinGOGO QR Code" class="qr-code">
+          <span class="qr-label">Scan to Download</span>
+        </div>
+      </div>
     </div>
   </div>
 
