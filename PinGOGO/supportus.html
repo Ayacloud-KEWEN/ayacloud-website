@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support the Developer | AYA Studio</title>
+  <!-- 引入科技感字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;700&display=swap"
+    rel="stylesheet">
+  <!-- 引入 Font Awesome 用于图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* 科技主题变量 */
+    :root {
+      --bg-dark: #0d1226;
+      --neon-1: #00b7ff; /* 亮蓝 */
+      --neon-2: #33e1ff; /* 浅青色 */
+      --text-light: #e5f3ff;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --main-accent: #7e57c2; /* 紫色作为主要按钮色 */
+    }
+
+    body {
+      font-family: 'Exo 2', Arial, sans-serif;
+      background: var(--bg-dark);
+      /* 添加渐变背景以增强科技感 */
+      background-image:
+        radial-gradient(800px 600px at 15% 10%, rgba(0, 123, 255, 0.1), transparent),
+        radial-gradient(1200px 800px at 85% 90%, rgba(0, 183, 255, 0.08), transparent);
+      color: var(--text-light);
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: transparent;
+      padding: 80px 20px 40px;
+      position: relative; /* 确保子元素的绝对定位基于 header */
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      font-size: 2.5rem;
+      color: var(--neon-1);
+      text-shadow: 0 0 8px rgba(0, 183, 255, 0.6);
+      text-transform: uppercase;
+    }
+    
+    header p {
+        color: rgba(229, 243, 255, 0.7);
+        font-size: 1.1rem;
+        margin-top: 10px;
+    }
+
+    /* 新增：右上角占位图标/Logo样式 */
+    .placeholder-icon {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        width: 50px; /* 设置图片尺寸 */
+        height: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        /* 为图片添加 Neon 效果 */
+        border-radius: 50%; /* 如果是圆形Logo */
+        box-shadow: 0 0 5px var(--neon-2), 0 0 15px var(--neon-1);
+        border: 2px solid var(--neon-2);
+        overflow: hidden; /* 确保图片在边框内 */
+        display: block; /* 确保是块级元素以便应用边框和阴影 */
+    }
+    
+    .placeholder-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .placeholder-icon:hover {
+        /* 悬停时增强光晕和缩放效果 */
+        box-shadow: 0 0 10px white, 0 0 20px var(--neon-1), 0 0 30px var(--neon-2);
+        transform: scale(1.1);
+        border-color: white;
+    }
+    
+    main {
+      max-width: 650px;
+      margin: 40px auto;
+      padding: 30px 20px;
+      background: var(--card-bg); /* 半透明卡片背景 */
+      backdrop-filter: blur(5px);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 183, 255, 0.1);
+      border: 1px solid rgba(0, 183, 255, 0.2);
+      flex-grow: 1;
+    }
+
+    p {
+      line-height: 1.8;
+      font-size: 1.05rem;
+      color: rgba(229, 243, 255, 0.9);
+      margin-bottom: 20px;
+    }
+
+    .btn-container {
+      margin: 30px 0 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 25px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: white;
+      font-weight: 700;
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      border: none;
+      position: relative;
+    }
+    
+    .btn i {
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+
+    /* 通用 Neon 按钮样式 */
+    .btn-neon {
+        background: linear-gradient(90deg, var(--neon-1), var(--neon-2));
+        color: var(--bg-dark); /* 科技感的深色文字 */
+        box-shadow: 0 0 10px var(--neon-1);
+    }
+
+    .btn-neon:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 20px var(--neon-1), 0 0 30px var(--neon-2);
+        background: linear-gradient(90deg, var(--neon-2), var(--neon-1));
+    }
+    
+    /* PayPal/Stripe/其他按钮的颜色调整 */
+    /* 由于我们使用通用的科技霓虹风格，这里只需要为图标/文字添加默认的深色背景 */
+    
+    .coffee, .paypal, .kofi, .stripe {
+        background: var(--main-accent);
+        color: white;
+        border: 2px solid var(--main-accent);
+        box-shadow: 0 0 10px var(--main-accent);
+    }
+    
+    .coffee:hover, .paypal:hover, .kofi:hover, .stripe:hover {
+        transform: translateY(-3px);
+        background: var(--main-accent);
+        box-shadow: 
+            0 0 15px var(--main-accent), 
+            0 0 25px var(--main-accent);
+    }
+    
+    /* 底部提示文本 */
+    .note-text {
+      font-size: 0.9rem;
+      color: rgba(229, 243, 255, 0.6);
+      max-width: 500px;
+      margin: 0 auto 30px auto;
+      padding: 10px;
+      border-top: 1px dashed rgba(229, 243, 255, 0.1);
+    }
+
+    footer {
+      font-size: 0.85rem;
+      color: rgba(229, 243, 255, 0.4);
+      padding: 20px 0;
+      margin-top: auto; /* 确保 footer 位于底部 */
+    }
+    
+    @media (max-width: 600px) {
+        header {
+            padding: 50px 15px 30px;
+        }
+        h1 {
+            font-size: 2rem;
+        }
+        .btn {
+            padding: 15px 20px;
+            font-size: 0.9rem;
+        }
+        /* 手机上调整图标位置 */
+        .placeholder-icon {
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+        }
+    }
+  </style>
+</head>
+<body>
+  <header>
+
+    <a href="pingogo.html" class="placeholder-icon" title="PinGOGO">
+        <img src="logo 1024v2.png" alt="User Logo">
+    </a>
+    
+    <h1>Support the Developer</h1>
+    <p>Thank you for using our app 🙏 Your support drives innovation!</p>
+  </header>
+
+  <main>
+    <p>
+      This page is for users who wish to voluntarily support the ongoing development of our project.  
+      Your contribution helps keep the app independent, ad-free, and improving over time.
+    </p>
+
+    <div class="btn-container">
+      <a class="btn btn-neon stripe" href="https://buy.stripe.com/cNiaEX1zPdVe4Ly9uEco000" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-stripe-s"></i> Support PinGOGO
+      </a>
+    </div>
+
+    <p class="note-text">
+      This is a voluntary donation page.  
+      Contributions made here do not unlock any features or content in the app.
+    </p>
+  </main>
+
+  <footer>
+    © 2025 AYA CLOUD SAS · All rights reserved
+  </footer>
+</body>
+</html>

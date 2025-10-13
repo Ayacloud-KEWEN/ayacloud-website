@@ -29,7 +29,7 @@
       text-align: center;
       border-bottom: 1px solid #ddd;
       position: relative;
-      /* <-- 必须，供 language-selector 绝对定位 */
+      /* <-- 必须，供 language-selector 和 header-buttons 绝对定位 */
     }
 
     header .app-logo {
@@ -197,6 +197,45 @@
       border: 1px solid #ddd;
       background: white;
     }
+    
+    /* === 新增按钮样式和布局 === */
+
+    .header-buttons {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        display: flex;
+        gap: 10px;
+    }
+
+    .tech-button {
+        display: inline-block;
+        padding: 8px 15px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        color: #583d72; /* 按钮文字颜色 */
+        background-color: #fff; /* 按钮背景色 */
+        border: 2px solid #583d72; /* 边框颜色 */
+        border-radius: 8px;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 0 5px rgba(88, 61, 114, 0.5); /* 初始淡紫色光晕 */
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .tech-button:hover {
+        /* 悬停时的科技感霓虹效果 */
+        color: #fff; /* 悬停时文字变为白色 */
+        background-color: #7e57c2; /* 悬停时背景变为深紫色 */
+        border-color: #c0a8e6; /* 悬停时边框变亮 */
+        box-shadow: 
+            0 0 10px #a289cc, /* 强光晕 */
+            0 0 20px #a289cc, /* 稍远光晕 */
+            0 0 30px #7e57c2; /* 最远光晕 */
+        transform: translateY(-2px);
+    }
 
     /* 响应式小修 */
     @media (max-width: 600px) {
@@ -207,8 +246,26 @@
       .hero {
         padding: 3.5rem 0;
       }
+      
+      /* 手机上将按钮移到顶部中央或隐藏 */
+      .header-buttons {
+          position: static;
+          justify-content: center;
+          margin-bottom: 10px;
+      }
+      
+      header .container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+      
+      .language-selector {
+          top: 10px;
+          right: 10px;
+      }
     }
-
+    
     /* 固定底部栏样式 */
     .cta-fixed-bar {
       position: fixed;
@@ -331,6 +388,12 @@
 
   <header>
     <div class="container">
+      <!-- 新增：帮助和支持我们按钮 -->
+      <div class="header-buttons">
+          <a href="help.html" target="_blank" rel="noopener noreferrer" class="tech-button" data-i18n="button_help">帮助</a>
+          <a href="supportus.html" target="_blank" rel="noopener noreferrer" class="tech-button" data-i18n="button_support">支持我们</a>
+      </div>
+      
       <!-- 语言选择下拉菜单 -->
       <div class="language-selector" aria-hidden="false">
         <label for="language-switcher" class="sr-only" style="display:none">Language</label>
@@ -439,6 +502,12 @@
   </footer>
 
   <script>
+    // 在这里添加按钮的默认文本，方便加载多语言文件失败时显示
+    const defaultButtonTexts = {
+        button_help: 'HELP',
+        button_support: 'SUPPORT US'
+    };
+
     async function loadLanguage(lang) {
       try {
         const res = await fetch('langpingo.json', { cache: "no-store" });
@@ -450,8 +519,10 @@
           const key = el.getAttribute('data-i18n');
           const value = translations[lang] && translations[lang][key];
           if (value !== undefined) {
-            // some elements like inputs would need value, for now use textContent
             el.textContent = value;
+          } else if (defaultButtonTexts[key]) {
+              // Fallback for new buttons if translation file is missing keys
+              el.textContent = defaultButtonTexts[key];
           }
         });
 
@@ -479,6 +550,14 @@
       const saved = localStorage.getItem('selectedLang') || 'en';
       switcher.value = saved;
       loadLanguage(saved);
+      
+      // 首次加载时，为按钮设置默认文本，直到多语言文件加载完成
+      document.querySelectorAll('.tech-button').forEach(btn => {
+          const key = btn.getAttribute('data-i18n');
+          if (defaultButtonTexts[key] && !btn.textContent) {
+              btn.textContent = defaultButtonTexts[key];
+          }
+      });
     });
   </script>
 </body>

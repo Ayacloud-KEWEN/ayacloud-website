@@ -24,7 +24,9 @@
     "cta_title": "Ready for Your Next Adventure?",
     "cta_text": "Download PinGOGO today and turn your travels into timeless stories.",
     "cta_button": "Download on the App Store",
-    "footer_text": "© 2025 AYA CLOUD SAS. All Rights Reserved."
+    "footer_text": "© 2025 AYA CLOUD SAS. All Rights Reserved.",
+    "button_help": "HELP",
+    "button_support": "SUPPORT US"
   },
   "fr": {
     "title": "PinGOGO : Votre compagnon de voyage ultime",
@@ -51,7 +53,9 @@
     "cta_title": "Prêt pour votre prochaine aventure ?",
     "cta_text": "Téléchargez PinGOGO et transformez vos voyages en histoires intemporelles.",
     "cta_button": "Télécharger sur l'App Store",
-    "footer_text": "© 2025 AYA CLOUD SAS. Tous droits réservés."
+    "footer_text": "© 2025 AYA CLOUD SAS. Tous droits réservés.",
+    "button_help": "AIDE",
+    "button_support": "SOUTENEZ-NOUS"
   },
   "zh": {
     "title": "PinGOGO：你的终极旅行伴侣",
@@ -78,8 +82,8 @@
     "cta_title": "准备好下一次冒险了吗？",
     "cta_text": "立即下载 PinGOGO，让旅行成为难忘的故事。",
     "cta_button": "在 App Store 下载",
-    "footer_text": "© 2025 AYA CLOUD SAS. 保留所有权利。"
+    "footer_text": "© 2025 AYA CLOUD SAS. 保留所有权利。",
+    "button_help": "帮助",
+    "button_support": "支持我们"
   }
 }
-
-
