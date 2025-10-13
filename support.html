@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-translation-key="title">Support Us - AYA CLOUD</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-  <script defer src="https://cloud.umami.is/script.js" data-website-id="8c0782cb-78ad-4663-8927-63500ed19af6"></script>
+  <script src="https://cloud.umami.is/script.js" data-website-id="8c0782cb-78ad-4663-8927-63500ed19af6"></script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -543,14 +543,15 @@
           <h3 data-i18n="projectTitle">Crowdfund Our Next Project</h3>
           <p data-i18n="projectDescription">Be a part of our next big thing! We are currently raising funds for MapWeb Porject. Your support will directly contribute to its development and success.</p>
           <br>
-          <a href="#" class="btn" target="_blank" rel="noopener noreferrer" data-i18n="projectButton">Contribute via Stripe</a>
+          <a href="#" class="btn" target="_blank" rel="noopener noreferrer" data-i18n="projectButton">Available Soon</a>
         </div>
 
         <div class="service-card">
-          <h3 data-i18n="donationTitle">Make a Donation</h3>
+          <h3 data-i18n="donationTitle">Make a General Donation</h3>
           <p data-i18n="donationDescription">If you appreciate our work and want to support our ongoing efforts, a general donation helps us cover operational costs and continue to innovate. Thank you for your generosity!</p>
           <br>
-          <a href="#" class="btn" target="_blank" rel="noopener noreferrer" data-i18n="donationButton">Donate with PayPal</a>
+
+          <a id="stripe-donation-link" href="YOUR_BASE_STRIPE_PAYMENT_LINK" class="btn" target="_blank" rel="noopener noreferrer" data-i18n="donationButton">Make a Donation</a>
         </div>
 
       </div>
@@ -563,6 +564,16 @@
 
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
+
+    const BASE_STRIPE_LINK = "https://buy.stripe.com/cNiaEX1zPdVe4Ly9uEco000"; 
+    
+    const STRIPE_LOCALES = {
+      en: 'en', 
+      fr: 'fr', 
+      zh: 'zh'  
+    };
+    // ------------------------
+
     const translations = {
       en: {
         title: "Support Us - AYA CLOUD",
@@ -577,10 +588,10 @@
         sectionSubtitle: "Choose how you'd like to contribute. Whether you're funding a specific project or making a general donation, every bit of support is invaluable to us.",
         projectTitle: "Crowdfund Our Next Project",
         projectDescription: "Be a part of our next big thing! We are currently raising funds for MapWeb Porject. Your support will directly contribute to its development and success.",
-        projectButton: "Contribute via Stripe",
-        donationTitle: "Make a Donation",
+        projectButton: "Available Soon",
+        donationTitle: "Make a General Donation", 
         donationDescription: "If you appreciate our work and want to support our ongoing efforts, a general donation helps us cover operational costs and continue to innovate. Thank you for your generosity!",
-        donationButton: "Donate with PayPal",
+        donationButton: "Make a Donation",
         footer: "© 2025 AYA CLOUD. All rights reserved."
       },
       fr: {
@@ -596,10 +607,10 @@
         sectionSubtitle: "Choisissez comment vous souhaitez contribuer. Que vous financiez un projet spécifique ou que vous fassiez un don général, tout soutien nous est inestimable.",
         projectTitle: "Financer Notre Prochain Projet",
         projectDescription: "Faites partie de notre prochaine grande aventure ! Nous levons actuellement des fonds pour le projet MapWeb. Votre soutien contribuera directement à son développement et à son succès.",
-        projectButton: "Contribuer via Stripe",
-        donationTitle: "Faire un Don",
+        projectButton: "Bientôt disponible",
+        donationTitle: "Faire un Don Général",
         donationDescription: "Si vous appréciez notre travail et souhaitez soutenir nos efforts continus, un don général nous aide à couvrir les coûts opérationnels et à continuer d'innover. Merci pour votre générosité !",
-        donationButton: "Donner avec PayPal",
+        donationButton: "Faire un Don",
         footer: "© 2025 AYA CLOUD. Tous droits réservés."
       },
       zh: {
@@ -615,10 +626,10 @@
         sectionSubtitle: "请选择您希望如何贡献。无论您是为特定项目提供资金，还是进行一般捐赠，您的每一份支持对我们都弥足珍贵。",
         projectTitle: "众筹我们的下一个项目",
         projectDescription: "成为我们下一个大项目的一部分！我们目前正在为 MapWeb 项目筹集资金。您的支持将直接促进其开发和成功。",
-        projectButton: "通过 Stripe 贡献",
-        donationTitle: "进行捐赠",
+        projectButton: "即将推出",
+        donationTitle: "进行一般捐赠", 
         donationDescription: "如果您欣赏我们的工作并希望支持我们正在进行的努力，一般性捐款有助于我们支付运营成本并继续创新。感谢您的慷慨！",
-        donationButton: "使用 PayPal 捐赠",
+        donationButton: "进行捐赠",
         footer: "© 2025 AYA CLOUD. 版权所有。"
       }
     };
@@ -630,6 +641,22 @@
       fr: 'linear-gradient(to right, #002395, #FFFFFF, #ED2939)',
       zh: 'linear-gradient(to bottom, #DE2910, #FFDE00)'
     };
+
+    function updateStripeLink(lang) {
+        const donationLink = document.getElementById('stripe-donation-link');
+        if (donationLink && BASE_STRIPE_LINK.includes('http')) {
+            const localeCode = STRIPE_LOCALES[lang] || STRIPE_LOCALES['en'];
+            
+            // 构造带 locale 参数的链接
+            let newLink = BASE_STRIPE_LINK;
+            const url = new URL(newLink);
+            url.searchParams.set('locale', localeCode);
+            donationLink.href = url.toString();
+        } else if (donationLink) {
+            // 如果链接未设置，则不添加 locale 参数，保持占位符
+            donationLink.href = BASE_STRIPE_LINK;
+        }
+    }
 
     function setLanguage(lang) {
       currentLanguage = lang;
@@ -643,13 +670,16 @@
           el.textContent = t[key];
         }
       });
+      
       updateLangSelectorDisplay(lang);
+      
+      // 重点：在设置完文本后，更新 Stripe 链接的 locale
+      updateStripeLink(lang);
     }
 
     function updateLangSelectorDisplay(lang) {
       const currentFlagDiv = document.getElementById('current-flag');
       const currentLangSpan = document.getElementById('current-lang');
-      const langDropdown = document.querySelector('.lang-dropdown');
       
       if (currentFlagDiv) {
         currentFlagDiv.style.background = flags[lang] || flags['en'];
@@ -709,9 +739,8 @@
     
     function initLanguageSelector() {
       const langSelector = document.querySelector('.language-selector');
-      const langDropdown = document.querySelector('.lang-dropdown');
       
-      if (langSelector && langDropdown) {
+      if (langSelector) {
         langSelector.addEventListener('click', (e) => {
           e.stopPropagation();
           langSelector.classList.toggle('active');
@@ -726,6 +755,7 @@
             e.preventDefault();
             const lang = option.getAttribute('data-lang');
             setLanguage(lang);
+            localStorage.setItem('preferredLanguage', lang); // Save preferred language
             langSelector.classList.remove('active');
           });
         });
