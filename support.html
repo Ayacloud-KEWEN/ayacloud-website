@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,15 +54,17 @@
       height: 100%;
       z-index: -1;
     }
-    
-    h1, h2, h3 {
-        font-family: 'Orbitron', sans-serif;
-        font-weight: 700;
-        margin: 0;
-        text-transform: uppercase;
-        color: var(--neon-1);
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      margin: 0;
+      text-transform: uppercase;
+      color: var(--neon-1);
     }
-    
+
     /* Header & Nav from index.html */
     header {
       position: fixed;
@@ -122,7 +125,7 @@
     .nav-links a:hover {
       background: rgba(255, 255, 255, 0.1);
     }
-    
+
     .language-selector {
       position: relative;
       display: flex;
@@ -218,7 +221,7 @@
     .mobile-menu-toggle:hover {
       background: rgba(255, 255, 255, 0.2);
     }
-    
+
     .nav-overlay {
       display: none;
       position: fixed;
@@ -234,7 +237,7 @@
     .nav-overlay.active {
       display: block;
     }
-    
+
     @media (max-width: 768px) {
       header {
         left: 12px;
@@ -283,17 +286,17 @@
       nav.active {
         left: 0;
       }
-      
+
       .nav-links {
         flex-direction: column;
         gap: 0;
         width: 100%;
       }
-      
+
       .nav-links li {
         width: 100%;
       }
-      
+
       .nav-links a {
         padding: 16px 20px;
         display: block;
@@ -302,30 +305,30 @@
         margin-bottom: 8px;
         background: rgba(255, 255, 255, 0.05);
       }
-      
+
       .nav-links a:hover {
         background: rgba(255, 255, 255, 0.1);
       }
-      
+
       .language-selector {
         margin-top: 20px;
         width: 100%;
         justify-content: center;
       }
-      
+
       .language-selector .lang-dropdown {
         width: 100%;
         right: auto;
         left: 0;
       }
-      
+
       .language-selector .current-lang {
         width: 100%;
       }
     }
-    
+
     /* End of Header & Nav from index.html */
-    
+
     .hero {
       min-height: 100vh;
       display: flex;
@@ -336,7 +339,7 @@
       overflow: hidden;
       padding: 2rem;
     }
-    
+
     .hero-content {
       position: relative;
       z-index: 2;
@@ -345,22 +348,22 @@
       border-radius: 12px;
       border: 1px solid rgba(0, 183, 255, 0.2);
     }
-    
+
     .hero-content h1 {
-        font-size: 4rem;
-        letter-spacing: 5px;
-        margin-bottom: 1rem;
-        text-shadow: 0 0 10px var(--neon-1), 0 0 20px var(--neon-1);
-        opacity: 0;
+      font-size: 4rem;
+      letter-spacing: 5px;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px var(--neon-1), 0 0 20px var(--neon-1);
+      opacity: 0;
     }
-    
+
     .hero-content p {
-        font-size: 1.5rem;
-        max-width: 600px;
-        margin-top: 1rem;
-        opacity: 0;
+      font-size: 1.5rem;
+      max-width: 600px;
+      margin-top: 1rem;
+      opacity: 0;
     }
-    
+
     .section {
       padding: 4rem 2rem;
       display: flex;
@@ -368,11 +371,12 @@
       align-items: center;
       gap: 2rem;
     }
-    
-    .section h2, .section p {
-        text-align: center;
+
+    .section h2,
+    .section p {
+      text-align: center;
     }
-    
+
     .services-grid {
       display: flex;
       justify-content: center;
@@ -381,7 +385,7 @@
       width: 100%;
       max-width: 1200px;
     }
-    
+
     .service-card {
       background-color: var(--card-background);
       border-radius: 10px;
@@ -396,24 +400,24 @@
       opacity: 0;
       transform: translateY(50px);
     }
-    
+
     .service-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0, 183, 255, 0.2);
-        border: 1px solid var(--neon-1);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 183, 255, 0.2);
+      border: 1px solid var(--neon-1);
     }
-    
+
     .service-card h3 {
       font-size: 1.8rem;
       margin-bottom: 1rem;
       text-shadow: 0 0 5px var(--neon-1);
     }
-    
+
     .service-card p {
       font-size: 1.1rem;
       opacity: 0.8;
     }
-    
+
     .btn {
       display: inline-block;
       margin-top: 1.5rem;
@@ -432,49 +436,87 @@
       border: none;
       border-radius: 8px;
     }
-
+    
     .btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 0 20px var(--neon-1);
     }
-
+    
     .btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-        transition: left 0.5s;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn-donation {
+      box-shadow: 0 0 20px rgba(0, 183, 255, 0.8);
+      animation: pulsate 2s infinite ease-in-out;
+    }
+    
+    .btn-crowdfund {
+      background: #444;
+      color: #aaa;
+      box-shadow: none;
+      cursor: not-allowed;
+      pointer-events: none;
+      transition: none;
     }
 
-    .btn:hover::before {
-        left: 100%;
+    .btn-crowdfund:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .btn-crowdfund::before {
+        display: none;
+    }
+
+    @keyframes pulsate {
+      0% {
+        box-shadow: 0 0 10px rgba(0, 183, 255, 0.5), 0 0 10px rgba(0, 183, 255, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(0, 183, 255, 0.9), 0 0 30px rgba(0, 183, 255, 0.6);
+      }
+      100% {
+        box-shadow: 0 0 10px rgba(0, 183, 255, 0.5), 0 0 10px rgba(0, 183, 255, 0.5);
+      }
     }
     
     footer {
-        text-align: center;
-        padding: 20px;
-        font-size: 14px;
-        color: rgba(200, 210, 230, 0.6);
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: rgba(200, 210, 230, 0.6);
     }
-    
+
     /* Responsive */
     @media (max-width: 768px) {
-        .hero-content h1 {
-            font-size: 2.5rem;
-        }
-        .hero-content p {
-            font-size: 1rem;
-        }
-        .services-grid {
-            flex-direction: column;
-            gap: 2rem;
-        }
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-content p {
+        font-size: 1rem;
+      }
+
+      .services-grid {
+        flex-direction: column;
+        gap: 2rem;
+      }
     }
   </style>
 </head>
+
 <body>
   <div id="particles-js"></div>
 
@@ -529,29 +571,35 @@
     <section id="home" class="hero">
       <div class="hero-content">
         <h1 data-i18n="heroTitle">Support Our Mission</h1>
-        <p data-i18n="heroSubtitle">Your contribution empowers us to continue creating innovative projects and maintaining our services. Thank you for being a part of our journey.</p>
+        <p data-i18n="heroSubtitle">Your contribution empowers us to continue creating innovative projects and
+          maintaining our services. Thank you for being a part of our journey.</p>
       </div>
     </section>
 
     <section id="support-options" class="section">
       <h2 data-i18n="sectionTitle">Crowdfunding & Donations</h2>
-      <p style="max-width: 800px; margin: 0 auto 50px auto;" data-i18n="sectionSubtitle">Choose how you'd like to contribute. Whether you're funding a specific project or making a general donation, every bit of support is invaluable to us.</p>
-      
+      <p style="max-width: 800px; margin: 0 auto 50px auto;" data-i18n="sectionSubtitle">Choose how you'd like to
+        contribute. Whether you're funding a specific project or making a general donation, every bit of support is
+        invaluable to us.</p>
+
       <div class="services-grid">
 
         <div class="service-card">
-          <h3 data-i18n="projectTitle">Crowdfund Our Next Project</h3>
-          <p data-i18n="projectDescription">Be a part of our next big thing! We are currently raising funds for MapWeb Porject. Your support will directly contribute to its development and success.</p>
+          <h3 data-i18n="donationTitle">Make a General Donation</h3>
+          <p data-i18n="donationDescription">If you appreciate our work and want to support our ongoing efforts, a
+            general donation helps us cover operational costs and continue to innovate. Thank you for your generosity!
+          </p>
           <br>
-          <a href="#" class="btn" target="_blank" rel="noopener noreferrer" data-i18n="projectButton">Available Soon</a>
+          <a id="stripe-donation-link" href="https://buy.stripe.com/cNiaEX1zPdVe4Ly9uEco000" class="btn btn-donation" target="_blank"
+            rel="noopener noreferrer" data-i18n="donationButton">Make a Donation</a>
         </div>
 
         <div class="service-card">
-          <h3 data-i18n="donationTitle">Make a General Donation</h3>
-          <p data-i18n="donationDescription">If you appreciate our work and want to support our ongoing efforts, a general donation helps us cover operational costs and continue to innovate. Thank you for your generosity!</p>
+          <h3 data-i18n="projectTitle">Crowdfund Our Next Project</h3>
+          <p data-i18n="projectDescription">Be a part of our next big thing! We are currently raising funds for MapWeb
+            Porject. Your support will directly contribute to its development and success.</p>
           <br>
-
-          <a id="stripe-donation-link" href="YOUR_BASE_STRIPE_PAYMENT_LINK" class="btn" target="_blank" rel="noopener noreferrer" data-i18n="donationButton">Make a Donation</a>
+          <a href="#" class="btn btn-crowdfund" target="_blank" rel="noopener noreferrer" data-i18n="projectButton">Available Soon</a>
         </div>
 
       </div>
@@ -565,12 +613,12 @@
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
 
-    const BASE_STRIPE_LINK = "https://buy.stripe.com/cNiaEX1zPdVe4Ly9uEco000"; 
-    
+    const BASE_STRIPE_LINK = "https://buy.stripe.com/cNiaEX1zPdVe4Ly9uEco000";
+
     const STRIPE_LOCALES = {
-      en: 'en', 
-      fr: 'fr', 
-      zh: 'zh'  
+      en: 'en',
+      fr: 'fr',
+      zh: 'zh'
     };
     // ------------------------
 
@@ -589,7 +637,7 @@
         projectTitle: "Crowdfund Our Next Project",
         projectDescription: "Be a part of our next big thing! We are currently raising funds for MapWeb Porject. Your support will directly contribute to its development and success.",
         projectButton: "Available Soon",
-        donationTitle: "Make a General Donation", 
+        donationTitle: "Make a General Donation",
         donationDescription: "If you appreciate our work and want to support our ongoing efforts, a general donation helps us cover operational costs and continue to innovate. Thank you for your generosity!",
         donationButton: "Make a Donation",
         footer: "© 2025 AYA CLOUD. All rights reserved."
@@ -627,7 +675,7 @@
         projectTitle: "众筹我们的下一个项目",
         projectDescription: "成为我们下一个大项目的一部分！我们目前正在为 MapWeb 项目筹集资金。您的支持将直接促进其开发和成功。",
         projectButton: "即将推出",
-        donationTitle: "进行一般捐赠", 
+        donationTitle: "进行一般捐赠",
         donationDescription: "如果您欣赏我们的工作并希望支持我们正在进行的努力，一般性捐款有助于我们支付运营成本并继续创新。感谢您的慷慨！",
         donationButton: "进行捐赠",
         footer: "© 2025 AYA CLOUD. 版权所有。"
@@ -643,19 +691,19 @@
     };
 
     function updateStripeLink(lang) {
-        const donationLink = document.getElementById('stripe-donation-link');
-        if (donationLink && BASE_STRIPE_LINK.includes('http')) {
-            const localeCode = STRIPE_LOCALES[lang] || STRIPE_LOCALES['en'];
-            
-            // 构造带 locale 参数的链接
-            let newLink = BASE_STRIPE_LINK;
-            const url = new URL(newLink);
-            url.searchParams.set('locale', localeCode);
-            donationLink.href = url.toString();
-        } else if (donationLink) {
-            // 如果链接未设置，则不添加 locale 参数，保持占位符
-            donationLink.href = BASE_STRIPE_LINK;
-        }
+      const donationLink = document.getElementById('stripe-donation-link');
+      if (donationLink && BASE_STRIPE_LINK.includes('http')) {
+        const localeCode = STRIPE_LOCALES[lang] || STRIPE_LOCALES['en'];
+
+        // 构造带 locale 参数的链接
+        let newLink = BASE_STRIPE_LINK;
+        const url = new URL(newLink);
+        url.searchParams.set('locale', localeCode);
+        donationLink.href = url.toString();
+      } else if (donationLink) {
+        // 如果链接未设置，则不添加 locale 参数，保持占位符
+        donationLink.href = BASE_STRIPE_LINK;
+      }
     }
 
     function setLanguage(lang) {
@@ -670,9 +718,9 @@
           el.textContent = t[key];
         }
       });
-      
+
       updateLangSelectorDisplay(lang);
-      
+
       // 重点：在设置完文本后，更新 Stripe 链接的 locale
       updateStripeLink(lang);
     }
@@ -680,19 +728,19 @@
     function updateLangSelectorDisplay(lang) {
       const currentFlagDiv = document.getElementById('current-flag');
       const currentLangSpan = document.getElementById('current-lang');
-      
+
       if (currentFlagDiv) {
         currentFlagDiv.style.background = flags[lang] || flags['en'];
       }
       if (currentLangSpan) {
         currentLangSpan.textContent = langCodes[lang] || langCodes['en'];
       }
-      
+
       document.querySelectorAll('.lang-option').forEach(option => {
         if (option.getAttribute('data-lang') === lang) {
-            option.classList.add('active');
+          option.classList.add('active');
         } else {
-            option.classList.remove('active');
+          option.classList.remove('active');
         }
       });
     }
@@ -709,10 +757,10 @@
           const icon = mobileToggle.querySelector('i');
           if (nav.classList.contains('active')) {
             icon.className = 'fas fa-times';
-            document.body.style.overflow = 'hidden'; 
+            document.body.style.overflow = 'hidden';
           } else {
             icon.className = 'fas fa-bars';
-            document.body.style.overflow = ''; 
+            document.body.style.overflow = '';
           }
         }
 
@@ -725,7 +773,7 @@
             nav.classList.remove('active');
             navOverlay.classList.remove('active');
             mobileToggle.querySelector('i').className = 'fas fa-bars';
-            document.body.style.overflow = ''; 
+            document.body.style.overflow = '';
           });
         });
 
@@ -736,16 +784,16 @@
         });
       }
     }
-    
+
     function initLanguageSelector() {
       const langSelector = document.querySelector('.language-selector');
-      
+
       if (langSelector) {
         langSelector.addEventListener('click', (e) => {
           e.stopPropagation();
           langSelector.classList.toggle('active');
         });
-        
+
         document.addEventListener('click', () => {
           langSelector.classList.remove('active');
         });
@@ -763,36 +811,36 @@
       const savedLang = localStorage.getItem('preferredLanguage') || 'en';
       setLanguage(savedLang);
     }
-    
+
     document.addEventListener("DOMContentLoaded", () => {
       initMobileMenu();
       initLanguageSelector();
 
       // Page animations
       anime({
-          targets: '.hero-content h1',
-          translateY: [50, 0],
-          opacity: [0, 1],
-          duration: 1500,
-          easing: 'easeOutElastic(1, .8)'
+        targets: '.hero-content h1',
+        translateY: [50, 0],
+        opacity: [0, 1],
+        duration: 1500,
+        easing: 'easeOutElastic(1, .8)'
       });
 
       anime({
-          targets: '.hero-content p',
-          translateY: [50, 0],
-          opacity: [0, 1],
-          duration: 1500,
-          delay: 200,
-          easing: 'easeOutElastic(1, .8)'
+        targets: '.hero-content p',
+        translateY: [50, 0],
+        opacity: [0, 1],
+        duration: 1500,
+        delay: 200,
+        easing: 'easeOutElastic(1, .8)'
       });
-      
+
       anime({
-          targets: '.service-card',
-          translateY: [50, 0],
-          opacity: [0, 1],
-          duration: 1200,
-          delay: anime.stagger(200, { start: 1000 }),
-          easing: 'easeOutExpo'
+        targets: '.service-card',
+        translateY: [50, 0],
+        opacity: [0, 1],
+        duration: 1200,
+        delay: anime.stagger(200, { start: 1000 }),
+        easing: 'easeOutExpo'
       });
 
       // Particles.js setup
@@ -838,4 +886,5 @@
     });
   </script>
 </body>
+
 </html>
