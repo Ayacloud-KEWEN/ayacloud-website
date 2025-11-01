@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D文物博物馆 - AR增强现实体验</title>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.css">
     <style>
         :root {
             --primary-color: #8B4513;
@@ -170,12 +171,14 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             background-color: #fff;
+            position: relative;
         }
         
         model-viewer {
             width: 100%;
             height: 100%;
             --poster-color: transparent;
+            --progress-bar-color: #8B4513;
         }
         
         .model-controls {
@@ -223,6 +226,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             max-width: 800px;
             width: 100%;
+            margin-top: 2rem;
         }
         
         .artifact-info h2 {
@@ -400,6 +404,13 @@
             align-items: center;
             height: 100%;
             flex-direction: column;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 10;
         }
         
         .spinner {
@@ -414,6 +425,10 @@
         
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+        
+        .model-loaded .loading {
+            display: none;
         }
     </style>
 </head>
@@ -464,10 +479,10 @@
 
     <!-- 3D模型展示区 -->
     <section class="model-viewer-container" id="artifacts">
-        <div class="model-display">
+        <div class="model-display" id="model-display">
             <model-viewer 
                 id="model-viewer"
-                src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+                src="./untitled1.glb"
                 alt="3D文物模型"
                 ar
                 ar-modes="webxr scene-viewer quick-look"
@@ -475,9 +490,12 @@
                 shadow-intensity="1"
                 camera-controls
                 auto-rotate
-                auto-rotate-delay="0">
+                auto-rotate-delay="0"
+                interaction-prompt="none"
+                camera-orbit="0deg 75deg 105%"
+                field-of-view="30deg">
                 
-                <div class="loading">
+                <div class="loading" slot="poster">
                     <div class="spinner"></div>
                     <p>加载3D模型中...</p>
                 </div>
@@ -543,7 +561,7 @@
                     <p>秦代陶俑，形态各异，展现秦朝军事力量与雕塑艺术。</p>
                 </div>
             </div>
-            <div class="artifact-card" data-model="https://modelviewer.dev/shared-assets/models/Astronaut.glb" data-info="bronze-mirror">
+            <div class="artifact-card" data-model="https://modelviewer.dev/shared-assets/models/Horse.glb" data-info="bronze-mirror">
                 <div class="artifact-thumb">🪞</div>
                 <div class="artifact-card-content">
                     <h3>青铜镜</h3>
@@ -596,6 +614,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modelViewer = document.querySelector('#model-viewer');
+            const modelDisplay = document.querySelector('#model-display');
             const autoRotateBtn = document.getElementById('auto-rotate-btn');
             const resetViewBtn = document.getElementById('reset-view-btn');
             const arBtn = document.getElementById('ar-btn');
@@ -637,6 +656,11 @@
                 }
             };
             
+            // 模型加载完成时隐藏加载动画
+            modelViewer.addEventListener('load', () => {
+                modelDisplay.classList.add('model-loaded');
+            });
+            
             // 自动旋转控制
             autoRotateBtn.addEventListener('click', function() {
                 const isAutoRotate = modelViewer.getAttribute('auto-rotate') === '';
@@ -652,6 +676,7 @@
             // 重置视角
             resetViewBtn.addEventListener('click', function() {
                 modelViewer.cameraOrbit = '0deg 75deg 105%';
+                modelViewer.fieldOfView = '30deg';
             });
             
             // AR模式
@@ -674,6 +699,9 @@
                     // 获取模型和信息
                     const modelSrc = this.getAttribute('data-model');
                     const infoKey = this.getAttribute('data-info');
+                    
+                    // 显示加载动画
+                    modelDisplay.classList.remove('model-loaded');
                     
                     // 更新模型
                     modelViewer.src = modelSrc;
