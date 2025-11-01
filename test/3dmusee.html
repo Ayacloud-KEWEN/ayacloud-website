@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>未来科技 - 智能机器人展示</title>
+    <title>AyaRoboTech - Advanced Robotics Showcase</title>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #00D4FF;
@@ -18,31 +22,34 @@
             --light-text: #B0BEC5;
             --neon-glow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Exo 2', sans-serif;
         }
-        
+
         body {
             background-color: var(--dark-bg);
             color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 10% 20%, rgba(126, 87, 194, 0.1) 0%, transparent 20%),
                 radial-gradient(circle at 90% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 20%),
                 radial-gradient(circle at 50% 50%, rgba(255, 64, 129, 0.05) 0%, transparent 30%);
         }
-        
-        h1, h2, h3, h4 {
+
+        h1,
+        h2,
+        h3,
+        h4 {
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
         }
-        
-        /* 导航栏样式 */
+
+        /* Navigation */
         nav {
             display: flex;
             justify-content: space-between;
@@ -56,7 +63,7 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 212, 255, 0.2);
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
@@ -65,17 +72,17 @@
             color: var(--primary-color);
             text-shadow: var(--neon-glow);
         }
-        
+
         .logo-icon {
             margin-right: 10px;
             font-size: 2rem;
         }
-        
+
         .nav-links {
             display: flex;
             gap: 2.5rem;
         }
-        
+
         .nav-links a {
             color: var(--text-color);
             text-decoration: none;
@@ -85,12 +92,12 @@
             padding: 5px 10px;
             border-radius: 4px;
         }
-        
+
         .nav-links a:hover {
             color: var(--primary-color);
             text-shadow: 0 0 8px var(--primary-color);
         }
-        
+
         .nav-links a::after {
             content: '';
             position: absolute;
@@ -102,23 +109,46 @@
             transition: width 0.3s;
             box-shadow: 0 0 5px var(--primary-color);
         }
-        
+
         .nav-links a:hover::after {
             width: 100%;
         }
-        
-        /* 主内容区样式 */
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon-img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            box-shadow: 0 0 10px 5px rgba(0, 191, 255, 0.7);
+            border: 2px solid rgba(0, 191, 255, 0.5);
+        }
+
+        .logo span {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.8),
+                0 0 20px rgba(0, 191, 255, 0.6);
+            font-weight: 700;
+        }
+
+        /* Hero Section */
         .hero {
             padding: 5rem 5%;
             text-align: center;
-            background: linear-gradient(rgba(10, 14, 23, 0.9), rgba(18, 24, 39, 0.9)), 
-                        radial-gradient(circle at 20% 80%, rgba(126, 87, 194, 0.3) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.3) 0%, transparent 50%);
+            background: linear-gradient(rgba(10, 14, 23, 0.9), rgba(18, 24, 39, 0.9)),
+                radial-gradient(circle at 20% 80%, rgba(126, 87, 194, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.3) 0%, transparent 50%);
             color: var(--text-color);
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero::before {
             content: '';
             position: absolute;
@@ -126,14 +156,14 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: 
+            background:
                 linear-gradient(90deg, transparent 49%, rgba(0, 212, 255, 0.1) 50%, transparent 51%),
                 linear-gradient(transparent 49%, rgba(0, 212, 255, 0.1) 50%, transparent 51%);
             background-size: 50px 50px;
             opacity: 0.3;
             pointer-events: none;
         }
-        
+
         .hero h1 {
             font-size: 4rem;
             margin-bottom: 1.5rem;
@@ -146,7 +176,7 @@
             position: relative;
             display: inline-block;
         }
-        
+
         .hero h1::after {
             content: '';
             position: absolute;
@@ -156,7 +186,7 @@
             height: 3px;
             background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
         }
-        
+
         .hero p {
             font-size: 1.4rem;
             max-width: 800px;
@@ -164,7 +194,7 @@
             color: var(--light-text);
             font-weight: 300;
         }
-        
+
         .cta-button {
             display: inline-block;
             padding: 15px 40px;
@@ -179,12 +209,12 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .cta-button:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 212, 255, 0.6);
         }
-        
+
         .cta-button::before {
             content: '';
             position: absolute;
@@ -195,12 +225,79 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: 0.5s;
         }
-        
+
         .cta-button:hover::before {
             left: 100%;
         }
-        
-        /* 3D模型展示区 */
+
+        /* Features Section */
+        .features {
+            padding: 5rem 5%;
+            background-color: var(--light-bg);
+        }
+
+        .features-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 3rem;
+            text-align: center;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, rgba(18, 24, 39, 0.8), rgba(10, 14, 23, 0.9));
+            padding: 2.5rem 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 212, 255, 0.3);
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+
+        .feature-icon {
+            margin-right: 15px;
+            font-size: 2rem;
+            filter: drop-shadow(0 0 5px var(--primary-color));
+        }
+
+        /* 3D Model Viewer */
         .model-viewer-container {
             display: flex;
             flex-direction: column;
@@ -209,7 +306,7 @@
             background-color: var(--dark-bg);
             position: relative;
         }
-        
+
         .model-viewer-container::before {
             content: '';
             position: absolute;
@@ -219,7 +316,7 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
         }
-        
+
         .model-display {
             width: 100%;
             max-width: 900px;
@@ -232,14 +329,14 @@
             border: 1px solid rgba(0, 212, 255, 0.3);
             position: relative;
         }
-        
+
         model-viewer {
             width: 100%;
             height: 100%;
             --poster-color: transparent;
             --progress-bar-color: var(--primary-color);
         }
-        
+
         .model-controls {
             display: flex;
             gap: 1rem;
@@ -247,7 +344,7 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        
+
         .control-btn {
             padding: 12px 25px;
             background: rgba(0, 212, 255, 0.1);
@@ -259,18 +356,18 @@
             font-weight: 500;
             backdrop-filter: blur(5px);
         }
-        
+
         .control-btn:hover {
             background: rgba(0, 212, 255, 0.2);
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
         }
-        
+
         .control-btn.active {
             background: rgba(0, 212, 255, 0.3);
             box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
         }
-        
+
         .animation-controls {
             display: flex;
             gap: 0.8rem;
@@ -278,7 +375,7 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        
+
         .animation-btn {
             padding: 10px 20px;
             background: rgba(126, 87, 194, 0.1);
@@ -289,17 +386,17 @@
             transition: all 0.3s;
             font-size: 0.9rem;
         }
-        
+
         .animation-btn:hover {
             background: rgba(126, 87, 194, 0.2);
             box-shadow: 0 0 10px rgba(126, 87, 194, 0.3);
         }
-        
+
         .animation-btn.active {
             background: rgba(126, 87, 194, 0.3);
             box-shadow: 0 0 15px rgba(126, 87, 194, 0.5);
         }
-        
+
         .ar-hint {
             background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(126, 87, 194, 0.1));
             color: var(--primary-color);
@@ -311,7 +408,7 @@
             border: 1px solid rgba(0, 212, 255, 0.2);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-        
+
         .robot-info {
             background: linear-gradient(145deg, rgba(18, 24, 39, 0.9), rgba(10, 14, 23, 0.9));
             padding: 2.5rem;
@@ -323,7 +420,7 @@
             border: 1px solid rgba(0, 212, 255, 0.2);
             position: relative;
         }
-        
+
         .robot-info::before {
             content: '';
             position: absolute;
@@ -333,7 +430,7 @@
             height: 3px;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
-        
+
         .robot-info h2 {
             color: var(--primary-color);
             margin-bottom: 1.5rem;
@@ -341,19 +438,19 @@
             padding-bottom: 0.8rem;
             font-size: 2rem;
         }
-        
+
         .robot-meta {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .meta-item {
             display: flex;
             flex-direction: column;
         }
-        
+
         .meta-label {
             font-weight: 600;
             color: var(--primary-color);
@@ -362,19 +459,19 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
         .meta-value {
             color: var(--text-color);
             font-size: 1.1rem;
         }
-        
-        /* 机器人选择区 */
+
+        /* Robot Selection */
         .robot-selection {
             padding: 5rem 5%;
             background-color: var(--light-bg);
             position: relative;
         }
-        
+
         .robot-selection::before {
             content: '';
             position: absolute;
@@ -384,7 +481,7 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
         }
-        
+
         .section-title {
             text-align: center;
             font-size: 2.5rem;
@@ -392,13 +489,13 @@
             color: var(--primary-color);
             text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
         }
-        
+
         .robots-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2.5rem;
         }
-        
+
         .robot-card {
             background: linear-gradient(145deg, rgba(18, 24, 39, 0.8), rgba(10, 14, 23, 0.9));
             border-radius: 15px;
@@ -409,18 +506,18 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             position: relative;
         }
-        
+
         .robot-card:hover {
             transform: translateY(-15px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 212, 255, 0.3);
             border-color: rgba(0, 212, 255, 0.5);
         }
-        
+
         .robot-card.active {
             border-color: var(--primary-color);
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
         }
-        
+
         .robot-thumb {
             height: 200px;
             background: linear-gradient(45deg, var(--dark-bg), var(--light-bg));
@@ -432,7 +529,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .robot-thumb::before {
             content: '';
             position: absolute;
@@ -444,42 +541,42 @@
             transform: translateX(-100%);
             transition: transform 0.6s;
         }
-        
+
         .robot-card:hover .robot-thumb::before {
             transform: translateX(100%);
         }
-        
+
         .robot-card-content {
             padding: 1.8rem;
         }
-        
+
         .robot-card h3 {
             margin-bottom: 0.8rem;
             color: var(--primary-color);
             font-size: 1.4rem;
         }
-        
+
         .robot-card p {
             color: var(--light-text);
             font-size: 0.95rem;
             line-height: 1.5;
         }
-        
-        /* 页脚 */
+
+        /* Footer */
         footer {
             background-color: var(--dark-bg);
             padding: 4rem 5% 2rem;
             color: var(--secondary-color);
             border-top: 1px solid rgba(0, 212, 255, 0.2);
         }
-        
+
         .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 3rem;
             margin-bottom: 3rem;
         }
-        
+
         .footer-column h3 {
             font-size: 1.3rem;
             margin-bottom: 1.5rem;
@@ -487,7 +584,7 @@
             position: relative;
             padding-bottom: 0.8rem;
         }
-        
+
         .footer-column h3::after {
             content: '';
             position: absolute;
@@ -497,23 +594,23 @@
             height: 2px;
             background: linear-gradient(90deg, var(--primary-color), transparent);
         }
-        
+
         .footer-links {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
         }
-        
+
         .footer-links a {
             color: var(--light-text);
             text-decoration: none;
             transition: color 0.3s;
         }
-        
+
         .footer-links a:hover {
             color: var(--primary-color);
         }
-        
+
         .copyright {
             text-align: center;
             padding-top: 2rem;
@@ -521,27 +618,31 @@
             color: var(--light-text);
             font-size: 0.9rem;
         }
-        
-        /* 响应式设计 */
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
             }
-            
+
             .model-display {
                 height: 400px;
             }
-            
+
             .nav-links {
                 display: none;
             }
-            
+
             .robot-meta {
                 grid-template-columns: 1fr;
             }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
         }
-        
-        /* 加载动画 */
+
+        /* Loading Animation */
         .loading {
             display: flex;
             justify-content: center;
@@ -556,7 +657,7 @@
             background-color: rgba(10, 14, 23, 0.9);
             z-index: 10;
         }
-        
+
         .spinner {
             width: 60px;
             height: 60px;
@@ -567,15 +668,17 @@
             margin-bottom: 1.5rem;
             box-shadow: 0 0 10px var(--primary-color);
         }
-        
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
-        
+
         .model-loaded .loading {
             display: none;
         }
-        
+
         .animation-status {
             margin-top: 1rem;
             font-size: 1rem;
@@ -583,42 +686,8 @@
             text-align: center;
             text-shadow: 0 0 5px var(--primary-color);
         }
-        
-        /* AR模式提示 */
-        .ar-tips {
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-            max-width: 800px;
-        }
-        
-        .ar-tips h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
-        .ar-tips ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        
-        .ar-tips li {
-            margin-bottom: 0.8rem;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-        
-        .ar-tips li::before {
-            content: "▶";
-            color: var(--primary-color);
-            position: absolute;
-            left: 0;
-        }
-        
-        /* 科幻元素 */
+
+        /* Sci-fi Elements */
         .floating-elements {
             position: absolute;
             width: 100%;
@@ -628,7 +697,7 @@
             pointer-events: none;
             z-index: 1;
         }
-        
+
         .floating-element {
             position: absolute;
             width: 10px;
@@ -638,7 +707,7 @@
             box-shadow: 0 0 10px var(--primary-color);
             animation: float 15s infinite linear;
         }
-        
+
         .floating-element:nth-child(2) {
             width: 6px;
             height: 6px;
@@ -647,7 +716,7 @@
             animation-duration: 12s;
             animation-delay: 2s;
         }
-        
+
         .floating-element:nth-child(3) {
             width: 8px;
             height: 8px;
@@ -656,18 +725,21 @@
             animation-duration: 18s;
             animation-delay: 5s;
         }
-        
+
         @keyframes float {
             0% {
                 transform: translate(0, 0) rotate(0deg);
                 opacity: 0;
             }
+
             10% {
                 opacity: 1;
             }
+
             90% {
                 opacity: 1;
             }
+
             100% {
                 transform: translate(100vw, -100vh) rotate(360deg);
                 opacity: 0;
@@ -675,197 +747,266 @@
         }
     </style>
 </head>
+
 <body>
-    <!-- 科幻浮动元素 -->
+    <!-- Sci-fi Floating Elements -->
     <div class="floating-elements">
         <div class="floating-element" style="top: 20%; left: 10%;"></div>
         <div class="floating-element" style="top: 70%; left: 80%;"></div>
         <div class="floating-element" style="top: 40%; left: 60%;"></div>
     </div>
 
-    <!-- 导航栏 -->
+    <!-- Navigation -->
     <nav>
         <div class="logo">
-            <span class="logo-icon">🤖</span>
-            <span>ROBOTECH</span>
+            <img src="../img/ayacloud.png" alt="Logo Icon" class="logo-icon-img">
+            <span>AYAROBOTECH</span>
         </div>
         <div class="nav-links">
-            <a href="#home" class="active">首页</a>
-            <a href="#robots">机器人</a>
-            <a href="#ar-tips">AR提示</a>
-            <a href="#contact">联系</a>
+            <a href="#home" class="active">Home</a>
+            <a href="#features">Features</a>
+            <a href="#robots">Robots</a>
+            <a href="#technology">Technology</a>
+            <a href="#contact">Contact</a>
         </div>
     </nav>
 
-    <!-- 主内容区 -->
+    <!-- Hero Section -->
     <section class="hero" id="home">
-        <h1>未来科技 智能机器人</h1>
-        <p>探索尖端人工智能与机器人技术的完美融合，体验未来世界的无限可能</p>
-        <a href="#robots" class="cta-button">探索机器人</a>
+        <h1>Advanced Robotics Showcase</h1>
+        <p>Explore the cutting-edge world of intelligent robotics with our advanced AI-powered machines</p>
+        <a href="#robots" class="cta-button">Explore Robots</a>
     </section>
 
-    <!-- 3D模型展示区 -->
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-content">
+            <h2>Core Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3><span class="feature-icon"></span>Advanced AI</h3>
+                    <p>Equipped with state-of-the-art neural networks for autonomous learning and decision-making in
+                        complex environments.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="feature-icon"></span>Power Systems</h3>
+                    <p>High-efficiency power cores providing extended operation time and powerful performance for
+                        demanding tasks.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="feature-icon"></span>Modular Design</h3>
+                    <p>Highly modular architecture allowing quick component replacement and functional upgrades for
+                        diverse applications.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3D Model Viewer -->
     <section class="model-viewer-container" id="robots">
         <div class="model-display" id="model-display">
-            <model-viewer 
-                id="model-viewer"
-                src="./Jump.glb"
-                alt="智能机器人模型"
-                ar
-                ar-modes="webxr scene-viewer quick-look"
-                environment-image="neutral"
-                shadow-intensity="1"
-                camera-controls
-                auto-rotate
-                auto-rotate-delay="0"
-                interaction-prompt="none"
-                camera-orbit="0deg 75deg 105%"
-                field-of-view="30deg"
-                animation-name="Dance"
-                autoplay>
-                
+            <model-viewer id="model-viewer" src="./humanoid.glb" alt="Intelligent Robot Model" ar
+                ar-modes="webxr scene-viewer quick-look" environment-image="neutral" shadow-intensity="1"
+                camera-controls auto-rotate auto-rotate-delay="0" interaction-prompt="none"
+                camera-orbit="0deg 75deg 105%" field-of-view="30deg" animation-name="Dance" autoplay>
+
                 <div class="loading" slot="poster">
                     <div class="spinner"></div>
-                    <p>加载机器人模型中...</p>
+                    <p>Loading Robot Model...</p>
                 </div>
             </model-viewer>
         </div>
-        
+
         <div class="model-controls">
-            <button class="control-btn" id="auto-rotate-btn">自动旋转</button>
-            <button class="control-btn" id="reset-view-btn">重置视角</button>
-            <button class="control-btn" id="ar-btn">AR模式</button>
+            <button class="control-btn" id="auto-rotate-btn">Auto Rotate</button>
+            <button class="control-btn" id="reset-view-btn">Reset View</button>
+            <button class="control-btn" id="ar-btn">AR Mode</button>
         </div>
-        
-        <!-- 动画控制区域 -->
+
+        <!-- Animation Controls -->
         <div class="animation-controls" id="animation-controls">
-            <button class="animation-btn" data-animation="Dance">舞蹈模式</button>
-            <button class="animation-btn" data-animation="Idle">待机模式</button>
-            <button class="animation-btn" data-animation="Walking">行走模式</button>
-            <button class="animation-btn" id="play-animation-btn">播放动画</button>
-            <button class="animation-btn" id="pause-animation-btn">暂停动画</button>
+            <button class="animation-btn" data-animation="Dance">Dance Mode</button>
+            <button class="animation-btn" data-animation="Idle">Idle Mode</button>
+            <button class="animation-btn" data-animation="Walking">Walk Mode</button>
+            <button class="animation-btn" id="play-animation-btn">Play Animation</button>
+            <button class="animation-btn" id="pause-animation-btn">Pause Animation</button>
         </div>
-        
+
         <div class="animation-status" id="animation-status">
-            当前模式: Dance - 正在运行
+            Current Mode: Dance - Running
         </div>
-        
+
         <div class="ar-hint">
-            <p>💡 提示：在移动设备上点击"AR模式"按钮，可以将机器人放置在您的现实环境中！</p>
+            <p>💡 Tip: Click "AR Mode" on mobile devices to place the robot in your real environment!</p>
         </div>
-        
-        <!-- AR模式提示 -->
-        <div class="ar-tips" id="ar-tips">
-            <h3>AR模式使用提示</h3>
-            <ul>
-                <li>确保在光线充足的环境中使用AR功能</li>
-                <li>寻找平坦的表面放置机器人模型</li>
-                <li>如果AR模式下动画不播放，请尝试重新选择动画模式</li>
-                <li>某些设备可能需要授予相机权限才能使用AR功能</li>
-                <li>AR模式下，您可以通过手势缩放和旋转机器人模型</li>
-            </ul>
-        </div>
-        
+
         <div class="robot-info">
-            <h2>NEXUS-7 智能机器人</h2>
+            <h2>NEXUS-7 Intelligent Robot</h2>
             <div class="robot-meta">
                 <div class="meta-item">
-                    <span class="meta-label">型号</span>
-                    <span class="meta-value">NEXUS-7 高级版</span>
+                    <span class="meta-label">Model</span>
+                    <span class="meta-value">NEXUS-7 Advanced</span>
                 </div>
                 <div class="meta-item">
-                    <span class="meta-label">AI系统</span>
+                    <span class="meta-label">AI System</span>
                     <span class="meta-value">NeuroSync AI v3.5</span>
                 </div>
                 <div class="meta-item">
-                    <span class="meta-label">动力核心</span>
-                    <span class="meta-value">量子电池 Mk.II</span>
+                    <span class="meta-label">Power Core</span>
+                    <span class="meta-value">Quantum Battery Mk.II</span>
                 </div>
                 <div class="meta-item">
-                    <span class="meta-label">应用领域</span>
-                    <span class="meta-value">服务、教育、研究</span>
+                    <span class="meta-label">Applications</span>
+                    <span class="meta-value">Service, Education, Research</span>
                 </div>
             </div>
-            <p>NEXUS-7是我们最新研发的智能机器人，具备高度自主性和适应性。它能够理解自然语言，执行复杂任务，并与人类进行自然互动。采用先进的传感器阵列和机器学习算法，NEXUS-7能够在各种环境中自主导航和工作。</p>
+            <p>The NEXUS-7 is our latest intelligent robot with high autonomy and adaptability. It understands natural
+                language, performs complex tasks, and interacts naturally with humans. Using advanced sensor arrays and
+                machine learning algorithms, NEXUS-7 can navigate and work autonomously in various environments.</p>
         </div>
     </section>
 
-    <!-- 页脚 -->
+    <!-- Robot Selection -->
+    <section class="robot-selection" id="technology">
+        <h2 class="section-title">Robot Series</h2>
+        <div class="robots-grid">
+            <div class="robot-card active" data-model="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
+                data-info="nexus-7" data-animations='["Dance", "Idle", "Walking"]'>
+                <div class="robot-thumb">🤖</div>
+                <div class="robot-card-content">
+                    <h3>NEXUS-7</h3>
+                    <p>Advanced service robot with high autonomy and natural interaction capabilities for multiple
+                        service scenarios.</p>
+                </div>
+            </div>
+            <div class="robot-card" data-model="./AgibotA2.glb" data-info="astro-bot">
+                <div class="robot-thumb">🚀</div>
+                <div class="robot-card-content">
+                    <h3>ASTRO-BOT</h3>
+                    <p>Space exploration robot designed for extreme environments with powerful adaptability and research
+                        capabilities.</p>
+                </div>
+            </div>
+            <div class="robot-card" data-model="./humanoid.glb" data-info="guardian-x">
+                <div class="robot-thumb">🛡️</div>
+                <div class="robot-card-content">
+                    <h3>GUARDIAN-X</h3>
+                    <p>Security patrol robot equipped with advanced sensing technology and rapid response systems for
+                        area protection.</p>
+                </div>
+            </div>
+            <div class="robot-card" data-model="./UnitreeA.glb" data-info="industrial-pro">
+                <div class="robot-thumb">🏭</div>
+                <div class="robot-card-content">
+                    <h3>INDUSTRIAL PRO</h3>
+                    <p>Heavy-duty industrial robot designed for manufacturing, assembly, and logistics applications.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer id="contact">
         <div class="footer-content">
             <div class="footer-column">
                 <h3>ROBOTECH</h3>
-                <p style="margin-top: 1rem;">致力于推动人工智能与机器人技术的发展，创造更智能、更便捷的未来生活。</p>
+                <p style="margin-top: 1rem;">Advancing artificial intelligence and robotics technology to create
+                    smarter, more convenient future living.</p>
             </div>
             <div class="footer-column">
-                <h3>快速链接</h3>
+                <h3>Quick Links</h3>
                 <div class="footer-links">
-                    <a href="#home">首页</a>
-                    <a href="#robots">机器人</a>
-                    <a href="#ar-tips">AR提示</a>
+                    <a href="#home">Home</a>
+                    <a href="#features">Features</a>
+                    <a href="#robots">Robots</a>
+                    <a href="#technology">Technology</a>
                 </div>
             </div>
             <div class="footer-column">
-                <h3>技术支持</h3>
+                <h3>Technical Support</h3>
                 <div class="footer-links">
-                    <a href="#">使用指南</a>
-                    <a href="#">设备兼容性</a>
-                    <a href="#">常见问题</a>
-                    <a href="#">更新日志</a>
+                    <a href="#">User Guide</a>
+                    <a href="#">Device Compatibility</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Update Log</a>
                 </div>
             </div>
             <div class="footer-column">
-                <h3>联系我们</h3>
+                <h3>Contact Us</h3>
                 <div class="footer-links">
-                    <a href="#">技术支持</a>
-                    <a href="#">商业合作</a>
-                    <a href="#">媒体咨询</a>
-                    <a href="#">加入我们</a>
+                    <a href="#">Technical Support</a>
+                    <a href="#">Business Cooperation</a>
+                    <a href="#">Media Inquiries</a>
+                    <a href="#">Join Us</a>
                 </div>
             </div>
         </div>
         <div class="copyright">
-            &copy; 2023 ROBOTECH未来科技. 保留所有权利.
+            &copy; 2023 ROBOTECH Future Technology. All rights reserved.
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const modelViewer = document.querySelector('#model-viewer');
             const modelDisplay = document.querySelector('#model-display');
             const autoRotateBtn = document.getElementById('auto-rotate-btn');
             const resetViewBtn = document.getElementById('reset-view-btn');
             const arBtn = document.getElementById('ar-btn');
+            const robotCards = document.querySelectorAll('.robot-card');
             const animationControls = document.getElementById('animation-controls');
             const animationStatus = document.getElementById('animation-status');
             const playAnimationBtn = document.getElementById('play-animation-btn');
             const pauseAnimationBtn = document.getElementById('pause-animation-btn');
-            
-            // 当前动画状态
+
+            // Robot information data
+            const robotData = {
+                'nexus-7': {
+                    title: 'NEXUS-7 Intelligent Robot',
+                    model: 'NEXUS-7 Advanced',
+                    ai: 'NeuroSync AI v3.5',
+                    power: 'Quantum Battery Mk.II',
+                    application: 'Service, Education, Research',
+                    description: 'The NEXUS-7 is our latest intelligent robot with high autonomy and adaptability. It understands natural language, performs complex tasks, and interacts naturally with humans. Using advanced sensor arrays and machine learning algorithms, NEXUS-7 can navigate and work autonomously in various environments.'
+                },
+                'astro-bot': {
+                    title: 'ASTRO-BOT Space Robot',
+                    model: 'ASTRO-BOT Explorer',
+                    ai: 'SpaceAI v2.1',
+                    power: 'Isotope Thermoelectric Generator',
+                    application: 'Space Exploration, Research',
+                    description: 'ASTRO-BOT is designed specifically for space exploration, capable of operating in extreme environments. Equipped with various scientific instruments and sample collection tools, it is the ideal assistant for space research missions. Features autonomous navigation and obstacle avoidance for safe movement in unknown environments.'
+                },
+                'guardian-x': {
+                    title: 'GUARDIAN-X Security Robot',
+                    model: 'GUARDIAN-X Security Edition',
+                    ai: 'SecureAI v4.0',
+                    power: 'High-Capacity Li-Polymer Battery',
+                    application: 'Security, Patrol, Monitoring',
+                    description: 'GUARDIAN-X is a professional security patrol robot equipped with 360-degree panoramic cameras, thermal imaging, and multiple environmental sensors. Capable of autonomous patrols in designated areas, identifying anomalies, and providing real-time alerts. Supports remote control and automatic charging functions.'
+                },
+                'industrial-pro': {
+                    title: 'INDUSTRIAL PRO Robot',
+                    model: 'INDUSTRIAL PRO Heavy-Duty',
+                    ai: 'IndustrialAI v2.8',
+                    power: 'High-Output Power Cell',
+                    application: 'Manufacturing, Assembly, Logistics',
+                    description: 'INDUSTRIAL PRO is designed for demanding industrial applications with heavy lifting capabilities and precision assembly functions. Features advanced collision detection and safety protocols for working alongside human operators in factory environments.'
+                }
+            };
+
+            // Current animation state
             let currentAnimation = 'Dance';
             let isPlaying = true;
-            
-            // 模型加载完成时隐藏加载动画
+
+            // Hide loading animation when model loads
             modelViewer.addEventListener('load', () => {
                 modelDisplay.classList.add('model-loaded');
                 updateAnimationStatus();
-                
-                // 确保动画在AR模式下也能正常工作
-                modelViewer.addEventListener('ar-status', (event) => {
-                    if (event.detail.status === 'session-started') {
-                        // AR会话开始时重新启动动画
-                        setTimeout(() => {
-                            modelViewer.animationName = currentAnimation;
-                            modelViewer.play();
-                            isPlaying = true;
-                            updateAnimationStatus();
-                        }, 500);
-                    }
-                });
             });
-            
-            // 自动旋转控制
-            autoRotateBtn.addEventListener('click', function() {
+
+            // Auto-rotate control
+            autoRotateBtn.addEventListener('click', function () {
                 const isAutoRotate = modelViewer.getAttribute('auto-rotate') === '';
                 if (isAutoRotate) {
                     modelViewer.removeAttribute('auto-rotate');
@@ -875,93 +1016,137 @@
                     autoRotateBtn.classList.add('active');
                 }
             });
-            
-            // 重置视角
-            resetViewBtn.addEventListener('click', function() {
+
+            // Reset view
+            resetViewBtn.addEventListener('click', function () {
                 modelViewer.cameraOrbit = '0deg 75deg 105%';
                 modelViewer.fieldOfView = '30deg';
             });
-            
-            // AR模式
-            arBtn.addEventListener('click', function() {
+
+            // AR mode
+            arBtn.addEventListener('click', function () {
                 if (modelViewer.activateAR) {
-                    // 在激活AR前确保动画设置正确
-                    modelViewer.animationName = currentAnimation;
                     modelViewer.activateAR();
-                    
-                    // 添加AR模式提示
-                    setTimeout(() => {
-                        alert('AR模式已启动！如果动画未播放，请尝试重新选择动画模式。');
-                    }, 1000);
                 } else {
-                    alert('您的设备不支持AR功能，请使用支持AR的移动设备访问此页面。');
+                    alert('Your device does not support AR functionality. Please use a mobile device with AR capabilities to access this feature.');
                 }
             });
-            
-            // 播放动画
-            playAnimationBtn.addEventListener('click', function() {
+
+            // Play animation
+            playAnimationBtn.addEventListener('click', function () {
                 modelViewer.play();
                 isPlaying = true;
                 updateAnimationStatus();
             });
-            
-            // 暂停动画
-            pauseAnimationBtn.addEventListener('click', function() {
+
+            // Pause animation
+            pauseAnimationBtn.addEventListener('click', function () {
                 modelViewer.pause();
                 isPlaying = false;
                 updateAnimationStatus();
             });
-            
-            // 切换动画
-            animationControls.addEventListener('click', function(e) {
+
+            // Switch animations
+            animationControls.addEventListener('click', function (e) {
                 if (e.target.classList.contains('animation-btn') && e.target.dataset.animation) {
                     const animationName = e.target.dataset.animation;
                     currentAnimation = animationName;
                     modelViewer.animationName = animationName;
-                    
-                    // 更新按钮状态
+
+                    // Update button states
                     document.querySelectorAll('.animation-btn').forEach(btn => {
                         btn.classList.remove('active');
                     });
                     e.target.classList.add('active');
-                    
-                    // 确保动画在AR模式下也能切换
-                    if (modelViewer.ar && modelViewer.ar.active) {
-                        setTimeout(() => {
-                            modelViewer.play();
-                            isPlaying = true;
-                        }, 100);
-                    }
-                    
+
                     updateAnimationStatus();
                 }
             });
-            
-            // 更新动画状态显示
+
+            // Update animation status display
             function updateAnimationStatus() {
-                const statusText = `当前模式: ${currentAnimation} - ${isPlaying ? '正在运行' : '已暂停'}`;
+                const statusText = `Current Mode: ${currentAnimation} - ${isPlaying ? 'Running' : 'Paused'}`;
                 animationStatus.textContent = statusText;
             }
-            
-            // 初始设置
-            autoRotateBtn.classList.add('active');
-            updateAnimationStatus();
-            
-            // 添加AR模式状态监听
-            modelViewer.addEventListener('ar-status', (event) => {
-                console.log('AR状态变化:', event.detail.status);
-                
-                if (event.detail.status === 'session-started') {
-                    // AR会话开始时确保动画运行
-                    setTimeout(() => {
+
+            // Robot card selection
+            robotCards.forEach(card => {
+                card.addEventListener('click', function () {
+                    // Remove active class from all cards
+                    robotCards.forEach(c => c.classList.remove('active'));
+                    // Add active class to current card
+                    this.classList.add('active');
+
+                    // Get model and info
+                    const modelSrc = this.getAttribute('data-model');
+                    const infoKey = this.getAttribute('data-info');
+                    const animations = this.getAttribute('data-animations');
+
+                    // Show loading animation
+                    modelDisplay.classList.remove('model-loaded');
+
+                    // Update model
+                    modelViewer.src = modelSrc;
+
+                    // Set default animation if available
+                    if (animations) {
+                        const animationList = JSON.parse(animations);
+                        currentAnimation = animationList[0];
                         modelViewer.animationName = currentAnimation;
-                        modelViewer.play();
+                        modelViewer.autoplay = true;
                         isPlaying = true;
-                        updateAnimationStatus();
-                    }, 1000);
-                }
+
+                        // Update animation buttons
+                        updateAnimationButtons(animationList);
+                    } else {
+                        // Hide animation controls for models without animations
+                        animationControls.style.display = 'none';
+                        animationStatus.style.display = 'none';
+                    }
+
+                    // Update robot information
+                    if (robotData[infoKey]) {
+                        const info = robotData[infoKey];
+                        document.querySelector('.robot-info h2').textContent = info.title;
+                        document.querySelector('.robot-info .meta-item:nth-child(1) .meta-value').textContent = info.model;
+                        document.querySelector('.robot-info .meta-item:nth-child(2) .meta-value').textContent = info.ai;
+                        document.querySelector('.robot-info .meta-item:nth-child(3) .meta-value').textContent = info.power;
+                        document.querySelector('.robot-info .meta-item:nth-child(4) .meta-value').textContent = info.application;
+                        document.querySelector('.robot-info p').textContent = info.description;
+                    }
+                });
             });
+
+            // Update animation buttons
+            function updateAnimationButtons(animations) {
+                animationControls.style.display = 'flex';
+                animationStatus.style.display = 'block';
+
+                // Clear existing animation selection buttons
+                document.querySelectorAll('.animation-btn[data-animation]').forEach(btn => {
+                    btn.remove();
+                });
+
+                // Add new animation selection buttons
+                animations.forEach(animation => {
+                    const btn = document.createElement('button');
+                    btn.className = 'animation-btn';
+                    btn.dataset.animation = animation;
+                    btn.textContent = animation;
+                    if (animation === currentAnimation) {
+                        btn.classList.add('active');
+                    }
+                    animationControls.insertBefore(btn, playAnimationBtn);
+                });
+
+                updateAnimationStatus();
+            }
+
+            // Initial setup
+            autoRotateBtn.classList.add('active');
+            updateAnimationButtons(['Dance', 'Idle', 'Walking']);
         });
     </script>
 </body>
+
 </html>
