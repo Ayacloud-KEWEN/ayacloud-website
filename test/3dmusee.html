@@ -200,73 +200,6 @@
             left: 100%;
         }
         
-        /* 特性说明区域 */
-        .features {
-            padding: 5rem 5%;
-            background-color: var(--light-bg);
-        }
-        
-        .features-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .features-content h2 {
-            color: var(--primary-color);
-            margin-bottom: 3rem;
-            text-align: center;
-            font-size: 2.5rem;
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;
-            margin-top: 2rem;
-        }
-        
-        .feature-card {
-            background: linear-gradient(145deg, rgba(18, 24, 39, 0.8), rgba(10, 14, 23, 0.9));
-            padding: 2.5rem 2rem;
-            border-radius: 15px;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 212, 255, 0.3);
-            border-color: rgba(0, 212, 255, 0.5);
-        }
-        
-        .feature-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 1.2rem;
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-        }
-        
-        .feature-icon {
-            margin-right: 15px;
-            font-size: 2rem;
-            filter: drop-shadow(0 0 5px var(--primary-color));
-        }
-        
         /* 3D模型展示区 */
         .model-viewer-container {
             display: flex;
@@ -606,10 +539,6 @@
             .robot-meta {
                 grid-template-columns: 1fr;
             }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
         }
         
         /* 加载动画 */
@@ -653,6 +582,40 @@
             color: var(--primary-color);
             text-align: center;
             text-shadow: 0 0 5px var(--primary-color);
+        }
+        
+        /* AR模式提示 */
+        .ar-tips {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            max-width: 800px;
+        }
+        
+        .ar-tips h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .ar-tips ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .ar-tips li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .ar-tips li::before {
+            content: "▶";
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
         }
         
         /* 科幻元素 */
@@ -728,9 +691,8 @@
         </div>
         <div class="nav-links">
             <a href="#home" class="active">首页</a>
-            <a href="#features">特性</a>
             <a href="#robots">机器人</a>
-            <a href="#technology">技术</a>
+            <a href="#ar-tips">AR提示</a>
             <a href="#contact">联系</a>
         </div>
     </nav>
@@ -740,27 +702,6 @@
         <h1>未来科技 智能机器人</h1>
         <p>探索尖端人工智能与机器人技术的完美融合，体验未来世界的无限可能</p>
         <a href="#robots" class="cta-button">探索机器人</a>
-    </section>
-
-    <!-- 特性说明区域 -->
-    <section class="features" id="features">
-        <div class="features-content">
-            <h2>核心特性</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h3><span class="feature-icon">🧠</span>高级人工智能</h3>
-                    <p>搭载最新神经网络技术，具备自主学习和决策能力，能够适应复杂环境并完成多样化任务。</p>
-                </div>
-                <div class="feature-card">
-                    <h3><span class="feature-icon">⚡</span>超强动力系统</h3>
-                    <p>采用高效能源核心，提供持久续航和强大动力输出，支持高强度工作和快速移动。</p>
-                </div>
-                <div class="feature-card">
-                    <h3><span class="feature-icon">🔧</span>模块化设计</h3>
-                    <p>高度模块化结构，支持快速更换部件和功能升级，满足不同场景和应用需求。</p>
-                </div>
-            </div>
-        </div>
     </section>
 
     <!-- 3D模型展示区 -->
@@ -813,6 +754,18 @@
             <p>💡 提示：在移动设备上点击"AR模式"按钮，可以将机器人放置在您的现实环境中！</p>
         </div>
         
+        <!-- AR模式提示 -->
+        <div class="ar-tips" id="ar-tips">
+            <h3>AR模式使用提示</h3>
+            <ul>
+                <li>确保在光线充足的环境中使用AR功能</li>
+                <li>寻找平坦的表面放置机器人模型</li>
+                <li>如果AR模式下动画不播放，请尝试重新选择动画模式</li>
+                <li>某些设备可能需要授予相机权限才能使用AR功能</li>
+                <li>AR模式下，您可以通过手势缩放和旋转机器人模型</li>
+            </ul>
+        </div>
+        
         <div class="robot-info">
             <h2>NEXUS-7 智能机器人</h2>
             <div class="robot-meta">
@@ -837,41 +790,6 @@
         </div>
     </section>
 
-    <!-- 机器人选择区 -->
-    <section class="robot-selection" id="technology">
-        <h2 class="section-title">机器人系列</h2>
-        <div class="robots-grid">
-            <div class="robot-card active" data-model="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb" data-info="nexus-7" data-animations='["Dance", "Idle", "Walking"]'>
-                <div class="robot-thumb">🤖</div>
-                <div class="robot-card-content">
-                    <h3>NEXUS-7</h3>
-                    <p>高级服务机器人，具备高度自主性和自然交互能力，适用于多种服务场景。</p>
-                </div>
-            </div>
-            <div class="robot-card" data-model="https://modelviewer.dev/shared-assets/models/Astronaut.glb" data-info="astro-bot">
-                <div class="robot-thumb">🚀</div>
-                <div class="robot-card-content">
-                    <h3>ASTRO-BOT</h3>
-                    <p>太空探索机器人，专为极端环境设计，具备强大的环境适应性和科研能力。</p>
-                </div>
-            </div>
-            <div class="robot-card" data-model="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb" data-info="guardian-x">
-                <div class="robot-thumb">🛡️</div>
-                <div class="robot-card-content">
-                    <h3>GUARDIAN-X</h3>
-                    <p>安防巡逻机器人，配备先进传感技术和快速响应系统，保障区域安全。</p>
-                </div>
-            </div>
-            <div class="robot-card" data-model="https://modelviewer.dev/shared-assets/models/Horse.glb" data-info="medi-care">
-                <div class="robot-thumb">🏥</div>
-                <div class="robot-card-content">
-                    <h3>MEDI-CARE</h3>
-                    <p>医疗辅助机器人，集成多种医疗传感器，能够提供基础医疗服务和紧急响应。</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- 页脚 -->
     <footer id="contact">
         <div class="footer-content">
@@ -883,9 +801,8 @@
                 <h3>快速链接</h3>
                 <div class="footer-links">
                     <a href="#home">首页</a>
-                    <a href="#features">特性</a>
                     <a href="#robots">机器人</a>
-                    <a href="#technology">技术</a>
+                    <a href="#ar-tips">AR提示</a>
                 </div>
             </div>
             <div class="footer-column">
@@ -919,47 +836,10 @@
             const autoRotateBtn = document.getElementById('auto-rotate-btn');
             const resetViewBtn = document.getElementById('reset-view-btn');
             const arBtn = document.getElementById('ar-btn');
-            const robotCards = document.querySelectorAll('.robot-card');
             const animationControls = document.getElementById('animation-controls');
             const animationStatus = document.getElementById('animation-status');
             const playAnimationBtn = document.getElementById('play-animation-btn');
             const pauseAnimationBtn = document.getElementById('pause-animation-btn');
-            
-            // 机器人信息数据
-            const robotData = {
-                'nexus-7': {
-                    title: 'NEXUS-7 智能机器人',
-                    model: 'NEXUS-7 高级版',
-                    ai: 'NeuroSync AI v3.5',
-                    power: '量子电池 Mk.II',
-                    application: '服务、教育、研究',
-                    description: 'NEXUS-7是我们最新研发的智能机器人，具备高度自主性和适应性。它能够理解自然语言，执行复杂任务，并与人类进行自然互动。采用先进的传感器阵列和机器学习算法，NEXUS-7能够在各种环境中自主导航和工作。'
-                },
-                'astro-bot': {
-                    title: 'ASTRO-BOT 太空机器人',
-                    model: 'ASTRO-BOT 探索版',
-                    ai: 'SpaceAI v2.1',
-                    power: '同位素热电发生器',
-                    application: '太空探索、科研',
-                    description: 'ASTRO-BOT专为太空探索设计，能够在极端环境下正常工作。配备多种科研仪器和样本采集工具，是太空科研任务的理想助手。具备自主导航和障碍规避能力，可在未知环境中安全移动。'
-                },
-                'guardian-x': {
-                    title: 'GUARDIAN-X 安防机器人',
-                    model: 'GUARDIAN-X 安防版',
-                    ai: 'SecureAI v4.0',
-                    power: '高容量锂聚合物电池',
-                    application: '安防、巡逻、监控',
-                    description: 'GUARDIAN-X是专业的安防巡逻机器人，配备360度全景摄像头、热成像仪和多种环境传感器。能够自主巡逻指定区域，识别异常情况并实时报警。支持远程控制和自动充电功能。'
-                },
-                'medi-care': {
-                    title: 'MEDI-CARE 医疗机器人',
-                    model: 'MEDI-CARE 医疗版',
-                    ai: 'MedAI v3.2',
-                    power: '医疗级安全电池',
-                    application: '医疗辅助、护理',
-                    description: 'MEDI-CARE是专业的医疗辅助机器人，集成生命体征监测、药物管理和紧急呼叫功能。能够协助医护人员完成日常护理工作，提供基础医疗服务，并在紧急情况下快速响应。'
-                }
-            };
             
             // 当前动画状态
             let currentAnimation = 'Dance';
@@ -969,6 +849,19 @@
             modelViewer.addEventListener('load', () => {
                 modelDisplay.classList.add('model-loaded');
                 updateAnimationStatus();
+                
+                // 确保动画在AR模式下也能正常工作
+                modelViewer.addEventListener('ar-status', (event) => {
+                    if (event.detail.status === 'session-started') {
+                        // AR会话开始时重新启动动画
+                        setTimeout(() => {
+                            modelViewer.animationName = currentAnimation;
+                            modelViewer.play();
+                            isPlaying = true;
+                            updateAnimationStatus();
+                        }, 500);
+                    }
+                });
             });
             
             // 自动旋转控制
@@ -992,7 +885,14 @@
             // AR模式
             arBtn.addEventListener('click', function() {
                 if (modelViewer.activateAR) {
+                    // 在激活AR前确保动画设置正确
+                    modelViewer.animationName = currentAnimation;
                     modelViewer.activateAR();
+                    
+                    // 添加AR模式提示
+                    setTimeout(() => {
+                        alert('AR模式已启动！如果动画未播放，请尝试重新选择动画模式。');
+                    }, 1000);
                 } else {
                     alert('您的设备不支持AR功能，请使用支持AR的移动设备访问此页面。');
                 }
@@ -1025,6 +925,14 @@
                     });
                     e.target.classList.add('active');
                     
+                    // 确保动画在AR模式下也能切换
+                    if (modelViewer.ar && modelViewer.ar.active) {
+                        setTimeout(() => {
+                            modelViewer.play();
+                            isPlaying = true;
+                        }, 100);
+                    }
+                    
                     updateAnimationStatus();
                 }
             });
@@ -1035,82 +943,24 @@
                 animationStatus.textContent = statusText;
             }
             
-            // 机器人卡片选择
-            robotCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    // 移除所有卡片的active类
-                    robotCards.forEach(c => c.classList.remove('active'));
-                    // 为当前卡片添加active类
-                    this.classList.add('active');
-                    
-                    // 获取模型和信息
-                    const modelSrc = this.getAttribute('data-model');
-                    const infoKey = this.getAttribute('data-info');
-                    const animations = this.getAttribute('data-animations');
-                    
-                    // 显示加载动画
-                    modelDisplay.classList.remove('model-loaded');
-                    
-                    // 更新模型
-                    modelViewer.src = modelSrc;
-                    
-                    // 如果有动画，设置默认动画
-                    if (animations) {
-                        const animationList = JSON.parse(animations);
-                        currentAnimation = animationList[0];
-                        modelViewer.animationName = currentAnimation;
-                        modelViewer.autoplay = true;
-                        isPlaying = true;
-                        
-                        // 更新动画控制按钮
-                        updateAnimationButtons(animationList);
-                    } else {
-                        // 没有动画的模型，隐藏动画控制
-                        animationControls.style.display = 'none';
-                        animationStatus.style.display = 'none';
-                    }
-                    
-                    // 更新机器人信息
-                    if (robotData[infoKey]) {
-                        const info = robotData[infoKey];
-                        document.querySelector('.robot-info h2').textContent = info.title;
-                        document.querySelector('.robot-info .meta-item:nth-child(1) .meta-value').textContent = info.model;
-                        document.querySelector('.robot-info .meta-item:nth-child(2) .meta-value').textContent = info.ai;
-                        document.querySelector('.robot-info .meta-item:nth-child(3) .meta-value').textContent = info.power;
-                        document.querySelector('.robot-info .meta-item:nth-child(4) .meta-value').textContent = info.application;
-                        document.querySelector('.robot-info p').textContent = info.description;
-                    }
-                });
-            });
-            
-            // 更新动画按钮
-            function updateAnimationButtons(animations) {
-                animationControls.style.display = 'flex';
-                animationStatus.style.display = 'block';
-                
-                // 清除现有的动画选择按钮
-                document.querySelectorAll('.animation-btn[data-animation]').forEach(btn => {
-                    btn.remove();
-                });
-                
-                // 添加新的动画选择按钮
-                animations.forEach(animation => {
-                    const btn = document.createElement('button');
-                    btn.className = 'animation-btn';
-                    btn.dataset.animation = animation;
-                    btn.textContent = animation;
-                    if (animation === currentAnimation) {
-                        btn.classList.add('active');
-                    }
-                    animationControls.insertBefore(btn, playAnimationBtn);
-                });
-                
-                updateAnimationStatus();
-            }
-            
             // 初始设置
             autoRotateBtn.classList.add('active');
-            updateAnimationButtons(['Dance', 'Idle', 'Walking']);
+            updateAnimationStatus();
+            
+            // 添加AR模式状态监听
+            modelViewer.addEventListener('ar-status', (event) => {
+                console.log('AR状态变化:', event.detail.status);
+                
+                if (event.detail.status === 'session-started') {
+                    // AR会话开始时确保动画运行
+                    setTimeout(() => {
+                        modelViewer.animationName = currentAnimation;
+                        modelViewer.play();
+                        isPlaying = true;
+                        updateAnimationStatus();
+                    }, 1000);
+                }
+            });
         });
     </script>
 </body>
