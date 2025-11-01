@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D文物博物馆 - AR增强现实体验</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2B48C;
+            --accent-color: #CD853F;
+            --dark-bg: #2F1B0C;
+            --light-bg: #FAF0E6;
+            --text-color: #3E2723;
+            --light-text: #8D6E63;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Serif SC', 'SimSun', serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        /* 导航栏样式 */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
+            background-color: var(--dark-bg);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* 主内容区样式 */
+        .hero {
+            padding: 3rem 5%;
+            text-align: center;
+            background: linear-gradient(rgba(47, 27, 12, 0.8), rgba(47, 27, 12, 0.9)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232F1B0C"/><path d="M0 0L100 100M100 0L0 100" stroke="%238B4513" stroke-width="1"/></svg>');
+            color: var(--secondary-color);
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: var(--secondary-color);
+        }
+        
+        /* AR说明区域 */
+        .ar-explanation {
+            padding: 3rem 5%;
+            background-color: white;
+        }
+        
+        .explanation-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .explanation-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 2.2rem;
+        }
+        
+        .ar-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background-color: var(--light-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        /* 3D模型展示区 */
+        .model-viewer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 5%;
+            background-color: var(--light-bg);
+        }
+        
+        .model-display {
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+        }
+        
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            --poster-color: transparent;
+        }
+        
+        .model-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .control-btn:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+        
+        .control-btn.active {
+            background-color: var(--accent-color);
+        }
+        
+        .ar-hint {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .artifact-info {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .artifact-info h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .artifact-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .meta-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+        
+        .meta-value {
+            color: var(--text-color);
+        }
+        
+        /* 文物选择区 */
+        .artifact-selection {
+            padding: 3rem 5%;
+            background-color: var(--dark-bg);
+            color: var(--secondary-color);
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: var(--secondary-color);
+        }
+        
+        .artifacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .artifact-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(210, 180, 140, 0.3);
+        }
+        
+        .artifact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+        
+        .artifact-card.active {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(205, 133, 63, 0.5);
+        }
+        
+        .artifact-thumb {
+            height: 180px;
+            background-color: #3E2723;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 3rem;
+        }
+        
+        .artifact-card-content {
+            padding: 1.5rem;
+        }
+        
+        .artifact-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+        
+        .artifact-card p {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: var(--text-color);
+            padding: 3rem 5% 2rem;
+            color: var(--secondary-color);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .model-display {
+                height: 400px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .artifact-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(139, 69, 19, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="logo">
+            <span class="logo-icon">🏛️</span>
+            <span>3D文物博物馆</span>
+        </div>
+        <div class="nav-links">
+            <a href="#home" class="active">首页</a>
+            <a href="#ar-explanation">AR说明</a>
+            <a href="#artifacts">文物展示</a>
+            <a href="#collections">馆藏精选</a>
+            <a href="#about">关于我们</a>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <section class="hero" id="home">
+        <h1>AR增强现实文物体验</h1>
+        <p>通过先进的3D与AR技术，将千年文物带入您的现实空间，感受前所未有的沉浸式文化体验</p>
+    </section>
+
+    <!-- AR说明区域 -->
+    <section class="ar-explanation" id="ar-explanation">
+        <div class="explanation-content">
+            <h2>什么是AR增强现实？</h2>
+            <p>AR（Augmented Reality，增强现实）是一种将虚拟信息叠加到真实世界中的技术。通过手机或平板电脑的摄像头，您可以将3D文物模型放置在您的实际环境中，从各个角度观察，仿佛文物真的在您面前。</p>
+            
+            <div class="ar-features">
+                <div class="feature-card">
+                    <h3><span class="feature-icon">📱</span>设备要求</h3>
+                    <p>支持AR功能的iOS或Android设备，需要具有后置摄像头和运动传感器。</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🔍</span>如何使用</h3>
+                    <p>点击"AR模式"按钮，将设备对准平坦表面，等待识别后即可放置文物模型。</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="feature-icon">✨</span>体验优势</h3>
+                    <p>可以真实感受文物尺寸，从任意角度观察细节，甚至可以将文物放在手中"把玩"。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3D模型展示区 -->
+    <section class="model-viewer-container" id="artifacts">
+        <div class="model-display">
+            <model-viewer 
+                id="model-viewer"
+                src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+                alt="3D文物模型"
+                ar
+                ar-modes="webxr scene-viewer quick-look"
+                environment-image="neutral"
+                shadow-intensity="1"
+                camera-controls
+                auto-rotate
+                auto-rotate-delay="0">
+                
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>加载3D模型中...</p>
+                </div>
+            </model-viewer>
+        </div>
+        
+        <div class="model-controls">
+            <button class="control-btn" id="auto-rotate-btn">自动旋转</button>
+            <button class="control-btn" id="reset-view-btn">重置视角</button>
+            <button class="control-btn" id="ar-btn">AR模式</button>
+        </div>
+        
+        <div class="ar-hint">
+            <p>💡 提示：在移动设备上点击"AR模式"按钮，可以将文物放置在您的现实环境中！</p>
+        </div>
+        
+        <div class="artifact-info">
+            <h2>青铜鼎</h2>
+            <div class="artifact-meta">
+                <div class="meta-item">
+                    <span class="meta-label">年代</span>
+                    <span class="meta-value">商代晚期 (约公元前1300-1046年)</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">材质</span>
+                    <span class="meta-value">青铜</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">尺寸</span>
+                    <span class="meta-value">高 45cm, 直径 38cm</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">出土地点</span>
+                    <span class="meta-value">河南省安阳市殷墟</span>
+                </div>
+            </div>
+            <p>此青铜鼎为商代晚期祭祀用礼器，器形庄重，纹饰精美。鼎身饰有饕餮纹，象征着权力与神权。鼎内壁铸有铭文，记载了商王祭祀祖先的史实，是研究商代社会制度和宗教信仰的重要实物资料。</p>
+        </div>
+    </section>
+
+    <!-- 文物选择区 -->
+    <section class="artifact-selection" id="collections">
+        <h2 class="section-title">馆藏精选</h2>
+        <div class="artifacts-grid">
+            <div class="artifact-card active" data-model="https://modelviewer.dev/shared-assets/models/Astronaut.glb" data-info="bronze-ding">
+                <div class="artifact-thumb">⚱️</div>
+                <div class="artifact-card-content">
+                    <h3>青铜鼎</h3>
+                    <p>商代晚期祭祀礼器，纹饰精美，具有重要历史价值。</p>
+                </div>
+            </div>
+            <div class="artifact-card" data-model="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb" data-info="jade-cong">
+                <div class="artifact-thumb">🟢</div>
+                <div class="artifact-card-content">
+                    <h3>玉琮</h3>
+                    <p>良渚文化代表性玉器，内外圆造型象征天地沟通。</p>
+                </div>
+            </div>
+            <div class="artifact-card" data-model="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb" data-info="terracotta-warrior">
+                <div class="artifact-thumb">🗿</div>
+                <div class="artifact-card-content">
+                    <h3>兵马俑</h3>
+                    <p>秦代陶俑，形态各异，展现秦朝军事力量与雕塑艺术。</p>
+                </div>
+            </div>
+            <div class="artifact-card" data-model="https://modelviewer.dev/shared-assets/models/Astronaut.glb" data-info="bronze-mirror">
+                <div class="artifact-thumb">🪞</div>
+                <div class="artifact-card-content">
+                    <h3>青铜镜</h3>
+                    <p>汉代生活用具，背面纹饰精美，兼具实用与艺术价值。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>3D文物博物馆</h3>
+                <p style="margin-top: 1rem;">致力于通过数字化技术保护、研究和展示中国珍贵文化遗产，让文物"活"起来。</p>
+            </div>
+            <div class="footer-column">
+                <h3>快速链接</h3>
+                <div class="footer-links">
+                    <a href="#home">首页</a>
+                    <a href="#ar-explanation">AR说明</a>
+                    <a href="#artifacts">文物展示</a>
+                    <a href="#collections">馆藏精选</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>AR技术支持</h3>
+                <div class="footer-links">
+                    <a href="#">AR使用指南</a>
+                    <a href="#">设备兼容性</a>
+                    <a href="#">常见问题</a>
+                    <a href="#">反馈建议</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>联系</h3>
+                <div class="footer-links">
+                    <a href="#">参观指南</a>
+                    <a href="#">团体预约</a>
+                    <a href="#">志愿者</a>
+                    <a href="#">捐赠支持</a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 3D文物博物馆. 保留所有权利.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modelViewer = document.querySelector('#model-viewer');
+            const autoRotateBtn = document.getElementById('auto-rotate-btn');
+            const resetViewBtn = document.getElementById('reset-view-btn');
+            const arBtn = document.getElementById('ar-btn');
+            const artifactCards = document.querySelectorAll('.artifact-card');
+            
+            // 文物信息数据
+            const artifactData = {
+                'bronze-ding': {
+                    title: '青铜鼎',
+                    era: '商代晚期 (约公元前1300-1046年)',
+                    material: '青铜',
+                    dimensions: '高 45cm, 直径 38cm',
+                    location: '河南省安阳市殷墟',
+                    description: '此青铜鼎为商代晚期祭祀用礼器，器形庄重，纹饰精美。鼎身饰有饕餮纹，象征着权力与神权。鼎内壁铸有铭文，记载了商王祭祀祖先的史实，是研究商代社会制度和宗教信仰的重要实物资料。'
+                },
+                'jade-cong': {
+                    title: '玉琮',
+                    era: '良渚文化 (约公元前3300-2300年)',
+                    material: '玉石',
+                    dimensions: '高 8.9cm, 外径 17.6cm',
+                    location: '浙江省杭州市良渚遗址',
+                    description: '玉琮是良渚文化的代表性玉器，内外圆造型象征天地沟通。器表刻有精细的神人兽面纹，反映了良渚文化时期发达的玉器制作工艺和复杂的精神信仰体系。'
+                },
+                'terracotta-warrior': {
+                    title: '兵马俑',
+                    era: '秦代 (公元前221-206年)',
+                    material: '陶土',
+                    dimensions: '高 180cm, 宽 60cm',
+                    location: '陕西省西安市秦始皇陵',
+                    description: '兵马俑是秦始皇陵的陪葬坑中的陶俑，形态各异，面容生动。这些陶俑展现了秦朝强大的军事力量和精湛的雕塑艺术，是世界考古史上最伟大的发现之一。'
+                },
+                'bronze-mirror': {
+                    title: '青铜镜',
+                    era: '汉代 (公元前202年-公元220年)',
+                    material: '青铜',
+                    dimensions: '直径 18cm, 厚 0.8cm',
+                    location: '湖南省长沙市马王堆汉墓',
+                    description: '汉代青铜镜是日常生活用品，背面装饰有精美的纹饰和吉祥语。这面铜镜保存完好，镜面仍可照人，反映了汉代青铜铸造工艺的高超水平。'
+                }
+            };
+            
+            // 自动旋转控制
+            autoRotateBtn.addEventListener('click', function() {
+                const isAutoRotate = modelViewer.getAttribute('auto-rotate') === '';
+                if (isAutoRotate) {
+                    modelViewer.removeAttribute('auto-rotate');
+                    autoRotateBtn.classList.remove('active');
+                } else {
+                    modelViewer.setAttribute('auto-rotate', '');
+                    autoRotateBtn.classList.add('active');
+                }
+            });
+            
+            // 重置视角
+            resetViewBtn.addEventListener('click', function() {
+                modelViewer.cameraOrbit = '0deg 75deg 105%';
+            });
+            
+            // AR模式
+            arBtn.addEventListener('click', function() {
+                if (modelViewer.activateAR) {
+                    modelViewer.activateAR();
+                } else {
+                    alert('您的设备不支持AR功能，请使用支持AR的移动设备访问此页面。');
+                }
+            });
+            
+            // 文物卡片选择
+            artifactCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // 移除所有卡片的active类
+                    artifactCards.forEach(c => c.classList.remove('active'));
+                    // 为当前卡片添加active类
+                    this.classList.add('active');
+                    
+                    // 获取模型和信息
+                    const modelSrc = this.getAttribute('data-model');
+                    const infoKey = this.getAttribute('data-info');
+                    
+                    // 更新模型
+                    modelViewer.src = modelSrc;
+                    
+                    // 更新文物信息
+                    if (artifactData[infoKey]) {
+                        const info = artifactData[infoKey];
+                        document.querySelector('.artifact-info h2').textContent = info.title;
+                        document.querySelector('.artifact-info .meta-item:nth-child(1) .meta-value').textContent = info.era;
+                        document.querySelector('.artifact-info .meta-item:nth-child(2) .meta-value').textContent = info.material;
+                        document.querySelector('.artifact-info .meta-item:nth-child(3) .meta-value').textContent = info.dimensions;
+                        document.querySelector('.artifact-info .meta-item:nth-child(4) .meta-value').textContent = info.location;
+                        document.querySelector('.artifact-info p').textContent = info.description;
+                    }
+                });
+            });
+            
+            // 初始设置
+            autoRotateBtn.classList.add('active');
+        });
+    </script>
+</body>
+</html>
