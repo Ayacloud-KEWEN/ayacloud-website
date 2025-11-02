@@ -745,8 +745,6 @@
                 opacity: 0;
             }
         }
-
-        
     </style>
 </head>
 
@@ -971,6 +969,7 @@
             const animationStatus = document.getElementById('animation-status');
             const playAnimationBtn = document.getElementById('play-animation-btn');
             const pauseAnimationBtn = document.getElementById('pause-animation-btn');
+            const modelViewerSection = document.getElementById('robots');
 
             // Robot information data
             const robotData = {
@@ -1127,6 +1126,12 @@
                         document.querySelector('.robot-info .meta-item:nth-child(4) .meta-value').textContent = info.application;
                         document.querySelector('.robot-info p').textContent = info.description;
                     }
+
+                    modelViewerSection.scrollIntoView({
+                        behavior: 'smooth', // 平滑滚动
+                        block: 'start'       // 滚动到元素的顶部
+                    });
+
                 });
             });
 
