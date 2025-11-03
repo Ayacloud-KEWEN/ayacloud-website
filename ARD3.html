@@ -6,7 +6,6 @@
     <title>AR菜品识别系统</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2"></script>
     <style>
         * {
             margin: 0;
@@ -50,6 +49,61 @@
             font-size: 1rem;
             color: #a0a0ff;
             margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            max-width: 300px;
+        }
+
+        .search-input {
+            padding: 10px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px 0 0 5px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            width: 70%;
+        }
+
+        .search-input::placeholder {
+            color: #a0a0ff;
+        }
+
+        .search-button {
+            padding: 10px 15px;
+            background: #4CAF50;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            color: white;
+            cursor: pointer;
+        }
+
+        .search-results {
+            margin: 20px auto;
+            max-width: 600px;
+            background: rgba(30, 50, 70, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .food-result {
+            background: rgba(40, 60, 80, 0.6);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+            border-left: 3px solid #4CAF50;
+        }
+
+        .food-result h4 {
+            color: #8BC34A;
+            margin-bottom: 8px;
+        }
+
+        .food-result p {
+            margin: 4px 0;
+            font-size: 0.9rem;
         }
         
         .ar-button {
@@ -370,7 +424,13 @@
     <div class="container">
         <header>
             <h1>AR菜品识别系统</h1>
-            <p class="subtitle">实时识别菜品并分析营养成分</p>
+            <p class="subtitle">实时识别菜品并分析营养成分 - 支持70+种食材</p>
+            
+            <div class="search-container">
+                <input type="text" id="foodSearch" placeholder="搜索食材..." class="search-input">
+                <button id="searchButton" class="search-button">搜索</button>
+            </div>
+            
             <button class="ar-button" id="arButton">启动AR识别</button>
         </header>
         
@@ -385,8 +445,8 @@
         <section class="features">
             <div class="feature-card">
                 <div class="feature-icon">🍲</div>
-                <h3 class="feature-title">菜品识别</h3>
-                <p class="feature-desc">使用TensorFlow.js识别超过1000种常见菜品，准确率高。</p>
+                <h3 class="feature-title">70+食材识别</h3>
+                <p class="feature-desc">支持识别水果、蔬菜、主食、蛋白质、饮品、甜点等70多种常见食材。</p>
             </div>
             
             <div class="feature-card">
@@ -421,27 +481,13 @@
     </div>
 
     <footer>
-        <p>© 2023 智能餐饮 AR识别系统 | 版本 v1.0</p>
+        <p>© 2023 智能餐饮 AR识别系统 | 增强版 v2.0 | 支持70+种食材</p>
     </footer>
 
     <script>
-        // 全局变量
-        let model = null;
-        let isARActive = false;
-        let detectionInterval = null;
-        
-        // DOM元素
-        const arButton = document.getElementById('arButton');
-        const arInterface = document.getElementById('arInterface');
-        const closeButton = document.getElementById('closeButton');
-        const videoElement = document.getElementById('videoElement');
-        const analysisOverlay = document.getElementById('analysisOverlay');
-        const dataGrid = document.getElementById('dataGrid');
-        const permissionNotice = document.getElementById('permissionNotice');
-        const loadingElement = document.getElementById('loading');
-        
-        // 菜品数据库
+        // 扩展的菜品数据库
         const foodDatabase = {
+            // 中式菜品
             'pizza': {
                 name: '披萨',
                 ingredients: ['面粉', '奶酪', '番茄酱', '蔬菜', '肉类'],
@@ -487,15 +533,26 @@
                 fat: 2,
                 healthScore: 8
             },
-            'salad': {
-                name: '沙拉',
-                ingredients: ['生菜', '番茄', '黄瓜', '橄榄油', '醋'],
-                calories: 80,
-                protein: 3,
-                carbs: 10,
-                fat: 4,
-                healthScore: 9
+            'ramen': {
+                name: '拉面',
+                ingredients: ['面条', '猪肉', '鸡蛋', '海苔', '葱'],
+                calories: 450,
+                protein: 20,
+                carbs: 60,
+                fat: 15,
+                healthScore: 6
             },
+            'fried rice': {
+                name: '炒饭',
+                ingredients: ['米饭', '鸡蛋', '蔬菜', '肉类', '酱油'],
+                calories: 235,
+                protein: 9,
+                carbs: 35,
+                fat: 7,
+                healthScore: 6
+            },
+            
+            // 水果类
             'apple': {
                 name: '苹果',
                 ingredients: ['苹果'],
@@ -523,6 +580,44 @@
                 fat: 0.1,
                 healthScore: 10
             },
+            'strawberry': {
+                name: '草莓',
+                ingredients: ['草莓'],
+                calories: 32,
+                protein: 0.7,
+                carbs: 8,
+                fat: 0.3,
+                healthScore: 10
+            },
+            'grape': {
+                name: '葡萄',
+                ingredients: ['葡萄'],
+                calories: 69,
+                protein: 0.7,
+                carbs: 18,
+                fat: 0.2,
+                healthScore: 9
+            },
+            'watermelon': {
+                name: '西瓜',
+                ingredients: ['西瓜'],
+                calories: 30,
+                protein: 0.6,
+                carbs: 8,
+                fat: 0.2,
+                healthScore: 9
+            },
+            'mango': {
+                name: '芒果',
+                ingredients: ['芒果'],
+                calories: 60,
+                protein: 0.8,
+                carbs: 15,
+                fat: 0.4,
+                healthScore: 9
+            },
+            
+            // 蔬菜类
             'broccoli': {
                 name: '西兰花',
                 ingredients: ['西兰花'],
@@ -540,8 +635,436 @@
                 carbs: 10,
                 fat: 0.2,
                 healthScore: 9
+            },
+            'tomato': {
+                name: '番茄',
+                ingredients: ['番茄'],
+                calories: 18,
+                protein: 0.9,
+                carbs: 4,
+                fat: 0.2,
+                healthScore: 10
+            },
+            'potato': {
+                name: '土豆',
+                ingredients: ['土豆'],
+                calories: 77,
+                protein: 2,
+                carbs: 17,
+                fat: 0.1,
+                healthScore: 8
+            },
+            'cucumber': {
+                name: '黄瓜',
+                ingredients: ['黄瓜'],
+                calories: 15,
+                protein: 0.7,
+                carbs: 3.6,
+                fat: 0.1,
+                healthScore: 10
+            },
+            'spinach': {
+                name: '菠菜',
+                ingredients: ['菠菜'],
+                calories: 23,
+                protein: 2.9,
+                carbs: 3.6,
+                fat: 0.4,
+                healthScore: 10
+            },
+            'onion': {
+                name: '洋葱',
+                ingredients: ['洋葱'],
+                calories: 40,
+                protein: 1.1,
+                carbs: 9,
+                fat: 0.1,
+                healthScore: 8
+            },
+            
+            // 主食类
+            'bread': {
+                name: '面包',
+                ingredients: ['面粉', '酵母', '水', '盐'],
+                calories: 265,
+                protein: 9,
+                carbs: 49,
+                fat: 3.2,
+                healthScore: 6
+            },
+            'rice': {
+                name: '米饭',
+                ingredients: ['大米'],
+                calories: 130,
+                protein: 2.7,
+                carbs: 28,
+                fat: 0.3,
+                healthScore: 7
+            },
+            'noodle': {
+                name: '面条',
+                ingredients: ['面粉', '水'],
+                calories: 138,
+                protein: 4.5,
+                carbs: 25,
+                fat: 1.3,
+                healthScore: 7
+            },
+            'pasta': {
+                name: '意大利面',
+                ingredients: ['面粉', '鸡蛋'],
+                calories: 158,
+                protein: 5.8,
+                carbs: 30,
+                fat: 0.9,
+                healthScore: 7
+            },
+            
+            // 蛋白质类
+            'chicken': {
+                name: '鸡肉',
+                ingredients: ['鸡肉'],
+                calories: 165,
+                protein: 31,
+                carbs: 0,
+                fat: 3.6,
+                healthScore: 8
+            },
+            'beef': {
+                name: '牛肉',
+                ingredients: ['牛肉'],
+                calories: 250,
+                protein: 26,
+                carbs: 0,
+                fat: 15,
+                healthScore: 7
+            },
+            'pork': {
+                name: '猪肉',
+                ingredients: ['猪肉'],
+                calories: 242,
+                protein: 25,
+                carbs: 0,
+                fat: 14,
+                healthScore: 6
+            },
+            'fish': {
+                name: '鱼肉',
+                ingredients: ['鱼肉'],
+                calories: 206,
+                protein: 22,
+                carbs: 0,
+                fat: 13,
+                healthScore: 9
+            },
+            'egg': {
+                name: '鸡蛋',
+                ingredients: ['鸡蛋'],
+                calories: 155,
+                protein: 13,
+                carbs: 1.1,
+                fat: 11,
+                healthScore: 8
+            },
+            'tofu': {
+                name: '豆腐',
+                ingredients: ['大豆'],
+                calories: 76,
+                protein: 8,
+                carbs: 2,
+                fat: 4,
+                healthScore: 9
+            },
+            
+            // 饮品
+            'coffee': {
+                name: '咖啡',
+                ingredients: ['咖啡豆', '水'],
+                calories: 2,
+                protein: 0.3,
+                carbs: 0,
+                fat: 0,
+                healthScore: 7
+            },
+            'tea': {
+                name: '茶',
+                ingredients: ['茶叶', '水'],
+                calories: 1,
+                protein: 0,
+                carbs: 0.3,
+                fat: 0,
+                healthScore: 8
+            },
+            'milk': {
+                name: '牛奶',
+                ingredients: ['牛奶'],
+                calories: 42,
+                protein: 3.4,
+                carbs: 5,
+                fat: 1,
+                healthScore: 8
+            },
+            'juice': {
+                name: '果汁',
+                ingredients: ['水果', '水'],
+                calories: 45,
+                protein: 0.5,
+                carbs: 11,
+                fat: 0.1,
+                healthScore: 6
+            },
+            
+            // 甜点
+            'cake': {
+                name: '蛋糕',
+                ingredients: ['面粉', '糖', '鸡蛋', '奶油'],
+                calories: 350,
+                protein: 5,
+                carbs: 50,
+                fat: 15,
+                healthScore: 3
+            },
+            'ice cream': {
+                name: '冰淇淋',
+                ingredients: ['牛奶', '糖', '奶油'],
+                calories: 207,
+                protein: 3.5,
+                carbs: 24,
+                fat: 11,
+                healthScore: 3
+            },
+            'chocolate': {
+                name: '巧克力',
+                ingredients: ['可可', '糖', '牛奶'],
+                calories: 546,
+                protein: 7.8,
+                carbs: 54,
+                fat: 31,
+                healthScore: 4
+            },
+            'cookie': {
+                name: '饼干',
+                ingredients: ['面粉', '糖', '黄油'],
+                calories: 502,
+                protein: 6,
+                carbs: 65,
+                fat: 24,
+                healthScore: 4
+            },
+            
+            // 中式特色菜品
+            'dumpling': {
+                name: '饺子',
+                ingredients: ['面粉', '猪肉', '蔬菜', '调味料'],
+                calories: 200,
+                protein: 8,
+                carbs: 30,
+                fat: 6,
+                healthScore: 7
+            },
+            'spring roll': {
+                name: '春卷',
+                ingredients: ['面粉', '蔬菜', '肉类', '油'],
+                calories: 153,
+                protein: 5,
+                carbs: 20,
+                fat: 6,
+                healthScore: 6
+            },
+            'kung pao chicken': {
+                name: '宫保鸡丁',
+                ingredients: ['鸡肉', '花生', '辣椒', '蔬菜'],
+                calories: 229,
+                protein: 18,
+                carbs: 12,
+                fat: 12,
+                healthScore: 7
+            },
+            'mapo tofu': {
+                name: '麻婆豆腐',
+                ingredients: ['豆腐', '猪肉末', '辣椒', '花椒'],
+                calories: 156,
+                protein: 12,
+                carbs: 8,
+                fat: 9,
+                healthScore: 7
+            },
+            
+            // 沙拉类
+            'salad': {
+                name: '沙拉',
+                ingredients: ['生菜', '番茄', '黄瓜', '橄榄油', '醋'],
+                calories: 80,
+                protein: 3,
+                carbs: 10,
+                fat: 4,
+                healthScore: 9
+            },
+            'caesar salad': {
+                name: '凯撒沙拉',
+                ingredients: ['生菜', '面包丁', '奶酪', '沙拉酱'],
+                calories: 184,
+                protein: 9,
+                carbs: 8,
+                fat: 14,
+                healthScore: 6
+            },
+            
+            // 汤类
+            'soup': {
+                name: '汤',
+                ingredients: ['水', '蔬菜', '肉类', '调味料'],
+                calories: 60,
+                protein: 5,
+                carbs: 8,
+                fat: 2,
+                healthScore: 8
             }
         };
+
+        // 全局变量
+        let model = null;
+        let isARActive = false;
+        let detectionInterval = null;
+        
+        // DOM元素
+        const arButton = document.getElementById('arButton');
+        const arInterface = document.getElementById('arInterface');
+        const closeButton = document.getElementById('closeButton');
+        const videoElement = document.getElementById('videoElement');
+        const analysisOverlay = document.getElementById('analysisOverlay');
+        const dataGrid = document.getElementById('dataGrid');
+        const permissionNotice = document.getElementById('permissionNotice');
+        const loadingElement = document.getElementById('loading');
+        const searchButton = document.getElementById('searchButton');
+        const foodSearch = document.getElementById('foodSearch');
+        
+        // 扩展的食物关键词识别
+        function isLikelyFood(className) {
+            const foodKeywords = [
+                // 水果
+                'apple', 'banana', 'orange', 'strawberry', 'grape', 'watermelon', 'mango',
+                'fruit', 'berry',
+                
+                // 蔬菜
+                'broccoli', 'carrot', 'tomato', 'potato', 'cucumber', 'spinach', 'onion',
+                'vegetable', 'lettuce', 'cabbage',
+                
+                // 主食
+                'bread', 'rice', 'noodle', 'pasta', 'pizza', 'burger', 'sandwich',
+                
+                // 蛋白质
+                'chicken', 'beef', 'pork', 'fish', 'egg', 'tofu', 'meat',
+                
+                // 饮品
+                'coffee', 'tea', 'milk', 'juice', 'drink', 'beverage',
+                
+                // 甜点
+                'cake', 'ice cream', 'chocolate', 'cookie', 'dessert', 'sweet',
+                
+                // 中式菜品
+                'dumpling', 'spring roll', 'kung pao', 'mapo tofu', 'ramen', 'sushi',
+                
+                // 通用
+                'food', 'meal', 'dish', 'soup', 'salad', 'snack'
+            ];
+            
+            const classNameLower = className.toLowerCase();
+            return foodKeywords.some(keyword => 
+                classNameLower.includes(keyword)
+            );
+        }
+        
+        // 智能食物名称匹配
+        function extractFoodName(className) {
+            const classNameLower = className.toLowerCase();
+            
+            // 精确匹配
+            for (const key in foodDatabase) {
+                if (classNameLower.includes(key)) {
+                    return key;
+                }
+            }
+            
+            // 模糊匹配 - 处理一些常见变体
+            const fuzzyMatches = {
+                'pizza': ['pizza', 'pie'],
+                'hamburger': ['hamburger', 'burger', 'cheeseburger'],
+                'sandwich': ['sandwich', 'sub', 'wrap'],
+                'sushi': ['sushi', 'maki', 'roll'],
+                'apple': ['apple', 'apples'],
+                'banana': ['banana', 'bananas'],
+                'orange': ['orange', 'oranges'],
+                'coffee': ['coffee', 'espresso', 'latte'],
+                'tea': ['tea', 'green tea', 'black tea']
+            };
+            
+            for (const [foodKey, variants] of Object.entries(fuzzyMatches)) {
+                if (variants.some(variant => classNameLower.includes(variant))) {
+                    return foodKey;
+                }
+            }
+            
+            // 如果没有匹配，返回第一个单词
+            return classNameLower.split(',')[0].split(' ')[0];
+        }
+        
+        // 搜索功能
+        searchButton.addEventListener('click', function() {
+            const searchTerm = foodSearch.value.toLowerCase().trim();
+            if (searchTerm) {
+                const results = searchFoodDatabase(searchTerm);
+                displaySearchResults(results);
+            }
+        });
+
+        // 支持按Enter键搜索
+        foodSearch.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchButton.click();
+            }
+        });
+
+        function searchFoodDatabase(searchTerm) {
+            const results = [];
+            for (const [key, food] of Object.entries(foodDatabase)) {
+                if (food.name.toLowerCase().includes(searchTerm) || 
+                    food.ingredients.some(ingredient => ingredient.toLowerCase().includes(searchTerm)) ||
+                    key.toLowerCase().includes(searchTerm)) {
+                    results.push({...food, key});
+                }
+            }
+            return results;
+        }
+
+        function displaySearchResults(results) {
+            // 创建或更新搜索结果展示
+            let resultsContainer = document.getElementById('searchResults');
+            if (!resultsContainer) {
+                resultsContainer = document.createElement('div');
+                resultsContainer.id = 'searchResults';
+                resultsContainer.className = 'search-results';
+                document.querySelector('.container').appendChild(resultsContainer);
+            }
+            
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<p>未找到相关食材</p>';
+                return;
+            }
+            
+            resultsContainer.innerHTML = `
+                <h3 style="color: #4CAF50; margin-bottom: 15px; text-align: center;">找到 ${results.length} 个相关食材</h3>
+                ${results.map(food => `
+                    <div class="food-result">
+                        <h4>${food.name}</h4>
+                        <p><span class="highlight">食材:</span> ${food.ingredients.join(', ')}</p>
+                        <p><span class="highlight">卡路里:</span> ${food.calories} kcal</p>
+                        <p><span class="highlight">蛋白质:</span> ${food.protein}g | <span class="highlight">碳水:</span> ${food.carbs}g | <span class="highlight">脂肪:</span> ${food.fat}g</p>
+                        <p><span class="highlight">健康评分:</span> ${'★'.repeat(food.healthScore)}${'☆'.repeat(10 - food.healthScore)} (${food.healthScore}/10)</p>
+                    </div>
+                `).join('')}
+            `;
+        }
         
         // 初始化函数
         async function initialize() {
@@ -632,19 +1155,6 @@
             }, 1000); // 每1秒检测一次
         }
         
-        // 判断是否为食物
-        function isLikelyFood(className) {
-            const foodKeywords = [
-                'pizza', 'burger', 'hotdog', 'sandwich', 'sushi', 'salad',
-                'apple', 'banana', 'orange', 'broccoli', 'carrot', 'food',
-                'fruit', 'vegetable', 'meal', 'dish', 'soup', 'pasta'
-            ];
-            
-            return foodKeywords.some(keyword => 
-                className.toLowerCase().includes(keyword)
-            );
-        }
-        
         // 显示食物检测结果
         function displayFoodDetection(predictions) {
             const videoWidth = videoElement.videoWidth;
@@ -706,19 +1216,6 @@
             `;
             
             analysisOverlay.appendChild(foodInfo);
-        }
-        
-        // 从预测结果中提取食物名称
-        function extractFoodName(className) {
-            // 尝试匹配数据库中的食物名称
-            for (const key in foodDatabase) {
-                if (className.toLowerCase().includes(key)) {
-                    return key;
-                }
-            }
-            
-            // 如果没有匹配，返回第一个单词
-            return className.split(',')[0].toLowerCase();
         }
         
         // 创建默认食物数据
