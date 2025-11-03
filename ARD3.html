@@ -424,7 +424,7 @@
     <div class="container">
         <header>
             <h1>AR菜品识别系统</h1>
-            <p class="subtitle">实时识别菜品并分析营养成分 - 支持70+种食材</p>
+            <p class="subtitle">实时识别菜品并分析营养成分 - 支持90+种食材</p>
             
             <div class="search-container">
                 <input type="text" id="foodSearch" placeholder="搜索食材..." class="search-input">
@@ -444,9 +444,9 @@
         
         <section class="features">
             <div class="feature-card">
-                <div class="feature-icon">🍲</div>
-                <h3 class="feature-title">70+食材识别</h3>
-                <p class="feature-desc">支持识别水果、蔬菜、主食、蛋白质、饮品、甜点等70多种常见食材。</p>
+                <div class="feature-icon">🥟</div>
+                <h3 class="feature-title">90+食材识别</h3>
+                <p class="feature-desc">支持识别中式美食、水果、蔬菜、主食等90多种常见食材。</p>
             </div>
             
             <div class="feature-card">
@@ -481,13 +481,181 @@
     </div>
 
     <footer>
-        <p>© 2023 智能餐饮 AR识别系统 | 增强版 v2.0 | 支持70+种食材</p>
+        <p>© 2023 智能餐饮 AR识别系统 | 增强版 v3.0 | 支持90+种食材</p>
     </footer>
 
     <script>
-        // 扩展的菜品数据库
+        // 扩展的菜品数据库 - 包含更多中式食物
         const foodDatabase = {
-            // 中式菜品
+            // 中式主食
+            'hot pot': {
+                name: '火锅',
+                ingredients: ['牛肉', '羊肉', '蔬菜', '豆腐', '蘑菇', '面条'],
+                calories: 350,
+                protein: 25,
+                carbs: 20,
+                fat: 18,
+                healthScore: 7
+            },
+            'steamed bun': {
+                name: '包子',
+                ingredients: ['面粉', '猪肉', '蔬菜', '酵母'],
+                calories: 220,
+                protein: 8,
+                carbs: 35,
+                fat: 6,
+                healthScore: 7
+            },
+            'flower roll': {
+                name: '花卷',
+                ingredients: ['面粉', '酵母', '油', '盐'],
+                calories: 180,
+                protein: 5,
+                carbs: 35,
+                fat: 2,
+                healthScore: 6
+            },
+            'dumpling': {
+                name: '饺子',
+                ingredients: ['面粉', '猪肉', '蔬菜', '调味料'],
+                calories: 200,
+                protein: 8,
+                carbs: 30,
+                fat: 6,
+                healthScore: 7
+            },
+            'wonton': {
+                name: '馄饨',
+                ingredients: ['面粉', '猪肉', '虾仁', '蔬菜'],
+                calories: 180,
+                protein: 10,
+                carbs: 20,
+                fat: 5,
+                healthScore: 7
+            },
+            'spring roll': {
+                name: '春卷',
+                ingredients: ['面粉', '蔬菜', '肉类', '油'],
+                calories: 153,
+                protein: 5,
+                carbs: 20,
+                fat: 6,
+                healthScore: 6
+            },
+            'fried rice': {
+                name: '炒饭',
+                ingredients: ['米饭', '鸡蛋', '蔬菜', '肉类', '酱油'],
+                calories: 235,
+                protein: 9,
+                carbs: 35,
+                fat: 7,
+                healthScore: 6
+            },
+            'congee': {
+                name: '粥',
+                ingredients: ['大米', '水', '肉类', '蔬菜'],
+                calories: 80,
+                protein: 4,
+                carbs: 15,
+                fat: 1,
+                healthScore: 8
+            },
+            
+            // 中式面点
+            'noodle': {
+                name: '面条',
+                ingredients: ['面粉', '水'],
+                calories: 138,
+                protein: 4.5,
+                carbs: 25,
+                fat: 1.3,
+                healthScore: 7
+            },
+            'ramen': {
+                name: '拉面',
+                ingredients: ['面条', '猪肉', '鸡蛋', '海苔', '葱'],
+                calories: 450,
+                protein: 20,
+                carbs: 60,
+                fat: 15,
+                healthScore: 6
+            },
+            'pancake': {
+                name: '煎饼',
+                ingredients: ['面粉', '鸡蛋', '葱花', '油'],
+                calories: 220,
+                protein: 7,
+                carbs: 30,
+                fat: 8,
+                healthScore: 6
+            },
+            'mantou': {
+                name: '馒头',
+                ingredients: ['面粉', '酵母', '水'],
+                calories: 150,
+                protein: 5,
+                carbs: 30,
+                fat: 1,
+                healthScore: 7
+            },
+            
+            // 中式菜肴
+            'kung pao chicken': {
+                name: '宫保鸡丁',
+                ingredients: ['鸡肉', '花生', '辣椒', '蔬菜'],
+                calories: 229,
+                protein: 18,
+                carbs: 12,
+                fat: 12,
+                healthScore: 7
+            },
+            'mapo tofu': {
+                name: '麻婆豆腐',
+                ingredients: ['豆腐', '猪肉末', '辣椒', '花椒'],
+                calories: 156,
+                protein: 12,
+                carbs: 8,
+                fat: 9,
+                healthScore: 7
+            },
+            'sweet and sour pork': {
+                name: '糖醋里脊',
+                ingredients: ['猪肉', '面粉', '糖', '醋'],
+                calories: 280,
+                protein: 15,
+                carbs: 25,
+                fat: 12,
+                healthScore: 5
+            },
+            'peking duck': {
+                name: '北京烤鸭',
+                ingredients: ['鸭子', '面粉', '黄瓜', '甜面酱'],
+                calories: 340,
+                protein: 25,
+                carbs: 20,
+                fat: 18,
+                healthScore: 6
+            },
+            'braised pork': {
+                name: '红烧肉',
+                ingredients: ['猪肉', '酱油', '糖', '料酒'],
+                calories: 380,
+                protein: 20,
+                carbs: 15,
+                fat: 25,
+                healthScore: 4
+            },
+            'stir fry': {
+                name: '炒菜',
+                ingredients: ['蔬菜', '肉类', '酱油', '油'],
+                calories: 120,
+                protein: 8,
+                carbs: 10,
+                fat: 6,
+                healthScore: 8
+            },
+            
+            // 西式菜品
             'pizza': {
                 name: '披萨',
                 ingredients: ['面粉', '奶酪', '番茄酱', '蔬菜', '肉类'],
@@ -532,24 +700,6 @@
                 carbs: 28,
                 fat: 2,
                 healthScore: 8
-            },
-            'ramen': {
-                name: '拉面',
-                ingredients: ['面条', '猪肉', '鸡蛋', '海苔', '葱'],
-                calories: 450,
-                protein: 20,
-                carbs: 60,
-                fat: 15,
-                healthScore: 6
-            },
-            'fried rice': {
-                name: '炒饭',
-                ingredients: ['米饭', '鸡蛋', '蔬菜', '肉类', '酱油'],
-                calories: 235,
-                protein: 9,
-                carbs: 35,
-                fat: 7,
-                healthScore: 6
             },
             
             // 水果类
@@ -614,6 +764,24 @@
                 protein: 0.8,
                 carbs: 15,
                 fat: 0.4,
+                healthScore: 9
+            },
+            'pear': {
+                name: '梨',
+                ingredients: ['梨'],
+                calories: 57,
+                protein: 0.4,
+                carbs: 15,
+                fat: 0.1,
+                healthScore: 9
+            },
+            'peach': {
+                name: '桃子',
+                ingredients: ['桃子'],
+                calories: 39,
+                protein: 0.9,
+                carbs: 10,
+                fat: 0.3,
                 healthScore: 9
             },
             
@@ -681,6 +849,24 @@
                 fat: 0.1,
                 healthScore: 8
             },
+            'cabbage': {
+                name: '卷心菜',
+                ingredients: ['卷心菜'],
+                calories: 25,
+                protein: 1.3,
+                carbs: 6,
+                fat: 0.1,
+                healthScore: 9
+            },
+            'eggplant': {
+                name: '茄子',
+                ingredients: ['茄子'],
+                calories: 25,
+                protein: 1,
+                carbs: 6,
+                fat: 0.2,
+                healthScore: 8
+            },
             
             // 主食类
             'bread': {
@@ -699,15 +885,6 @@
                 protein: 2.7,
                 carbs: 28,
                 fat: 0.3,
-                healthScore: 7
-            },
-            'noodle': {
-                name: '面条',
-                ingredients: ['面粉', '水'],
-                calories: 138,
-                protein: 4.5,
-                carbs: 25,
-                fat: 1.3,
                 healthScore: 7
             },
             'pasta': {
@@ -852,64 +1029,6 @@
                 healthScore: 4
             },
             
-            // 中式特色菜品
-            'dumpling': {
-                name: '饺子',
-                ingredients: ['面粉', '猪肉', '蔬菜', '调味料'],
-                calories: 200,
-                protein: 8,
-                carbs: 30,
-                fat: 6,
-                healthScore: 7
-            },
-            'spring roll': {
-                name: '春卷',
-                ingredients: ['面粉', '蔬菜', '肉类', '油'],
-                calories: 153,
-                protein: 5,
-                carbs: 20,
-                fat: 6,
-                healthScore: 6
-            },
-            'kung pao chicken': {
-                name: '宫保鸡丁',
-                ingredients: ['鸡肉', '花生', '辣椒', '蔬菜'],
-                calories: 229,
-                protein: 18,
-                carbs: 12,
-                fat: 12,
-                healthScore: 7
-            },
-            'mapo tofu': {
-                name: '麻婆豆腐',
-                ingredients: ['豆腐', '猪肉末', '辣椒', '花椒'],
-                calories: 156,
-                protein: 12,
-                carbs: 8,
-                fat: 9,
-                healthScore: 7
-            },
-            
-            // 沙拉类
-            'salad': {
-                name: '沙拉',
-                ingredients: ['生菜', '番茄', '黄瓜', '橄榄油', '醋'],
-                calories: 80,
-                protein: 3,
-                carbs: 10,
-                fat: 4,
-                healthScore: 9
-            },
-            'caesar salad': {
-                name: '凯撒沙拉',
-                ingredients: ['生菜', '面包丁', '奶酪', '沙拉酱'],
-                calories: 184,
-                protein: 9,
-                carbs: 8,
-                fat: 14,
-                healthScore: 6
-            },
-            
             // 汤类
             'soup': {
                 name: '汤',
@@ -942,13 +1061,17 @@
         // 扩展的食物关键词识别
         function isLikelyFood(className) {
             const foodKeywords = [
+                // 中式食物
+                'hot pot', 'steamed bun', 'flower roll', 'dumpling', 'wonton', 'congee',
+                'mantou', 'pancake', 'kung pao', 'mapo tofu', 'peking duck', 'braised pork',
+                
                 // 水果
                 'apple', 'banana', 'orange', 'strawberry', 'grape', 'watermelon', 'mango',
-                'fruit', 'berry',
+                'pear', 'peach', 'fruit', 'berry',
                 
                 // 蔬菜
                 'broccoli', 'carrot', 'tomato', 'potato', 'cucumber', 'spinach', 'onion',
-                'vegetable', 'lettuce', 'cabbage',
+                'cabbage', 'eggplant', 'vegetable', 'lettuce',
                 
                 // 主食
                 'bread', 'rice', 'noodle', 'pasta', 'pizza', 'burger', 'sandwich',
@@ -961,9 +1084,6 @@
                 
                 // 甜点
                 'cake', 'ice cream', 'chocolate', 'cookie', 'dessert', 'sweet',
-                
-                // 中式菜品
-                'dumpling', 'spring roll', 'kung pao', 'mapo tofu', 'ramen', 'sushi',
                 
                 // 通用
                 'food', 'meal', 'dish', 'soup', 'salad', 'snack'
@@ -988,6 +1108,13 @@
             
             // 模糊匹配 - 处理一些常见变体
             const fuzzyMatches = {
+                'hot pot': ['hot pot', 'hotpot', 'huoguo'],
+                'steamed bun': ['steamed bun', 'bun', 'baozi'],
+                'flower roll': ['flower roll', 'huajuan'],
+                'dumpling': ['dumpling', 'jiaozi'],
+                'wonton': ['wonton', 'huntun'],
+                'congee': ['congee', 'zhou'],
+                'mantou': ['mantou', 'steamed bread'],
                 'pizza': ['pizza', 'pie'],
                 'hamburger': ['hamburger', 'burger', 'cheeseburger'],
                 'sandwich': ['sandwich', 'sub', 'wrap'],
@@ -1227,6 +1354,8 @@
                                foodName.includes('vegetable');
             const isFastFood = foodName.includes('pizza') || foodName.includes('burger') || 
                               foodName.includes('hotdog');
+            const isChinese = foodName.includes('bao') || foodName.includes('jiao') || 
+                             foodName.includes('huo') || foodName.includes('zhou');
             
             let calories, protein, carbs, fat, healthScore;
             
@@ -1248,6 +1377,12 @@
                 carbs = 35;
                 fat = 15;
                 healthScore = 4;
+            } else if (isChinese) {
+                calories = 200;
+                protein = 10;
+                carbs = 25;
+                fat = 8;
+                healthScore = 7;
             } else {
                 calories = 200;
                 protein = 10;
