@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <title>自动识别附近地标 + AI讲解（WebAR）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <!-- A-Frame + AR.js -->
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
+  <style>
+    body,html{margin:0;height:100%;background:#000;overflow:hidden}
+    #ui {
+      position: absolute; left: 8px; top: 8px; z-index: 999;
+      color: #fff; font-family: system-ui, sans-serif;
+      background: rgba(0,0,0,0.45); padding: 8px; border-radius: 8px;
+      max-width: calc(100% - 16px);
+    }
+    #poi-list { max-height: 180px; overflow:auto; margin-top:8px; font-size:14px; }
+    button { margin-right:6px; }
+    #info-box {
+      position: absolute; bottom: 14px; left:50%; transform:translateX(-50%);
+      background: rgba(0,0,0,0.7); color:#fff; padding:10px 14px; border-radius:10px;
+      font-family: system-ui, sans-serif; font-size:15px; max-width:92%;
+      text-align:center;
+    }
+    #loading {
+      position: fixed; inset:0; display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:18px; z-index:9999; background: linear-gradient(180deg, rgba(0,0,0,0.8), rgba(0,0,0,0.4));
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">📍 获取位置与周边地标中……（允许定位与摄像头）</div>
+
+  <div id="ui">
+    <div><strong>自动周边地标 + AI讲解（测试版）</strong></div>
+    <div style="margin-top:6px; font-size:13px;">
+      半径（m）： <input id="radius" type="number" value="800" style="width:80px" /> 
+      <button id="refreshBtn">刷新附近地标</button>
+      <button id="toggleNames">显示/隐藏名称</button>
+    </div>
+    <div id="poi-list"></div>
+  </div>
+
+  <div id="info-box">对准地标或点击列表项以播放讲解。</div>
+
+  <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; debugUIEnabled: false; gpsMinDistance: 3;">
+    <!-- 动态注入 POI 实体 -->
+    <a-camera gps-camera rotation-reader></a-camera>
+  </a-scene>
+
+<script>
+/* ----------------- 配置 ----------------- */
+/*
+  OpenAI Key（可选）：
+  - 若填入，页面会直接从浏览器调用 OpenAI Chat API（仅供测试）。
+  - 上线请不要在前端保存 Key，改为后端代理请求。
+*/
+const OPENAI_API_KEY = ""; // <-- 如果你有 key，填在这里（测试用）。否则留空使用 Wikipedia 回退。
+
+/* Overpass 配置 */
+const OVERPASS_ENDPOINT = "https://overpass-api.de/api/interpreter";
+
+/* 一些运行时变量 */
+let userLat = null, userLon = null;
+let poiEntities = []; // track created entities
+let showingNames = true;
+
+/* 工具：计算两点距离（米） */
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const toRad = v => v * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+/* 获取附近 POI（Overpass） */
+async function fetchNearbyPOIs(lat, lon, radiusMeters=800) {
+  // 查询常见可作为“地标”的标签（tourism,historic,amenity,place,shop）
+  const q = `
+[out:json][timeout:25];
+(
+  node(around:${radiusMeters},${lat},${lon})[~"^(tourism|historic|amenity|place|shop)$"~"."]; 
+  way(around:${radiusMeters},${lat},${lon})[~"^(tourism|historic|amenity|place|shop)$"~"."]; 
+  relation(around:${radiusMeters},${lat},${lon})[~"^(tourism|historic|amenity|place|shop)$"~"."];
+);
+out center;`;
+  const resp = await fetch(OVERPASS_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+    body: "data=" + encodeURIComponent(q)
+  });
+  if(!resp.ok) throw new Error("Overpass 请求失败: " + resp.status);
+  const json = await resp.json();
+  const elems = json.elements || [];
+  const pois = [];
+  for(const el of elems) {
+    const tags = el.tags || {};
+    if(!tags.name) continue; // 需要名字
+    let plat = el.lat, plon = el.lon;
+    if(!plat && el.center) { plat = el.center.lat; plon = el.center.lon; }
+    if(!plat) continue;
+    const dist = haversineDistance(lat, lon, plat, plon);
+    pois.push({
+      id: el.id,
+      name: tags.name,
+      lat: plat,
+      lon: plon,
+      tags,
+      dist
+    });
+  }
+  // 按距离排序并去重（同名）
+  const byName = {};
+  const filtered = [];
+  pois.sort((a,b)=>a.dist - b.dist);
+  for(const p of pois) {
+    if(!byName[p.name]) { filtered.push(p); byName[p.name]=true; }
+  }
+  return filtered.slice(0, 30); // 最多30个
+}
+
+/* 在AR场景中渲染POI */
+function renderPOIs(pois) {
+  // 移除旧的 poi
+  const scene = document.querySelector('a-scene');
+  // remove previous entities
+  poiEntities.forEach(e => { try{ scene.removeChild(e) }catch(e){} });
+  poiEntities = [];
+
+  const listEl = document.getElementById('poi-list');
+  listEl.innerHTML = "";
+
+  pois.forEach((p, idx) => {
+    // create entity
+    const ent = document.createElement('a-entity');
+    ent.setAttribute('gps-entity-place', `latitude: ${p.lat}; longitude: ${p.lon};`);
+    ent.setAttribute('scale', '18 18 18');
+    ent.setAttribute('look-at', '[gps-camera]');
+    ent.classList.add('poi-entity');
+    ent.dataset.name = p.name;
+    ent.dataset.idx = idx;
+
+    // label text (toggle show/hide)
+    const txt = document.createElement('a-text');
+    txt.setAttribute('value', `${p.name}\n${Math.round(p.dist)} m`);
+    txt.setAttribute('align','center');
+    txt.setAttribute('position','0 2 0');
+    txt.setAttribute('color', '#FFD700');
+    ent.appendChild(txt);
+
+    const sphere = document.createElement('a-sphere');
+    sphere.setAttribute('radius','0.5');
+    sphere.setAttribute('opacity','0.6');
+    sphere.setAttribute('position','0 0 0');
+    sphere.setAttribute('color','#FF8C00');
+    ent.appendChild(sphere);
+
+    // click handler
+    ent.addEventListener('click', async (ev) => {
+      const name = ent.dataset.name;
+      showInfo(`🤖 生成 ${name} 的讲解……`);
+      try {
+        const text = await getAIExplanation(name);
+        showInfo(`🎧 ${text}`);
+        speakText(text);
+      } catch(err) {
+        console.error(err);
+        showInfo('⚠️ 获取讲解失败，请检查网络或稍后重试。');
+      }
+    });
+
+    scene.appendChild(ent);
+    poiEntities.push(ent);
+
+    // add to list UI
+    const row = document.createElement('div');
+    row.style.padding = '6px 0';
+    row.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
+    row.innerHTML = `<strong>${p.name}</strong> · ${Math.round(p.dist)} m 
+      <button data-idx="${idx}">播放讲解</button>`;
+    listEl.appendChild(row);
+
+    row.querySelector('button').addEventListener('click', async () => {
+      showInfo(`🤖 生成 ${p.name} 的讲解……`);
+      try {
+        const text = await getAIExplanation(p.name);
+        showInfo(`🎧 ${text}`);
+        speakText(text);
+      } catch(err) {
+        console.error(err);
+        showInfo('⚠️ 获取讲解失败，请检查网络或稍后重试。');
+      }
+    });
+  });
+}
+
+/* 显示消息 */
+function showInfo(msg) {
+  document.getElementById('info-box').innerText = msg;
+}
+
+/* TTS */
+function speakText(text) {
+  if('speechSynthesis' in window) {
+    const u = new SpeechSynthesisUtterance(text);
+    // 尝试设定语言为中文，如果浏览器不支持会回落
+    u.lang = 'zh-CN';
+    u.rate = 1.0;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  } else {
+    alert('当前浏览器不支持语音合成（SpeechSynthesis）。');
+  }
+}
+
+/* AI 讲解抽象：优先 OpenAI（若有KEY），否则 Wikipedia 摘要回退，再否则模板 */
+async function getAIExplanation(placeName) {
+  // 1) 若有 OPENAI_API_KEY 且有网络，调用 OpenAI Chat 完成
+  if(OPENAI_API_KEY && OPENAI_API_KEY.trim().length > 8) {
+    // 简短 prompt 控制 60s 内
+    const prompt = `请用简短、生动的中文为"${placeName}"生成一段60秒内的语音导览讲解，语气友好、信息包括历史/看点/趣闻中的一两点。`;
+    const payload = {
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
+    };
+    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify(payload)
+    });
+    if(!resp.ok) {
+      const txt = await resp.text();
+      throw new Error("OpenAI error: " + resp.status + " / " + txt);
+    }
+    const j = await resp.json();
+    const text = j.choices?.[0]?.message?.content;
+    if(text) return text.trim();
+  }
+
+  // 2) 尝试 Wikipedia 摘要（优先中文维基，再英文维基）
+  try {
+    // encode title for zh first
+    const zhTitle = encodeURIComponent(placeName);
+    let wikiResp = await fetch(`https://zh.wikipedia.org/api/rest_v1/page/summary/${zhTitle}`);
+    if(!wikiResp.ok) {
+      // try english
+      const enTitle = encodeURIComponent(placeName);
+      wikiResp = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${enTitle}`);
+    }
+    if(wikiResp.ok) {
+      const data = await wikiResp.json();
+      if(data.extract) {
+        // keep it brief: take first 2 sentences if too long
+        const s = data.extract;
+        const sentences = s.match(/[^\.!\?。！？]+[\.!\?。！？]?/g) || [s];
+        const brief = sentences.slice(0,2).join('').trim();
+        return brief;
+      }
+    }
+  } catch(e) {
+    console.warn('Wikipedia fetch failed', e);
+  }
+
+  // 3) 回退模板
+  return `${placeName} 是附近的一个有趣地点。这里有丰富的历史与当地故事：例如它常被人们提到的特点包括历史、建筑或文化价值。到现场可以注意观察建筑细节与周边环境。`;
+}
+
+/* 初始流程：获取定位 -> 查询 POI -> 渲染 */
+async function init() {
+  try {
+    // get position
+    const pos = await new Promise((resolve, reject) => {
+      if(!navigator.geolocation) return reject(new Error("浏览器不支持 Geolocation"));
+      navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
+    });
+    userLat = pos.coords.latitude;
+    userLon = pos.coords.longitude;
+    console.log("定位：", userLat, userLon);
+    // fetch POIs
+    const radius = parseInt(document.getElementById('radius').value) || 800;
+    showInfo('🔎 正在检索附近地标（Overpass）……');
+    const pois = await fetchNearbyPOIs(userLat, userLon, radius);
+    if(pois.length === 0) {
+      showInfo('未发现周边显著地标（尝试增大半径或手动添加）。');
+    } else {
+      showInfo(`找到 ${pois.length} 个附近地标，点击即可听讲解。`);
+      renderPOIs(pois);
+    }
+  } catch(err) {
+    console.error(err);
+    showInfo('⚠️ 无法获取定位或检索地标：' + (err.message||err));
+  } finally {
+    document.getElementById('loading').style.display = 'none';
+  }
+}
+
+/* UI 事件绑定 */
+document.getElementById('refreshBtn').addEventListener('click', () => {
+  document.getElementById('loading').style.display = 'flex';
+  init();
+});
+document.getElementById('toggleNames').addEventListener('click', () => {
+  showingNames = !showingNames;
+  poiEntities.forEach(ent => {
+    const txt = ent.querySelector('a-text');
+    if(txt) txt.setAttribute('visible', showingNames ? 'true' : 'false');
+  });
+});
+
+/* 启动 */
+init();
+</script>
+
+</body>
+</html>
