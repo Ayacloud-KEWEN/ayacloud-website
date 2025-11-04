@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS+AR巴黎导览 - 实时摄像头显示</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #050510 100%);
+            color: #e2f1f8;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background: rgba(5, 5, 16, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #e2f1f8, #00f3ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .ar-container {
+            flex: 1;
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* AR镜头界面样式 */
+        .ar-interface {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .ar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(0,0,0,0.3) 0%, 
+                transparent 20%, 
+                transparent 80%, 
+                rgba(0,0,0,0.3) 100%);
+        }
+
+        .crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(0, 243, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .crosshair::before, .crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(0, 243, 255, 0.8);
+        }
+
+        .crosshair::before {
+            top: 50%;
+            left: 5px;
+            right: 5px;
+            height: 2px;
+            transform: translateY(-50%);
+        }
+
+        .crosshair::after {
+            left: 50%;
+            top: 5px;
+            bottom: 5px;
+            width: 2px;
+            transform: translateX(-50%);
+        }
+
+        .gps-status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(5, 5, 16, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            z-index: 10;
+            max-width: 300px;
+            pointer-events: auto;
+        }
+
+        .gps-status h3 {
+            color: #00f3ff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: rgba(226, 241, 248, 0.8);
+        }
+
+        .status-value {
+            color: #00f3ff;
+            font-weight: 600;
+        }
+
+        .accuracy-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .accuracy-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff006e, #00ff88);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .landmarks-list {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(5, 5, 16, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            z-index: 10;
+            max-width: 250px;
+            max-height: 300px;
+            overflow-y: auto;
+            pointer-events: auto;
+        }
+
+        .landmarks-list h3 {
+            color: #00f3ff;
+            margin-bottom: 10px;
+        }
+
+        .landmark-item {
+            padding: 8px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            pointer-events: auto;
+        }
+
+        .landmark-item:hover {
+            background: rgba(0, 243, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .landmark-item.active {
+            background: rgba(0, 243, 255, 0.2);
+            border-left: 3px solid #00f3ff;
+        }
+
+        .landmark-name {
+            font-weight: 600;
+            color: #e2f1f8;
+        }
+
+        .landmark-distance {
+            font-size: 0.8rem;
+            color: rgba(226, 241, 248, 0.6);
+        }
+
+        .ar-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        .control-btn {
+            background: rgba(5, 5, 16, 0.9);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            color: #e2f1f8;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 243, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(5, 5, 16, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            z-index: 20;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 243, 255, 0.3);
+            border-top: 5px solid #00f3ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .ar-info-panel {
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: rgba(5, 5, 16, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            transform: translateY(150%);
+            transition: transform 0.5s ease;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        .ar-info-panel.active {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #e2f1f8;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .info-tags {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .info-tag {
+            background: rgba(0, 243, 255, 0.1);
+            color: #00f3ff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px 0;
+            color: rgba(226, 241, 248, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* AR标记点样式 */
+        .ar-landmark-marker {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 243, 255, 0.3);
+            border: 2px solid #00f3ff;
+            border-radius: 50%;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 8;
+            animation: markerPulse 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ar-landmark-marker::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #00f3ff;
+            border-radius: 50%;
+        }
+
+        @keyframes markerPulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 243, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+        }
+
+        .ar-landmark-label {
+            position: absolute;
+            background: rgba(5, 5, 16, 0.9);
+            color: #e2f1f8;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 9;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            transform: translateY(-100%);
+            margin-top: -10px;
+        }
+
+        @media (max-width: 768px) {
+            .gps-status, .landmarks-list {
+                max-width: 200px;
+                font-size: 0.9rem;
+            }
+            
+            .ar-controls {
+                bottom: 10px;
+            }
+            
+            .control-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GPS+AR巴黎导览</h1>
+            <p>实时摄像头显示 + GPS定位 - 完整的AR导览体验</p>
+        </div>
+
+        <div class="ar-container">
+            <!-- A-Frame AR场景 -->
+            <a-scene 
+                embedded 
+                arjs="sourceType: webcam; debugUIEnabled: false;"
+                vr-mode-ui="enabled: false"
+                gps-camera 
+                rotation-reader
+                id="arScene"
+            >
+                <!-- GPS定位的地标 - 3D模型 -->
+                <a-entity 
+                    class="landmark-entity"
+                    data-landmark="eiffel"
+                    gps-entity-place="latitude: 48.8584; longitude: 2.2945;"
+                >
+                    <a-cone 
+                        color="#00f3ff" 
+                        height="2" 
+                        radius-bottom="0.5"
+                        animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
+                    ></a-cone>
+                    <a-text 
+                        value="埃菲尔铁塔" 
+                        position="0 2.5 0" 
+                        align="center" 
+                        color="#e2f1f8"
+                        scale="2 2 2"
+                    ></a-text>
+                </a-entity>
+
+                <a-entity 
+                    class="landmark-entity"
+                    data-landmark="louvre"
+                    gps-entity-place="latitude: 48.8606; longitude: 2.3376;"
+                >
+                    <a-box 
+                        color="#9d4edd" 
+                        width="1" 
+                        height="1" 
+                        depth="1"
+                        animation="property: rotation; to: 45 360 45; loop: true; dur: 8000"
+                    ></a-box>
+                    <a-text 
+                        value="卢浮宫" 
+                        position="0 1.8 0" 
+                        align="center" 
+                        color="#e2f1f8"
+                        scale="2 2 2"
+                    ></a-text>
+                </a-entity>
+
+                <a-entity camera gps-camera></a-entity>
+            </a-scene>
+
+            <!-- AR镜头界面 -->
+            <div class="ar-interface">
+                <div class="ar-overlay"></div>
+                <div class="crosshair"></div>
+                
+                <!-- 动态生成的AR标记点 -->
+                <div id="arMarkersContainer"></div>
+            </div>
+
+            <!-- GPS状态显示 -->
+            <div class="gps-status">
+                <h3>📍 GPS状态</h3>
+                <div class="status-item">
+                    <span>精度:</span>
+                    <span class="status-value" id="accuracyValue">-- 米</span>
+                </div>
+                <div class="accuracy-bar">
+                    <div class="accuracy-fill" id="accuracyFill"></div>
+                </div>
+                <div class="status-item">
+                    <span>检测到地标:</span>
+                    <span class="status-value" id="landmarksCount">0</span>
+                </div>
+            </div>
+
+            <!-- 地标列表 -->
+            <div class="landmarks-list">
+                <h3>🏛️ 附近地标</h3>
+                <div id="landmarksContainer">
+                    <!-- 地标列表将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <!-- AR控制按钮 -->
+            <div class="ar-controls">
+                <button class="control-btn" id="toggleCamera">
+                    <i class="fas fa-camera"></i> 切换摄像头
+                </button>
+                <button class="control-btn" id="toggleAR">
+                    <i class="fas fa-vr-cardboard"></i> 切换AR模式
+                </button>
+                <button class="control-btn" id="capturePhoto">
+                    <i class="fas fa-camera-retro"></i> 拍照
+                </button>
+            </div>
+
+            <!-- 加载状态 -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <h2>正在启动AR镜头...</h2>
+                <p>请允许摄像头和位置访问权限</p>
+            </div>
+
+            <!-- AR信息面板 -->
+            <div class="ar-info-panel" id="arInfoPanel">
+                <button class="close-btn" id="closeInfoPanel">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h3 id="infoTitle">景点信息</h3>
+                <p id="infoDescription">点击地标查看详细信息</p>
+                <div class="info-tags">
+                    <span class="info-tag" id="infoDistance">距离: -- 米</span>
+                    <span class="info-tag" id="infoRating">评分: 4.8/5</span>
+                </div>
+                <p id="infoDetails">请选择一个地标以查看详细信息</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>GPS+AR实时导览 | 使用A-Frame和AR.js构建</p>
+        </div>
+    </div>
+
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script>
+        // 巴黎地标数据
+        const landmarks = {
+            eiffel: {
+                name: "埃菲尔铁塔",
+                description: "巴黎的标志性建筑",
+                latitude: 48.8584,
+                longitude: 2.2945,
+                details: "埃菲尔铁塔是巴黎的标志性建筑，高324米，于1889年建成。它是世界上访问量最大的付费纪念碑，每年接待近700万游客。铁塔有三层，游客可以乘坐电梯或爬楼梯到达第一和第二层。",
+                type: "monument"
+            },
+            louvre: {
+                name: "卢浮宫博物馆",
+                description: "世界著名艺术博物馆",
+                latitude: 48.8606,
+                longitude: 2.3376,
+                details: "卢浮宫是世界上最大、最著名的博物馆之一，位于巴黎市中心塞纳河畔。它收藏了超过38万件作品，包括蒙娜丽莎、维纳斯雕像和胜利女神像等世界级艺术珍品。",
+                type: "museum"
+            },
+            "notre-dame": {
+                name: "巴黎圣母院",
+                description: "哥特式建筑杰作",
+                latitude: 48.8530,
+                longitude: 2.3499,
+                details: "巴黎圣母院是一座中世纪天主教大教堂，是法国哥特式建筑的杰出代表。虽然2019年遭受火灾损坏，但重建工作正在进行中。其标志性的玫瑰窗和飞扶壁是建筑史上的杰作。",
+                type: "cathedral"
+            },
+            arc: {
+                name: "凯旋门",
+                description: "拿破仑胜利的象征",
+                latitude: 48.8738,
+                longitude: 2.2950,
+                details: "凯旋门位于香榭丽舍大街的西端，是为了纪念拿破仑战争中的胜利而建造的。它高50米，宽45米，是世界上最著名的纪念性建筑之一。顶部观景台可以俯瞰巴黎全景。",
+                type: "monument"
+            }
+        };
+
+        let userLocation = null;
+        let cameraFacingMode = 'environment';
+        let isARMode = true;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingElement = document.getElementById('loading');
+            const accuracyValue = document.getElementById('accuracyValue');
+            const accuracyFill = document.getElementById('accuracyFill');
+            const landmarksCount = document.getElementById('landmarksCount');
+            const landmarksContainer = document.getElementById('landmarksContainer');
+            const arInfoPanel = document.getElementById('arInfoPanel');
+            const closeInfoPanel = document.getElementById('closeInfoPanel');
+            const toggleCameraBtn = document.getElementById('toggleCamera');
+            const toggleARBtn = document.getElementById('toggleAR');
+            const capturePhotoBtn = document.getElementById('capturePhoto');
+            const arMarkersContainer = document.getElementById('arMarkersContainer');
+
+            // 初始化
+            initGPSTracking();
+            initLandmarksList();
+            setupEventListeners();
+
+            function initGPSTracking() {
+                if (!navigator.geolocation) {
+                    alert('您的浏览器不支持地理定位功能');
+                    return;
+                }
+
+                const options = {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 60000
+                };
+
+                navigator.geolocation.watchPosition(
+                    function(position) {
+                        userLocation = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            accuracy: position.coords.accuracy
+                        };
+
+                        updateLocationUI(userLocation);
+                        updateNearbyLandmarks(userLocation);
+                        updateARMarkers(userLocation);
+
+                        loadingElement.style.display = 'none';
+                    },
+                    function(error) {
+                        console.error('GPS错误:', error);
+                        handleGPSError(error);
+                    },
+                    options
+                );
+            }
+
+            function updateLocationUI(location) {
+                accuracyValue.textContent = `${Math.round(location.accuracy)} 米`;
+                const accuracyPercent = Math.max(0, Math.min(100, 100 - (location.accuracy / 50 * 100)));
+                accuracyFill.style.width = `${accuracyPercent}%`;
+            }
+
+            function updateNearbyLandmarks(userLocation) {
+                let visibleCount = 0;
+                
+                Object.keys(landmarks).forEach(landmarkId => {
+                    const landmark = landmarks[landmarkId];
+                    const distance = calculateDistance(
+                        userLocation.latitude, 
+                        userLocation.longitude,
+                        landmark.latitude,
+                        landmark.longitude
+                    );
+                    
+                    if (distance <= 2000) {
+                        visibleCount++;
+                    }
+                });
+                
+                landmarksCount.textContent = visibleCount;
+            }
+
+            function updateARMarkers(userLocation) {
+                arMarkersContainer.innerHTML = '';
+                
+                Object.keys(landmarks).forEach(landmarkId => {
+                    const landmark = landmarks[landmarkId];
+                    const distance = calculateDistance(
+                        userLocation.latitude,
+                        userLocation.longitude,
+                        landmark.latitude,
+                        landmark.longitude
+                    );
+                    
+                    // 只在2公里范围内显示标记
+                    if (distance <= 2000) {
+                        // 计算标记在屏幕上的位置（简化版）
+                        const screenPos = calculateScreenPosition(
+                            userLocation.latitude,
+                            userLocation.longitude,
+                            landmark.latitude,
+                            landmark.longitude
+                        );
+                        
+                        if (screenPos.x >= 0 && screenPos.x <= 100 && 
+                            screenPos.y >= 0 && screenPos.y <= 100) {
+                            
+                            createARMarker(landmarkId, landmark, screenPos, distance);
+                        }
+                    }
+                });
+            }
+
+            function calculateScreenPosition(userLat, userLng, landmarkLat, landmarkLng) {
+                // 简化的坐标转换（实际实现需要更复杂的计算）
+                const latDiff = landmarkLat - userLat;
+                const lngDiff = landmarkLng - userLng;
+                
+                // 转换为屏幕坐标百分比
+                const x = 50 + (lngDiff * 10000);
+                const y = 50 - (latDiff * 10000);
+                
+                return { x: Math.max(5, Math.min(95, x)), y: Math.max(5, Math.min(95, y)) };
+            }
+
+            function createARMarker(landmarkId, landmark, screenPos, distance) {
+                const marker = document.createElement('div');
+                marker.className = 'ar-landmark-marker';
+                marker.style.left = `${screenPos.x}%`;
+                marker.style.top = `${screenPos.y}%`;
+                marker.setAttribute('data-landmark', landmarkId);
+                
+                const label = document.createElement('div');
+                label.className = 'ar-landmark-label';
+                label.style.left = `${screenPos.x}%`;
+                label.style.top = `${screenPos.y}%`;
+                label.innerHTML = `
+                    ${landmark.name}<br>
+                    <small>${Math.round(distance)}米</small>
+                `;
+                label.setAttribute('data-landmark', landmarkId);
+                
+                // 添加点击事件
+                [marker, label].forEach(element => {
+                    element.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        showLandmarkInfo(landmarkId);
+                    });
+                });
+                
+                arMarkersContainer.appendChild(marker);
+                arMarkersContainer.appendChild(label);
+            }
+
+            function initLandmarksList() {
+                landmarksContainer.innerHTML = '';
+                
+                Object.keys(landmarks).forEach(landmarkId => {
+                    const landmark = landmarks[landmarkId];
+                    const item = document.createElement('div');
+                    item.className = 'landmark-item';
+                    item.setAttribute('data-landmark', landmarkId);
+                    
+                    item.innerHTML = `
+                        <div class="landmark-name">${landmark.name}</div>
+                        <div class="landmark-distance">-- 米</div>
+                    `;
+                    
+                    item.addEventListener('click', function() {
+                        const landmarkId = this.getAttribute('data-landmark');
+                        showLandmarkInfo(landmarkId);
+                        
+                        document.querySelectorAll('.landmark-item').forEach(i => {
+                            i.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    });
+                    
+                    landmarksContainer.appendChild(item);
+                });
+            }
+
+            function setupEventListeners() {
+                // 关闭信息面板
+                closeInfoPanel.addEventListener('click', function() {
+                    arInfoPanel.classList.remove('active');
+                });
+
+                // 切换摄像头
+                toggleCameraBtn.addEventListener('click', function() {
+                    cameraFacingMode = cameraFacingMode === 'environment' ? 'user' : 'environment';
+                    alert(`切换到${cameraFacingMode === 'environment' ? '后置' : '前置'}摄像头`);
+                    // 在实际应用中这里会重新初始化摄像头
+                });
+
+                // 切换AR模式
+                toggleARBtn.addEventListener('click', function() {
+                    isARMode = !isARMode;
+                    const arInterface = document.querySelector('.ar-interface');
+                    if (isARMode) {
+                        arInterface.style.display = 'block';
+                        toggleARBtn.innerHTML = '<i class="fas fa-vr-cardboard"></i> 关闭AR';
+                    } else {
+                        arInterface.style.display = 'none';
+                        toggleARBtn.innerHTML = '<i class="fas fa-vr-cardboard"></i> 开启AR';
+                    }
+                });
+
+                // 拍照功能
+                capturePhotoBtn.addEventListener('click', function() {
+                    alert('拍照功能已触发！在实际应用中，这里会保存当前AR视图的截图。');
+                    // 实际实现可以使用canvas截取视频帧
+                });
+
+                // AR场景中的地标点击事件
+                document.addEventListener('gps-entity-place-loaded', function(e) {
+                    const entity = e.detail;
+                    entity.addEventListener('click', function() {
+                        const landmarkId = this.getAttribute('data-landmark');
+                        showLandmarkInfo(landmarkId);
+                    });
+                });
+            }
+
+            function showLandmarkInfo(landmarkId) {
+                const landmark = landmarks[landmarkId];
+                if (!landmark || !userLocation) return;
+
+                const distance = calculateDistance(
+                    userLocation.latitude,
+                    userLocation.longitude,
+                    landmark.latitude,
+                    landmark.longitude
+                );
+
+                document.getElementById('infoTitle').textContent = landmark.name;
+                document.getElementById('infoDescription').textContent = landmark.description;
+                document.getElementById('infoDistance').textContent = `距离: ${Math.round(distance)} 米`;
+                document.getElementById('infoDetails').textContent = landmark.details;
+
+                arInfoPanel.classList.add('active');
+            }
+
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371000;
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = 
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            }
+
+            function handleGPSError(error) {
+                let message = '';
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        message = '位置访问被拒绝';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        message = '位置信息不可用';
+                        break;
+                    case error.TIMEOUT:
+                        message = '获取位置超时';
+                        break;
+                    default:
+                        message = '未知错误';
+                        break;
+                }
+                
+                loadingElement.querySelector('h2').textContent = '位置获取失败';
+                loadingElement.querySelector('p').textContent = message;
+            }
+
+            // 定期更新地标距离和AR标记
+            setInterval(() => {
+                if (!userLocation) return;
+                
+                // 更新地标列表距离
+                document.querySelectorAll('.landmark-item').forEach(item => {
+                    const landmarkId = item.getAttribute('data-landmark');
+                    const landmark = landmarks[landmarkId];
+                    if (landmark) {
+                        const distance = calculateDistance(
+                            userLocation.latitude,
+                            userLocation.longitude,
+                            landmark.latitude,
+                            landmark.longitude
+                        );
+                        item.querySelector('.landmark-distance').textContent = `${Math.round(distance)} 米`;
+                    }
+                });
+                
+                // 更新AR标记
+                updateARMarkers(userLocation);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
