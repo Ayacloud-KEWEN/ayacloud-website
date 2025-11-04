@@ -404,25 +404,44 @@
         }
 
         /* Video Container Styles */
-        .video-container {
+.video-container {
             margin: 25px 0;
             border-radius: 12px;
             overflow: hidden;
             position: relative;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            /* 添加 aspect-ratio 以确保视频容器比例正确，或者保持使用固定高度 */
+            /* aspect-ratio: 16/9; */ 
+            height: 280px; /* 保持原有的高度，保证视频能被占位符盖住 */
         }
-
-        .video-placeholder {
+        
+        /* === 新增/修改的视频播放相关 CSS === */
+        
+        .actual-video {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 280px;
+            height: 100%;
+            object-fit: cover; /* 确保视频填满容器 */
+            display: block !important;
+            z-index: 1; /* 确保视频在占位符下方 */
+        }
+        
+        .video-placeholder {
+            /* ... 原有样式 ... */
+            width: 100%;
+            height: 100%; /* 确保它能完全覆盖 video-container */
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: relative;
+            position: absolute; /* 使用绝对定位 */
             cursor: pointer;
             transition: all 0.3s ease;
+            z-index: 2; /* 确保它在视频上方 */
+            display: none;
         }
 
         .video-placeholder:hover {
@@ -438,6 +457,13 @@
             height: 100%;
             background: linear-gradient(45deg, rgba(0, 243, 255, 0.1), rgba(157, 78, 221, 0.1));
             opacity: 0.5;
+        }
+
+        .video-duration {
+            font-size: 0.9rem;
+            color: rgba(226, 241, 248, 0.7);
+            margin-top: 5px;
+            z-index: 1;
         }
 
         .play-button {
@@ -760,15 +786,19 @@
                     <p>Our Mirrorworld platform creates a perfect digital replica of the physical world, allowing for persistent AR experiences that multiple users can interact with simultaneously. This revolutionary technology maintains state across sessions, enabling complex applications that evolve over time.</p>
                     <p>Key applications include persistent virtual art installations, location-based gaming, and collaborative design environments where changes made by one user are visible to all participants in real-time.</p>
                     
-                    <!-- Mirrorworld Video -->
                     <div class="video-container">
-                        <div class="video-placeholder" onclick="playVideo('mirrorworld')">
+                        <div class="video-placeholder" id="placeholder-mirrorworld" onclick="playVideo('video-mirrorworld')">
                             <div class="play-button">
                                 <i class="fas fa-play"></i>
                             </div>
                             <div class="video-title">Mirrorworld Platform Demo</div>
-                            <div class="video-duration">2:45</div>
                         </div>
+                        <video id="video-mirrorworld" class="actual-video" 
+                               autoplay muted loop playsinline 
+                               preload="auto"
+                               poster="placeholder_image.jpg"> <source src="Mirrorworld.mp4" type="video/mp4">
+                            Your browser does not support HTML5 video playback.
+                        </video>
                     </div>
                     
                     <div class="app-tags">
@@ -788,15 +818,19 @@
                     <p>Immersive Map transforms traditional navigation by overlaying interactive digital information directly onto the physical environment. Our platform understands terrain, buildings, and points of interest to create rich, context-aware experiences.</p>
                     <p>Beyond basic navigation, Immersive Map enables historical recreations, future city planning visualizations, and interactive tourism experiences that bring locations to life with stories, data, and digital artifacts.</p>
                     
-                    <!-- Immersive Map Video -->
                     <div class="video-container">
-                        <div class="video-placeholder" onclick="playVideo('immersive-map')">
+                        <div class="video-placeholder" id="placeholder-immersive-map" onclick="playVideo('video-immersive-map')">
                             <div class="play-button">
                                 <i class="fas fa-play"></i>
                             </div>
                             <div class="video-title">Immersive Map in Action</div>
-                            <div class="video-duration">3:20</div>
                         </div>
+                        <video id="video-immersive-map" class="actual-video" 
+                               autoplay muted loop playsinline 
+                               preload="auto"
+                               poster="placeholder_image_2.jpg"> <source src="Immersive_Map.mp4" type="video/mp4">
+                            Your browser does not support HTML5 video playback.
+                        </video>
                     </div>
                     
                     <div class="app-tags">
@@ -906,11 +940,30 @@
         });
 
         // Video play function
-        function playVideo(videoType) {
-            if (videoType === 'mirrorworld') {
-                alert('Playing Mirrorworld Platform Demo video. In a real implementation, this would load and play the actual video.');
-            } else if (videoType === 'immersive-map') {
-                alert('Playing Immersive Map in Action video. In a real implementation, this would load and play the actual video.');
+       function playVideo(videoId) {
+            const videoElement = document.getElementById(videoId);
+            // 假设占位符在视频元素的前一个兄弟节点
+            const placeholder = videoElement.previousElementSibling; 
+
+            if (videoElement) {
+                // 1. 取消静音
+                videoElement.muted = false;
+                
+                // 2. 隐藏占位符
+                if (placeholder) {
+                    placeholder.style.display = 'none';
+                }
+                
+                // 3. 显示视频控制条
+                videoElement.controls = true; 
+                
+                // 4. 尝试播放（虽然已经自动播放，但这是个安全措施，并处理可能被阻止的音频）
+                videoElement.play().catch(error => {
+                    console.error("Video playback/unmute failed:", error);
+                    // 可以在这里提示用户需要再次点击
+                });
+            } else {
+                alert(`Video element with ID ${videoId} not found.`);
             }
         }
     </script>
