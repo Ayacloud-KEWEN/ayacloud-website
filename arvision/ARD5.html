@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>科幻AR巴黎导览</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
@@ -12,25 +12,27 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            position: fixed;
         }
 
         body {
+            margin: 0;
+            padding: 0;
             background: #000;
             color: #fff;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-            position: fixed;
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
 
-        /* 完全隐藏所有容器，只保留AR场景 */
-        .header, .footer, .container {
-            display: none;
-        }
-
-        /* AR场景全屏 */
+        /* AR场景全屏修复 */
         #arScene {
             position: fixed !important;
             top: 0 !important;
@@ -40,7 +42,26 @@
             z-index: 1 !important;
         }
 
-        /* 科幻AR界面 - 悬浮叠加 */
+        /* 修复A-Frame视频元素 */
+        #arScene video {
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: cover !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+
+        /* 修复A-Frame画布 */
+        #arScene canvas {
+            width: 100vw !important;
+            height: 100vh !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+
+        /* 科幻AR界面 */
         .ar-interface {
             position: fixed;
             top: 0;
@@ -124,7 +145,7 @@
             50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.7; }
         }
 
-        /* 科幻状态面板 - 更紧凑 */
+        /* 科幻状态面板 */
         .scifi-panel {
             background: linear-gradient(135deg, rgba(0, 15, 30, 0.85) 0%, rgba(5, 0, 20, 0.8) 100%);
             backdrop-filter: blur(15px);
@@ -281,7 +302,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 控制面板 - 只保留AR切换按钮 */
+        /* 控制面板 */
         .ar-controls {
             position: fixed;
             bottom: 10px;
@@ -534,7 +555,7 @@
             justify-content: center;
         }
 
-        /* 响应式设计 */
+        /* 修复移动端全屏问题 */
         @media (max-width: 768px) {
             .gps-status {
                 width: 140px;
@@ -555,61 +576,76 @@
                 bottom: 8px;
             }
         }
+
+        /* 强制全屏修复 */
+        .fullscreen-fix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+        }
     </style>
 </head>
 <body>
-    <!-- A-Frame AR场景 - 直接放在body中，确保全屏 -->
+    <!-- 全屏修复层 -->
+    <div class="fullscreen-fix"></div>
+
+    <!-- A-Frame AR场景 - 使用正确的配置 -->
     <a-scene 
         embedded 
-        arjs="sourceType: webcam; debugUIEnabled: false;"
+        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
         vr-mode-ui="enabled: false"
-        gps-camera 
-        rotation-reader
+        renderer="antialias: true; alpha: true; precision: medium;"
         id="arScene"
     >
-        <!-- GPS定位的地标 - 3D模型 -->
+        <!-- 使用基于位置的AR而不是标记 -->
+        <a-entity gps-camera="gpsMinDistance: 5"></a-entity>
+        
+        <!-- 地标1: 埃菲尔铁塔 -->
         <a-entity 
-            class="landmark-entity"
-            data-landmark="eiffel"
             gps-entity-place="latitude: 48.8584; longitude: 2.2945;"
+            data-landmark="eiffel"
         >
             <a-cone 
                 color="#00f3ff" 
-                height="2" 
-                radius-bottom="0.5"
+                height="15" 
+                radius-bottom="4"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
             ></a-cone>
             <a-text 
                 value="埃菲尔铁塔" 
-                position="0 2.5 0" 
+                position="0 20 0" 
                 align="center" 
                 color="#e2f1f8"
-                scale="2 2 2"
+                scale="8 8 8"
             ></a-text>
         </a-entity>
 
+        <!-- 地标2: 卢浮宫 -->
         <a-entity 
-            class="landmark-entity"
-            data-landmark="louvre"
             gps-entity-place="latitude: 48.8606; longitude: 2.3376;"
+            data-landmark="louvre"
         >
             <a-box 
                 color="#9d4edd" 
-                width="1" 
-                height="1" 
-                depth="1"
+                width="10" 
+                height="10" 
+                depth="10"
                 animation="property: rotation; to: 45 360 45; loop: true; dur: 8000"
             ></a-box>
             <a-text 
                 value="卢浮宫" 
-                position="0 1.8 0" 
+                position="0 15 0" 
                 align="center" 
                 color="#e2f1f8"
-                scale="2 2 2"
+                scale="8 8 8"
             ></a-text>
         </a-entity>
 
-        <a-entity camera gps-camera></a-entity>
+        <!-- 相机 -->
+        <a-entity camera></a-entity>
     </a-scene>
 
     <!-- 科幻AR界面 -->
@@ -642,11 +678,11 @@
             </div>
             <div class="status-item">
                 <div class="status-label">地标数量</div>
-                <div class="status-value" id="landmarksCount">0</div>
+                <div class="status-value" id="landmarksCount">2</div>
             </div>
             <div class="status-item">
                 <div class="status-label">系统状态</div>
-                <div class="status-value">初始化中</div>
+                <div class="status-value">在线</div>
             </div>
             <div class="status-item">
                 <div class="status-label">数据版本</div>
@@ -655,13 +691,13 @@
             <div class="accuracy-visual">
                 <div class="status-label">定位精度</div>
                 <div class="accuracy-bar">
-                    <div class="accuracy-fill" id="accuracyFill" style="width: 0%"></div>
+                    <div class="accuracy-fill" id="accuracyFill" style="width: 75%"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- AR控制面板 - 只保留AR切换按钮 -->
+    <!-- AR控制面板 -->
     <div class="ar-controls">
         <button class="control-btn" id="toggleAR">
             <span>🔮</span> AR界面
@@ -739,19 +775,12 @@
             }
         };
 
-        let userLocation = null;
-        let isUIVisible = true;
-
         document.addEventListener('DOMContentLoaded', function() {
             const loadingElement = document.getElementById('loading');
             const loadingStatus = document.getElementById('loadingStatus');
-            const accuracyValue = document.getElementById('accuracyValue');
-            const accuracyFill = document.getElementById('accuracyFill');
-            const landmarksCount = document.getElementById('landmarksCount');
             const arInfoPanel = document.getElementById('arInfoPanel');
             const closeInfoPanel = document.getElementById('closeInfoPanel');
             const toggleARBtn = document.getElementById('toggleAR');
-            const arMarkersContainer = document.getElementById('arMarkersContainer');
             const uiToggle = document.getElementById('uiToggle');
 
             // 初始化系统
@@ -760,7 +789,7 @@
             function initializeSystem() {
                 const steps = [
                     { text: "正在启动AR引擎...", delay: 1000 },
-                    { text: "正在连接定位网络...", delay: 1500 },
+                    { text: "正在连接摄像头...", delay: 1500 },
                     { text: "正在加载地标数据...", delay: 1000 }
                 ];
 
@@ -769,7 +798,10 @@
                         loadingStatus.textContent = "系统准备就绪！";
                         setTimeout(() => {
                             loadingElement.style.display = 'none';
-                            startDemoMode();
+                            // 直接显示在线状态，因为GPS在演示模式
+                            document.querySelector('.gps-status .status-item:nth-child(3) .status-value').textContent = '在线';
+                            document.getElementById('accuracyValue').textContent = "25m";
+                            document.getElementById('accuracyFill').style.width = "75%";
                         }, 800);
                         return;
                     }
@@ -785,122 +817,18 @@
                 executeStep(0);
             }
 
-            function startDemoMode() {
-                userLocation = {
-                    latitude: 48.8566,
-                    longitude: 2.3522,
-                    accuracy: 25
-                };
-
-                updateLocationUI(userLocation);
-                updateNearbyLandmarks(userLocation);
-                updateARMarkers(userLocation);
-
-                document.querySelector('.gps-status .status-item:nth-child(3) .status-value').textContent = '在线';
-                accuracyValue.textContent = "25m";
-                accuracyFill.style.width = "75%";
-            }
-
-            function updateLocationUI(location) {
-                if (location.accuracy) {
-                    accuracyValue.textContent = `${Math.round(location.accuracy)}m`;
-                    const accuracyPercent = Math.max(10, Math.min(100, 100 - (location.accuracy / 50 * 100)));
-                    accuracyFill.style.width = `${accuracyPercent}%`;
-                }
-            }
-
-            function updateNearbyLandmarks(userLocation) {
-                let visibleCount = 0;
-                Object.keys(landmarks).forEach(landmarkId => {
-                    const landmark = landmarks[landmarkId];
-                    const distance = calculateDistance(
-                        userLocation.latitude, 
-                        userLocation.longitude,
-                        landmark.latitude,
-                        landmark.longitude
-                    );
-                    if (distance <= 5000) {
-                        visibleCount++;
-                    }
-                });
-                landmarksCount.textContent = visibleCount;
-            }
-
-            function updateARMarkers(userLocation) {
-                arMarkersContainer.innerHTML = '';
-                
-                Object.keys(landmarks).forEach(landmarkId => {
-                    const landmark = landmarks[landmarkId];
-                    const distance = calculateDistance(
-                        userLocation.latitude,
-                        userLocation.longitude,
-                        landmark.latitude,
-                        landmark.longitude
-                    );
-                    
-                    if (distance <= 5000) {
-                        const screenX = 30 + Math.random() * 40;
-                        const screenY = 30 + Math.random() * 40;
-                        
-                        createARMarker(landmarkId, landmark, {x: screenX, y: screenY}, distance);
-                    }
-                });
-            }
-
-            function createARMarker(landmarkId, landmark, screenPos, distance) {
-                const marker = document.createElement('div');
-                marker.className = 'ar-marker';
-                marker.style.left = `${screenPos.x}%`;
-                marker.style.top = `${screenPos.y}%`;
-                marker.setAttribute('data-landmark', landmarkId);
-                
-                marker.innerHTML = `
-                    <div class="marker-core">
-                        <div class="marker-outer"></div>
-                        <div class="marker-inner"></div>
-                    </div>
-                    <div class="marker-label">${landmark.name}<br><small>${Math.round(distance)}m</small></div>
-                `;
-                
-                marker.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    showLandmarkInfo(landmarkId);
-                });
-                
-                arMarkersContainer.appendChild(marker);
-            }
-
             function showLandmarkInfo(landmarkId) {
                 const landmark = landmarks[landmarkId];
                 if (!landmark) return;
 
-                const distance = userLocation ? calculateDistance(
-                    userLocation.latitude,
-                    userLocation.longitude,
-                    landmark.latitude,
-                    landmark.longitude
-                ) : 0;
-
                 document.getElementById('infoTitle').textContent = landmark.name;
-                document.getElementById('infoDistance').textContent = userLocation ? Math.round(distance) + 'm' : '--';
+                document.getElementById('infoDistance').textContent = "演示模式";
                 document.getElementById('infoType').textContent = 
                     landmark.type === 'monument' ? '纪念碑' : '博物馆';
                 document.getElementById('infoDescription').textContent = landmark.description;
                 document.querySelector('.stat-item:nth-child(4) .stat-value').textContent = landmark.established;
 
                 arInfoPanel.classList.add('active');
-            }
-
-            function calculateDistance(lat1, lon1, lat2, lon2) {
-                const R = 6371000;
-                const dLat = (lat2 - lat1) * Math.PI / 180;
-                const dLon = (lon2 - lon1) * Math.PI / 180;
-                const a = 
-                    Math.sin(dLat/2) * Math.sin(dLat/2) +
-                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-                    Math.sin(dLon/2) * Math.sin(dLon/2);
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                return R * c;
             }
 
             // 设置事件监听器
@@ -923,26 +851,60 @@
                 // UI显示/隐藏切换
                 uiToggle.addEventListener('click', function() {
                     const panels = document.querySelectorAll('.scifi-panel, .ar-controls');
-                    isUIVisible = !isUIVisible;
+                    const isUIVisible = panels[0].style.display !== 'none';
                     
                     panels.forEach(panel => {
-                        panel.style.display = isUIVisible ? 'block' : 'none';
+                        panel.style.display = isUIVisible ? 'none' : 'block';
                     });
                     
-                    uiToggle.textContent = isUIVisible ? '👁️' : '👁️‍🗨️';
+                    uiToggle.textContent = isUIVisible ? '👁️‍🗨️' : '👁️';
                 });
 
                 // AR场景点击事件
                 document.addEventListener('click', function(e) {
-                    if (e.target.closest('.landmark-entity')) {
-                        const entity = e.target.closest('.landmark-entity');
+                    if (e.target.closest('[data-landmark]')) {
+                        const entity = e.target.closest('[data-landmark]');
                         const landmarkId = entity.getAttribute('data-landmark');
                         showLandmarkInfo(landmarkId);
                     }
                 });
+
+                // 监听A-Frame场景加载完成
+                document.querySelector('a-scene').addEventListener('loaded', function() {
+                    console.log('A-Frame场景加载完成');
+                    
+                    // 强制重新计算尺寸
+                    setTimeout(() => {
+                        const video = document.querySelector('a-scene video');
+                        const canvas = document.querySelector('a-scene canvas');
+                        if (video) {
+                            video.style.width = '100vw';
+                            video.style.height = '100vh';
+                            video.style.objectFit = 'cover';
+                        }
+                        if (canvas) {
+                            canvas.style.width = '100vw';
+                            canvas.style.height = '100vh';
+                        }
+                    }, 1000);
+                });
             }
 
             setupEventListeners();
+        });
+
+        // 添加窗口调整大小时的重置
+        window.addEventListener('resize', function() {
+            const video = document.querySelector('a-scene video');
+            const canvas = document.querySelector('a-scene canvas');
+            if (video) {
+                video.style.width = '100vw';
+                video.style.height = '100vh';
+            }
+            if (canvas) {
+                canvas.style.width = '100vw';
+                canvas.style.height = '100vh';
+            }
         });
     </script>
 </body>
