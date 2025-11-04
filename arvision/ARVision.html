@@ -410,12 +410,9 @@
             overflow: hidden;
             position: relative;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            /* 添加 aspect-ratio 以确保视频容器比例正确，或者保持使用固定高度 */
-            /* aspect-ratio: 16/9; */ 
-            height: 280px; /* 保持原有的高度，保证视频能被占位符盖住 */
+            height: 280px; 
         }
         
-        /* === 新增/修改的视频播放相关 CSS === */
         
         .actual-video {
             position: absolute;
@@ -423,24 +420,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 确保视频填满容器 */
+            object-fit: cover; 
             display: block !important;
-            z-index: 1; /* 确保视频在占位符下方 */
+            z-index: 1; 
         }
         
         .video-placeholder {
-            /* ... 原有样式 ... */
             width: 100%;
-            height: 100%; /* 确保它能完全覆盖 video-container */
+            height: 100%; 
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: absolute; /* 使用绝对定位 */
+            position: absolute; 
             cursor: pointer;
             transition: all 0.3s ease;
-            z-index: 2; /* 确保它在视频上方 */
+            z-index: 2; 
             display: none;
         }
 
@@ -700,8 +696,8 @@
                         <i class="fas fa-user-friends"></i>
                     </div>
                     <div class="app-content">
-                        <h3>Person Recognition AR</h3>
-                        <p>Our advanced AR technology can identify individuals in real-time and overlay relevant information. Perfect for networking events, security applications, and personalized experiences. The system can recognize facial features, body language, and even emotional states.</p>
+                        <h3>Face Recognition AR</h3>
+                        <p>Our advanced AR technology can identify individuals in real-time and overlay relevant information. Perfect for networking events, security applications, and personalized experiences. The system can recognize facial features, and even emotional states.</p>
                         <div class="app-tags">
                             <span class="app-tag">AI Recognition</span>
                             <span class="app-tag">Real-time</span>
@@ -783,8 +779,8 @@
                         </div>
                         <h3>Mirrorworld</h3>
                     </div>
-                    <p>Our Mirrorworld platform creates a perfect digital replica of the physical world, allowing for persistent AR experiences that multiple users can interact with simultaneously. This revolutionary technology maintains state across sessions, enabling complex applications that evolve over time.</p>
-                    <p>Key applications include persistent virtual art installations, location-based gaming, and collaborative design environments where changes made by one user are visible to all participants in real-time.</p>
+                    <p>Our Mirrorworld platform creates a perfect digital replica of the physical world, allowing for persistent AR experiences that multiple users can interact with simultaneously. This revolutionary technology maintains state across sessions, enabling complex applications that evolve over time.
+                    Key applications include persistent virtual art installations, location-based gaming, and design environments where changes made by one user are visible to all participants in real-time.</p>
                     
                     <div class="video-container">
                         <div class="video-placeholder" id="placeholder-mirrorworld" onclick="playVideo('video-mirrorworld')">
