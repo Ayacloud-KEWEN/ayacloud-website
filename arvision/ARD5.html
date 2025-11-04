@@ -18,51 +18,35 @@
             background: #000;
             color: #fff;
             overflow: hidden;
+            width: 100vw;
             height: 100vh;
-            position: relative;
+            position: fixed;
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
 
-        /* 隐藏header和footer，让AR全屏显示 */
-        .header, .footer {
+        /* 完全隐藏所有容器，只保留AR场景 */
+        .header, .footer, .container {
             display: none;
         }
 
-        .container {
-            width: 100vw;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            position: relative;
-        }
-
-        .ar-container {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-
-        /* 确保A-Frame场景全屏显示 */
-        a-scene {
-            width: 100% !important;
-            height: 100% !important;
-            position: absolute !important;
+        /* AR场景全屏 */
+        #arScene {
+            position: fixed !important;
             top: 0 !important;
             left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
             z-index: 1 !important;
         }
 
-        /* 科幻AR界面 - 改为半透明和可隐藏 */
+        /* 科幻AR界面 - 悬浮叠加 */
         .ar-interface {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             z-index: 2;
             pointer-events: none;
         }
@@ -74,9 +58,8 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(0, 243, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(157, 78, 221, 0.05) 0%, transparent 50%);
-            opacity: 0.3;
+                radial-gradient(circle at 20% 80%, rgba(0, 243, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(157, 78, 221, 0.03) 0%, transparent 50%);
         }
 
         /* 科幻十字准星 */
@@ -141,15 +124,15 @@
             50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.7; }
         }
 
-        /* 科幻状态面板 - 改为更紧凑和半透明 */
+        /* 科幻状态面板 - 悬浮设计 */
         .scifi-panel {
-            background: linear-gradient(135deg, rgba(0, 15, 30, 0.7) 0%, rgba(5, 0, 20, 0.6) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-            position: absolute;
+            background: linear-gradient(135deg, rgba(0, 15, 30, 0.85) 0%, rgba(5, 0, 20, 0.8) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+            position: fixed;
             overflow: hidden;
             pointer-events: auto;
             z-index: 4;
@@ -172,10 +155,9 @@
         }
 
         .gps-status {
-            top: 10px;
-            left: 10px;
-            width: 200px;
-            max-height: 120px;
+            top: 15px;
+            left: 15px;
+            width: 180px;
         }
 
         .gps-status h3 {
@@ -192,7 +174,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 6px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
         .status-item {
@@ -202,13 +184,13 @@
         }
 
         .status-label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: rgba(200, 220, 255, 0.7);
             font-weight: 300;
         }
 
         .status-value {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #00f3ff;
             font-weight: 500;
         }
@@ -224,7 +206,6 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
             overflow: hidden;
-            position: relative;
         }
 
         .accuracy-fill {
@@ -232,17 +213,14 @@
             background: linear-gradient(90deg, #ff006e, #9d4edd, #00f3ff);
             border-radius: 2px;
             transition: width 0.5s ease;
-            position: relative;
         }
 
-        /* 科幻地标列表 - 改为可折叠 */
+        /* 地标HUD */
         .landmarks-hud {
-            top: 10px;
-            right: 10px;
-            width: 180px;
+            top: 15px;
+            right: 15px;
+            width: 160px;
             max-height: 200px;
-            z-index: 4;
-            overflow-y: auto;
             transition: all 0.3s ease;
         }
 
@@ -261,7 +239,6 @@
 
         .landmarks-hud::-webkit-scrollbar-thumb {
             background: linear-gradient(#00f3ff, #9d4edd);
-            border-radius: 1px;
         }
 
         .landmarks-hud h3 {
@@ -286,7 +263,7 @@
         .landmark-card {
             padding: 8px;
             margin-bottom: 6px;
-            background: rgba(0, 20, 40, 0.5);
+            background: rgba(0, 20, 40, 0.6);
             border: 1px solid rgba(0, 243, 255, 0.2);
             border-radius: 6px;
             cursor: pointer;
@@ -323,15 +300,15 @@
             font-weight: 600;
             color: #fff;
             margin-bottom: 3px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
         .landmark-distance {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #00f3ff;
         }
 
-        /* 科幻AR标记 */
+        /* AR标记 */
         .ar-marker {
             position: absolute;
             width: 20px;
@@ -374,11 +351,11 @@
             top: -25px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 15, 30, 0.8);
+            background: rgba(0, 15, 30, 0.9);
             color: #00f3ff;
             padding: 4px 8px;
             border-radius: 6px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             white-space: nowrap;
             border: 1px solid rgba(0, 243, 255, 0.3);
             box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
@@ -397,10 +374,10 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 科幻控制面板 - 改为更紧凑 */
+        /* 控制面板 */
         .ar-controls {
-            position: absolute;
-            bottom: 10px;
+            position: fixed;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -410,8 +387,8 @@
         }
 
         .control-btn {
-            background: linear-gradient(135deg, rgba(0, 20, 40, 0.8) 0%, rgba(5, 0, 20, 0.7) 100%);
-            border: 1px solid rgba(0, 243, 255, 0.3);
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.9) 0%, rgba(5, 0, 20, 0.85) 100%);
+            border: 1px solid rgba(0, 243, 255, 0.4);
             color: #e2f1f8;
             padding: 8px 12px;
             border-radius: 20px;
@@ -443,25 +420,25 @@
         }
 
         .control-btn:hover {
-            background: linear-gradient(135deg, rgba(0, 30, 60, 0.8) 0%, rgba(10, 0, 30, 0.7) 100%);
+            background: linear-gradient(135deg, rgba(0, 30, 60, 0.9) 0%, rgba(10, 0, 30, 0.85) 100%);
             border-color: #00f3ff;
             transform: translateY(-1px);
         }
 
-        /* 科幻信息面板 - 改为可拖动和调整大小 */
+        /* 信息面板 */
         .scifi-info-panel {
-            position: absolute;
+            position: fixed;
             bottom: 60px;
             left: 50%;
             transform: translateX(-50%) translateY(150%);
             width: 90%;
-            max-width: 400px;
-            background: linear-gradient(135deg, rgba(0, 20, 40, 0.9) 0%, rgba(5, 0, 20, 0.85) 100%);
-            backdrop-filter: blur(15px);
+            max-width: 350px;
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.95) 0%, rgba(5, 0, 20, 0.9) 100%);
+            backdrop-filter: blur(20px);
             padding: 15px;
             border-radius: 15px;
-            border: 1px solid rgba(0, 243, 255, 0.4);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+            border: 1px solid rgba(0, 243, 255, 0.5);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
             transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             z-index: 4;
             pointer-events: auto;
@@ -483,7 +460,6 @@
 
         .scifi-info-panel::-webkit-scrollbar-thumb {
             background: linear-gradient(#00f3ff, #9d4edd);
-            border-radius: 2px;
         }
 
         .panel-header {
@@ -496,7 +472,7 @@
         }
 
         .panel-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             background: linear-gradient(90deg, #00f3ff, #9d4edd);
             -webkit-background-clip: text;
             background-clip: text;
@@ -508,7 +484,7 @@
             background: none;
             border: none;
             color: #ff006e;
-            font-size: 1.1rem;
+            font-size: 1rem;
             cursor: pointer;
             width: 25px;
             height: 25px;
@@ -540,14 +516,14 @@
         }
 
         .stat-value {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: #00f3ff;
             margin-bottom: 3px;
         }
 
         .stat-label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: rgba(200, 220, 255, 0.8);
             font-weight: 300;
         }
@@ -555,7 +531,7 @@
         .info-description {
             color: rgba(200, 220, 255, 0.9);
             line-height: 1.4;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin-bottom: 10px;
         }
 
@@ -570,13 +546,13 @@
             color: #e2f1f8;
             padding: 4px 8px;
             border-radius: 12px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             border: 1px solid rgba(157, 78, 221, 0.3);
         }
 
         /* 加载界面 */
         .loading {
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -630,19 +606,20 @@
             font-size: 0.9rem;
         }
 
-        /* 隐藏/显示UI的按钮 */
+        /* UI切换按钮 */
         .ui-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 20, 40, 0.8);
-            border: 1px solid rgba(0, 243, 255, 0.3);
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 20, 40, 0.9);
+            border: 1px solid rgba(0, 243, 255, 0.4);
             color: #00f3ff;
             padding: 8px;
             border-radius: 50%;
             cursor: pointer;
             z-index: 5;
             backdrop-filter: blur(10px);
+            font-size: 0.8rem;
         }
 
         /* 响应式设计 */
@@ -659,200 +636,202 @@
                 width: 95%;
                 max-height: 40vh;
             }
+        }
+
+        @media (max-width: 480px) {
+            .gps-status {
+                width: 140px;
+            }
+            
+            .landmarks-hud {
+                width: 130px;
+            }
             
             .ar-controls {
-                bottom: 5px;
+                bottom: 10px;
+            }
+            
+            .control-btn {
+                padding: 6px 10px;
+                font-size: 0.65rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🚀 科幻AR巴黎导览</h1>
-            <p>全息投影界面 · 实时GPS定位 · 增强现实体验</p>
+    <!-- A-Frame AR场景 - 直接放在body中，确保全屏 -->
+    <a-scene 
+        embedded 
+        arjs="sourceType: webcam; debugUIEnabled: false;"
+        vr-mode-ui="enabled: false"
+        gps-camera 
+        rotation-reader
+        id="arScene"
+    >
+        <!-- GPS定位的地标 - 3D模型 -->
+        <a-entity 
+            class="landmark-entity"
+            data-landmark="eiffel"
+            gps-entity-place="latitude: 48.8584; longitude: 2.2945;"
+        >
+            <a-cone 
+                color="#00f3ff" 
+                height="2" 
+                radius-bottom="0.5"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
+            ></a-cone>
+            <a-text 
+                value="埃菲尔铁塔" 
+                position="0 2.5 0" 
+                align="center" 
+                color="#e2f1f8"
+                scale="2 2 2"
+            ></a-text>
+        </a-entity>
+
+        <a-entity 
+            class="landmark-entity"
+            data-landmark="louvre"
+            gps-entity-place="latitude: 48.8606; longitude: 2.3376;"
+        >
+            <a-box 
+                color="#9d4edd" 
+                width="1" 
+                height="1" 
+                depth="1"
+                animation="property: rotation; to: 45 360 45; loop: true; dur: 8000"
+            ></a-box>
+            <a-text 
+                value="卢浮宫" 
+                position="0 1.8 0" 
+                align="center" 
+                color="#e2f1f8"
+                scale="2 2 2"
+            ></a-text>
+        </a-entity>
+
+        <a-entity camera gps-camera></a-entity>
+    </a-scene>
+
+    <!-- 科幻AR界面 -->
+    <div class="ar-interface">
+        <div class="ar-overlay"></div>
+        
+        <!-- 科幻十字准星 -->
+        <div class="crosshair">
+            <div class="crosshair-inner">
+                <div class="crosshair-element crosshair-h"></div>
+                <div class="crosshair-element crosshair-v"></div>
+                <div class="crosshair-element crosshair-dot"></div>
+            </div>
         </div>
+        
+        <!-- 动态生成的AR标记点 -->
+        <div id="arMarkersContainer"></div>
+    </div>
 
-        <div class="ar-container">
-            <!-- A-Frame AR场景 - 现在应该全屏显示了 -->
-            <a-scene 
-                embedded 
-                arjs="sourceType: webcam; debugUIEnabled: false;"
-                vr-mode-ui="enabled: false"
-                gps-camera 
-                rotation-reader
-                id="arScene"
-            >
-                <!-- GPS定位的地标 - 3D模型 -->
-                <a-entity 
-                    class="landmark-entity"
-                    data-landmark="eiffel"
-                    gps-entity-place="latitude: 48.8584; longitude: 2.2945;"
-                >
-                    <a-cone 
-                        color="#00f3ff" 
-                        height="2" 
-                        radius-bottom="0.5"
-                        animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
-                    ></a-cone>
-                    <a-text 
-                        value="埃菲尔铁塔" 
-                        position="0 2.5 0" 
-                        align="center" 
-                        color="#e2f1f8"
-                        scale="2 2 2"
-                    ></a-text>
-                </a-entity>
+    <!-- UI切换按钮 -->
+    <button class="ui-toggle" id="uiToggle">👁️</button>
 
-                <a-entity 
-                    class="landmark-entity"
-                    data-landmark="louvre"
-                    gps-entity-place="latitude: 48.8606; longitude: 2.3376;"
-                >
-                    <a-box 
-                        color="#9d4edd" 
-                        width="1" 
-                        height="1" 
-                        depth="1"
-                        animation="property: rotation; to: 45 360 45; loop: true; dur: 8000"
-                    ></a-box>
-                    <a-text 
-                        value="卢浮宫" 
-                        position="0 1.8 0" 
-                        align="center" 
-                        color="#e2f1f8"
-                        scale="2 2 2"
-                    ></a-text>
-                </a-entity>
-
-                <a-entity camera gps-camera></a-entity>
-            </a-scene>
-
-            <!-- 科幻AR界面 -->
-            <div class="ar-interface">
-                <div class="ar-overlay"></div>
-                
-                <!-- 科幻十字准星 -->
-                <div class="crosshair">
-                    <div class="crosshair-inner">
-                        <div class="crosshair-element crosshair-h"></div>
-                        <div class="crosshair-element crosshair-v"></div>
-                        <div class="crosshair-element crosshair-dot"></div>
-                    </div>
-                </div>
-                
-                <!-- 动态生成的AR标记点 -->
-                <div id="arMarkersContainer"></div>
+    <!-- GPS状态面板 -->
+    <div class="scifi-panel gps-status">
+        <h3>🛰️ 定位系统</h3>
+        <div class="status-grid">
+            <div class="status-item">
+                <div class="status-label">信号强度</div>
+                <div class="status-value" id="accuracyValue">--</div>
             </div>
-
-            <!-- UI切换按钮 -->
-            <button class="ui-toggle" id="uiToggle">👁️</button>
-
-            <!-- GPS状态面板 -->
-            <div class="scifi-panel gps-status">
-                <h3>🛰️ 定位系统</h3>
-                <div class="status-grid">
-                    <div class="status-item">
-                        <div class="status-label">信号强度</div>
-                        <div class="status-value" id="accuracyValue">--</div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-label">地标数量</div>
-                        <div class="status-value" id="landmarksCount">0</div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-label">系统状态</div>
-                        <div class="status-value">初始化中</div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-label">数据版本</div>
-                        <div class="status-value">v2.4.1</div>
-                    </div>
-                    <div class="accuracy-visual">
-                        <div class="status-label">定位精度</div>
-                        <div class="accuracy-bar">
-                            <div class="accuracy-fill" id="accuracyFill" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
+            <div class="status-item">
+                <div class="status-label">地标数量</div>
+                <div class="status-value" id="landmarksCount">0</div>
             </div>
-
-            <!-- 地标HUD -->
-            <div class="scifi-panel landmarks-hud">
-                <h3 id="landmarksToggle">
-                    <span class="toggle-icon">▼</span> 🏛️ 地标
-                </h3>
-                <div id="landmarksContainer">
-                    <!-- 地标列表将通过JavaScript动态生成 -->
-                </div>
+            <div class="status-item">
+                <div class="status-label">系统状态</div>
+                <div class="status-value">初始化中</div>
             </div>
-
-            <!-- AR控制面板 -->
-            <div class="ar-controls">
-                <button class="control-btn" id="toggleCamera">
-                    <span>📷</span> 镜头
-                </button>
-                <button class="control-btn" id="toggleAR">
-                    <span>🔮</span> AR
-                </button>
-                <button class="control-btn" id="capturePhoto">
-                    <span>🖼️</span> 拍照
-                </button>
+            <div class="status-item">
+                <div class="status-label">数据版本</div>
+                <div class="status-value">v2.4.1</div>
             </div>
-
-            <!-- 加载界面 -->
-            <div class="loading" id="loading">
-                <div class="hologram-loader">
-                    <div class="hologram-element hologram-1"></div>
-                    <div class="hologram-element hologram-2"></div>
-                    <div class="hologram-element hologram-3"></div>
-                </div>
-                <h2>系统初始化中</h2>
-                <p id="loadingStatus">正在连接定位网络...</p>
-            </div>
-
-            <!-- 科幻信息面板 -->
-            <div class="scifi-info-panel" id="arInfoPanel">
-                <div class="panel-header">
-                    <h3 class="panel-title" id="infoTitle">地标信息系统</h3>
-                    <button class="close-btn" id="closeInfoPanel">
-                        <span>✕</span>
-                    </button>
-                </div>
-                
-                <div class="info-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="infoDistance">--</div>
-                        <div class="stat-label">距离</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">4.8/5</div>
-                        <div class="stat-label">评分</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="infoType">地标</div>
-                        <div class="stat-label">类型</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">1889</div>
-                        <div class="stat-label">建立年份</div>
-                    </div>
-                </div>
-                
-                <p class="info-description" id="infoDescription">
-                    选择地标以加载详细信息...
-                </p>
-                
-                <div class="info-tags">
-                    <span class="info-tag">#文化遗产</span>
-                    <span class="info-tag">#旅游热点</span>
-                    <span class="info-tag">#历史建筑</span>
+            <div class="accuracy-visual">
+                <div class="status-label">定位精度</div>
+                <div class="accuracy-bar">
+                    <div class="accuracy-fill" id="accuracyFill" style="width: 0%"></div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="footer">
-            <p>AR导航系统 v2.4.1 | 全息投影技术 | 实时数据流</p>
+    <!-- 地标HUD -->
+    <div class="scifi-panel landmarks-hud">
+        <h3 id="landmarksToggle">
+            <span class="toggle-icon">▼</span> 🏛️ 地标
+        </h3>
+        <div id="landmarksContainer">
+            <!-- 地标列表将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <!-- AR控制面板 -->
+    <div class="ar-controls">
+        <button class="control-btn" id="toggleCamera">
+            <span>📷</span> 镜头
+        </button>
+        <button class="control-btn" id="toggleAR">
+            <span>🔮</span> AR
+        </button>
+        <button class="control-btn" id="capturePhoto">
+            <span>🖼️</span> 拍照
+        </button>
+    </div>
+
+    <!-- 加载界面 -->
+    <div class="loading" id="loading">
+        <div class="hologram-loader">
+            <div class="hologram-element hologram-1"></div>
+            <div class="hologram-element hologram-2"></div>
+            <div class="hologram-element hologram-3"></div>
+        </div>
+        <h2>系统初始化中</h2>
+        <p id="loadingStatus">正在启动AR系统...</p>
+    </div>
+
+    <!-- 科幻信息面板 -->
+    <div class="scifi-info-panel" id="arInfoPanel">
+        <div class="panel-header">
+            <h3 class="panel-title" id="infoTitle">地标信息系统</h3>
+            <button class="close-btn" id="closeInfoPanel">
+                <span>✕</span>
+            </button>
+        </div>
+        
+        <div class="info-stats">
+            <div class="stat-item">
+                <div class="stat-value" id="infoDistance">--</div>
+                <div class="stat-label">距离</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">4.8/5</div>
+                <div class="stat-label">评分</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="infoType">地标</div>
+                <div class="stat-label">类型</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">1889</div>
+                <div class="stat-label">建立年份</div>
+            </div>
+        </div>
+        
+        <p class="info-description" id="infoDescription">
+            选择地标以加载详细信息...
+        </p>
+        
+        <div class="info-tags">
+            <span class="info-tag">#文化遗产</span>
+            <span class="info-tag">#旅游热点</span>
+            <span class="info-tag">#历史建筑</span>
         </div>
     </div>
 
@@ -930,7 +909,6 @@
             }
 
             function startDemoMode() {
-                // 演示模式 - 使用模拟位置
                 userLocation = {
                     latitude: 48.8566,
                     longitude: 2.3522,
