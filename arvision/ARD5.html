@@ -124,14 +124,14 @@
             50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.7; }
         }
 
-        /* 科幻状态面板 - 悬浮设计 */
+        /* 科幻状态面板 - 更紧凑 */
         .scifi-panel {
             background: linear-gradient(135deg, rgba(0, 15, 30, 0.85) 0%, rgba(5, 0, 20, 0.8) 100%);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(0, 243, 255, 0.4);
-            border-radius: 12px;
-            padding: 12px;
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
             position: fixed;
             overflow: hidden;
             pointer-events: auto;
@@ -155,26 +155,26 @@
         }
 
         .gps-status {
-            top: 15px;
-            left: 15px;
-            width: 180px;
+            top: 10px;
+            left: 10px;
+            width: 150px;
         }
 
         .gps-status h3 {
             color: #00f3ff;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
+            gap: 5px;
+            font-size: 0.8rem;
             font-weight: 500;
         }
 
         .status-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            font-size: 0.75rem;
+            gap: 5px;
+            font-size: 0.7rem;
         }
 
         .status-item {
@@ -184,13 +184,13 @@
         }
 
         .status-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: rgba(200, 220, 255, 0.7);
             font-weight: 300;
         }
 
         .status-value {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #00f3ff;
             font-weight: 500;
         }
@@ -202,7 +202,7 @@
 
         .accuracy-bar {
             width: 100%;
-            height: 4px;
+            height: 3px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
             overflow: hidden;
@@ -215,104 +215,11 @@
             transition: width 0.5s ease;
         }
 
-        /* 地标HUD */
-        .landmarks-hud {
-            top: 15px;
-            right: 15px;
-            width: 160px;
-            max-height: 200px;
-            transition: all 0.3s ease;
-        }
-
-        .landmarks-hud.collapsed {
-            max-height: 40px;
-            overflow: hidden;
-        }
-
-        .landmarks-hud::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .landmarks-hud::-webkit-scrollbar-track {
-            background: rgba(0, 243, 255, 0.1);
-        }
-
-        .landmarks-hud::-webkit-scrollbar-thumb {
-            background: linear-gradient(#00f3ff, #9d4edd);
-        }
-
-        .landmarks-hud h3 {
-            color: #9d4edd;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .toggle-icon {
-            transition: transform 0.3s ease;
-        }
-
-        .landmarks-hud.collapsed .toggle-icon {
-            transform: rotate(-90deg);
-        }
-
-        .landmark-card {
-            padding: 8px;
-            margin-bottom: 6px;
-            background: rgba(0, 20, 40, 0.6);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .landmark-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .landmark-card:hover::before {
-            left: 100%;
-        }
-
-        .landmark-card:hover {
-            transform: translateX(3px);
-            border-color: #00f3ff;
-        }
-
-        .landmark-card.active {
-            border-color: #ff006e;
-        }
-
-        .landmark-name {
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 3px;
-            font-size: 0.75rem;
-        }
-
-        .landmark-distance {
-            font-size: 0.65rem;
-            color: #00f3ff;
-        }
-
         /* AR标记 */
         .ar-marker {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             pointer-events: auto;
             cursor: pointer;
             z-index: 3;
@@ -343,22 +250,22 @@
             position: absolute;
             top: 20%;
             left: 20%;
-            box-shadow: 0 0 15px #00f3ff;
+            box-shadow: 0 0 12px #00f3ff;
         }
 
         .marker-label {
             position: absolute;
-            top: -25px;
+            top: -22px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 15, 30, 0.9);
             color: #00f3ff;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.65rem;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 0.6rem;
             white-space: nowrap;
             border: 1px solid rgba(0, 243, 255, 0.3);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 8px rgba(0, 243, 255, 0.2);
             backdrop-filter: blur(5px);
             pointer-events: auto;
             cursor: pointer;
@@ -374,10 +281,10 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 控制面板 */
+        /* 控制面板 - 只保留AR切换按钮 */
         .ar-controls {
             position: fixed;
-            bottom: 15px;
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -390,15 +297,15 @@
             background: linear-gradient(135deg, rgba(0, 20, 40, 0.9) 0%, rgba(5, 0, 20, 0.85) 100%);
             border: 1px solid rgba(0, 243, 255, 0.4);
             color: #e2f1f8;
-            padding: 8px 12px;
-            border-radius: 20px;
+            padding: 6px 10px;
+            border-radius: 15px;
             cursor: pointer;
             backdrop-filter: blur(10px);
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.7rem;
+            gap: 5px;
+            font-size: 0.65rem;
             font-weight: 500;
             position: relative;
             overflow: hidden;
@@ -428,21 +335,21 @@
         /* 信息面板 */
         .scifi-info-panel {
             position: fixed;
-            bottom: 60px;
+            bottom: 50px;
             left: 50%;
             transform: translateX(-50%) translateY(150%);
             width: 90%;
-            max-width: 350px;
+            max-width: 320px;
             background: linear-gradient(135deg, rgba(0, 20, 40, 0.95) 0%, rgba(5, 0, 20, 0.9) 100%);
             backdrop-filter: blur(20px);
-            padding: 15px;
-            border-radius: 15px;
+            padding: 12px;
+            border-radius: 12px;
             border: 1px solid rgba(0, 243, 255, 0.5);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
             transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             z-index: 4;
             pointer-events: auto;
-            max-height: 50vh;
+            max-height: 45vh;
             overflow-y: auto;
         }
 
@@ -451,7 +358,7 @@
         }
 
         .scifi-info-panel::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
 
         .scifi-info-panel::-webkit-scrollbar-track {
@@ -466,13 +373,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
             border-bottom: 1px solid rgba(0, 243, 255, 0.3);
         }
 
         .panel-title {
-            font-size: 1rem;
+            font-size: 0.9rem;
             background: linear-gradient(90deg, #00f3ff, #9d4edd);
             -webkit-background-clip: text;
             background-clip: text;
@@ -484,10 +391,10 @@
             background: none;
             border: none;
             color: #ff006e;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
-            width: 25px;
-            height: 25px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -503,50 +410,50 @@
         .info-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 10px;
         }
 
         .stat-item {
             text-align: center;
-            padding: 8px;
+            padding: 6px;
             background: rgba(0, 243, 255, 0.1);
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid rgba(0, 243, 255, 0.2);
         }
 
         .stat-value {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #00f3ff;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         .stat-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: rgba(200, 220, 255, 0.8);
             font-weight: 300;
         }
 
         .info-description {
             color: rgba(200, 220, 255, 0.9);
-            line-height: 1.4;
-            font-size: 0.75rem;
-            margin-bottom: 10px;
+            line-height: 1.3;
+            font-size: 0.7rem;
+            margin-bottom: 8px;
         }
 
         .info-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 5px;
         }
 
         .info-tag {
             background: linear-gradient(135deg, rgba(157, 78, 221, 0.2) 0%, rgba(255, 0, 110, 0.2) 100%);
             color: #e2f1f8;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.65rem;
+            padding: 3px 6px;
+            border-radius: 10px;
+            font-size: 0.6rem;
             border: 1px solid rgba(157, 78, 221, 0.3);
         }
 
@@ -558,18 +465,18 @@
             transform: translate(-50%, -50%);
             text-align: center;
             background: linear-gradient(135deg, rgba(0, 15, 30, 0.95) 0%, rgba(5, 0, 20, 0.9) 100%);
-            padding: 30px;
-            border-radius: 15px;
+            padding: 25px;
+            border-radius: 12px;
             border: 1px solid rgba(0, 243, 255, 0.4);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
             z-index: 10;
             backdrop-filter: blur(15px);
         }
 
         .hologram-loader {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 15px;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 12px;
             position: relative;
         }
 
@@ -597,39 +504,40 @@
 
         .loading h2 {
             color: #00f3ff;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-size: 1rem;
         }
 
         .loading p {
             color: rgba(200, 220, 255, 0.8);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         /* UI切换按钮 */
         .ui-toggle {
             position: fixed;
-            top: 15px;
-            right: 15px;
+            top: 10px;
+            right: 10px;
             background: rgba(0, 20, 40, 0.9);
             border: 1px solid rgba(0, 243, 255, 0.4);
             color: #00f3ff;
-            padding: 8px;
+            padding: 6px;
             border-radius: 50%;
             cursor: pointer;
             z-index: 5;
             backdrop-filter: blur(10px);
-            font-size: 0.8rem;
+            font-size: 0.7rem;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* 响应式设计 */
         @media (max-width: 768px) {
             .gps-status {
-                width: 160px;
-            }
-            
-            .landmarks-hud {
-                width: 150px;
+                width: 140px;
             }
             
             .scifi-info-panel {
@@ -640,20 +548,11 @@
 
         @media (max-width: 480px) {
             .gps-status {
-                width: 140px;
-            }
-            
-            .landmarks-hud {
                 width: 130px;
             }
             
             .ar-controls {
-                bottom: 10px;
-            }
-            
-            .control-btn {
-                padding: 6px 10px;
-                font-size: 0.65rem;
+                bottom: 8px;
             }
         }
     </style>
@@ -762,26 +661,10 @@
         </div>
     </div>
 
-    <!-- 地标HUD -->
-    <div class="scifi-panel landmarks-hud">
-        <h3 id="landmarksToggle">
-            <span class="toggle-icon">▼</span> 🏛️ 地标
-        </h3>
-        <div id="landmarksContainer">
-            <!-- 地标列表将通过JavaScript动态生成 -->
-        </div>
-    </div>
-
-    <!-- AR控制面板 -->
+    <!-- AR控制面板 - 只保留AR切换按钮 -->
     <div class="ar-controls">
-        <button class="control-btn" id="toggleCamera">
-            <span>📷</span> 镜头
-        </button>
         <button class="control-btn" id="toggleAR">
-            <span>🔮</span> AR
-        </button>
-        <button class="control-btn" id="capturePhoto">
-            <span>🖼️</span> 拍照
+            <span>🔮</span> AR界面
         </button>
     </div>
 
@@ -865,16 +748,11 @@
             const accuracyValue = document.getElementById('accuracyValue');
             const accuracyFill = document.getElementById('accuracyFill');
             const landmarksCount = document.getElementById('landmarksCount');
-            const landmarksContainer = document.getElementById('landmarksContainer');
             const arInfoPanel = document.getElementById('arInfoPanel');
             const closeInfoPanel = document.getElementById('closeInfoPanel');
-            const toggleCameraBtn = document.getElementById('toggleCamera');
             const toggleARBtn = document.getElementById('toggleAR');
-            const capturePhotoBtn = document.getElementById('capturePhoto');
             const arMarkersContainer = document.getElementById('arMarkersContainer');
             const uiToggle = document.getElementById('uiToggle');
-            const landmarksToggle = document.getElementById('landmarksToggle');
-            const landmarksHud = document.querySelector('.landmarks-hud');
 
             // 初始化系统
             initializeSystem();
@@ -892,7 +770,6 @@
                         setTimeout(() => {
                             loadingElement.style.display = 'none';
                             startDemoMode();
-                            initLandmarksList();
                         }, 800);
                         return;
                     }
@@ -993,39 +870,6 @@
                 arMarkersContainer.appendChild(marker);
             }
 
-            function initLandmarksList() {
-                landmarksContainer.innerHTML = '';
-                
-                Object.keys(landmarks).forEach(landmarkId => {
-                    const landmark = landmarks[landmarkId];
-                    const distance = userLocation ? calculateDistance(
-                        userLocation.latitude,
-                        userLocation.longitude,
-                        landmark.latitude,
-                        landmark.longitude
-                    ) : 0;
-                    
-                    const item = document.createElement('div');
-                    item.className = 'landmark-card';
-                    item.setAttribute('data-landmark', landmarkId);
-                    
-                    item.innerHTML = `
-                        <div class="landmark-name">${landmark.name}</div>
-                        <div class="landmark-distance">${userLocation ? Math.round(distance) + 'm' : '--'}</div>
-                    `;
-                    
-                    item.addEventListener('click', function() {
-                        showLandmarkInfo(landmarkId);
-                        document.querySelectorAll('.landmark-card').forEach(i => {
-                            i.classList.remove('active');
-                        });
-                        this.classList.add('active');
-                    });
-                    
-                    landmarksContainer.appendChild(item);
-                });
-            }
-
             function showLandmarkInfo(landmarkId) {
                 const landmark = landmarks[landmarkId];
                 if (!landmark) return;
@@ -1065,10 +909,6 @@
                     arInfoPanel.classList.remove('active');
                 });
 
-                toggleCameraBtn.addEventListener('click', function() {
-                    alert('摄像头切换功能');
-                });
-
                 toggleARBtn.addEventListener('click', function() {
                     const arInterface = document.querySelector('.ar-interface');
                     if (arInterface.style.display !== 'none') {
@@ -1076,12 +916,8 @@
                         toggleARBtn.innerHTML = '<span>👁️</span> 显示AR';
                     } else {
                         arInterface.style.display = 'block';
-                        toggleARBtn.innerHTML = '<span>🔮</span> AR';
+                        toggleARBtn.innerHTML = '<span>🔮</span> AR界面';
                     }
-                });
-
-                capturePhotoBtn.addEventListener('click', function() {
-                    alert('拍照功能已触发！');
                 });
 
                 // UI显示/隐藏切换
@@ -1096,11 +932,6 @@
                     uiToggle.textContent = isUIVisible ? '👁️' : '👁️‍🗨️';
                 });
 
-                // 地标列表折叠/展开
-                landmarksToggle.addEventListener('click', function() {
-                    landmarksHud.classList.toggle('collapsed');
-                });
-
                 // AR场景点击事件
                 document.addEventListener('click', function(e) {
                     if (e.target.closest('.landmark-entity')) {
@@ -1112,25 +943,6 @@
             }
 
             setupEventListeners();
-
-            // 定期更新
-            setInterval(() => {
-                if (!userLocation) return;
-                
-                document.querySelectorAll('.landmark-card').forEach(item => {
-                    const landmarkId = item.getAttribute('data-landmark');
-                    const landmark = landmarks[landmarkId];
-                    if (landmark) {
-                        const distance = calculateDistance(
-                            userLocation.latitude,
-                            userLocation.longitude,
-                            landmark.latitude,
-                            landmark.longitude
-                        );
-                        item.querySelector('.landmark-distance').textContent = `${Math.round(distance)}m`;
-                    }
-                });
-            }, 3000);
         });
     </script>
 </body>
