@@ -25,6 +25,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            display: none;
         }
         
         #video {
@@ -48,21 +49,22 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(rgba(0, 150, 255, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 150, 255, 0.1) 1px, transparent 1px);
-            background-size: 30px 30px;
+                linear-gradient(rgba(0, 150, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 150, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
             z-index: 1;
         }
         
         .scan-line {
             position: absolute;
             width: 100%;
-            height: 2px;
+            height: 1px;
             background: linear-gradient(90deg, transparent, #00ffff, transparent);
             top: 30%;
             animation: scan 4s linear infinite;
-            box-shadow: 0 0 10px #00ffff;
+            box-shadow: 0 0 8px #00ffff;
             z-index: 2;
+            opacity: 0.7;
         }
         
         @keyframes scan {
@@ -73,47 +75,53 @@
         
         .info-panel {
             position: absolute;
-            width: 85%;
-            max-width: 400px;
-            background: rgba(10, 25, 47, 0.7);
-            border: 1px solid rgba(0, 255, 255, 0.5);
-            border-radius: 12px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3),
-                        inset 0 0 20px rgba(0, 255, 255, 0.1);
+            width: 75%;
+            max-width: 320px;
+            background: rgba(5, 15, 30, 0.25); /* 提高透明度 */
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 8px;
+            padding: 12px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2),
+                        inset 0 0 10px rgba(0, 255, 255, 0.05);
             z-index: 10;
             animation: float 6s ease-in-out infinite;
             pointer-events: auto;
+            opacity: 0; /* 初始隐藏 */
+            transition: opacity 0.5s ease;
+        }
+        
+        .info-panel.visible {
+            opacity: 1; /* 显示面板 */
         }
         
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0.5deg); }
-            50% { transform: translateY(-10px) rotate(-0.5deg); }
+            0%, 100% { transform: translateY(0) rotate(0.3deg); }
+            50% { transform: translateY(-5px) rotate(-0.3deg); }
         }
         
         .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
         }
         
         .panel-title {
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
+            text-shadow: 0 0 5px #00ffff;
         }
         
         .status-indicator {
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #00ff00;
-            box-shadow: 0 0 10px #00ff00;
+            box-shadow: 0 0 5px #00ff00;
             animation: pulse 2s infinite;
         }
         
@@ -123,81 +131,82 @@
         }
         
         .info-item {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
         }
         
         .info-label {
-            color: #66ccff;
-            font-size: 0.9rem;
+            color: #88ddff;
+            font-size: 0.75rem;
         }
         
         .info-value {
             color: #ffffff;
             font-weight: 500;
             text-align: right;
+            font-size: 0.8rem;
         }
         
         .weather-icon {
-            font-size: 2rem;
+            font-size: 1.5rem;
             text-align: center;
-            margin: 10px 0;
+            margin: 8px 0;
         }
         
         #location-panel {
-            top: 10%;
+            top: 8%;
             left: 5%;
         }
         
         #weather-panel {
-            top: 10%;
+            top: 8%;
             right: 5%;
         }
         
         #environment-panel {
-            bottom: 15%;
+            bottom: 12%;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
+            width: 80%;
         }
         
         .corner {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 12px;
+            height: 12px;
         }
         
         .corner-tl {
             top: -1px;
             left: -1px;
-            border-top: 2px solid #00ffff;
-            border-left: 2px solid #00ffff;
-            border-radius: 8px 0 0 0;
+            border-top: 1px solid #00ffff;
+            border-left: 1px solid #00ffff;
+            border-radius: 6px 0 0 0;
         }
         
         .corner-tr {
             top: -1px;
             right: -1px;
-            border-top: 2px solid #00ffff;
-            border-right: 2px solid #00ffff;
-            border-radius: 0 8px 0 0;
+            border-top: 1px solid #00ffff;
+            border-right: 1px solid #00ffff;
+            border-radius: 0 6px 0 0;
         }
         
         .corner-bl {
             bottom: -1px;
             left: -1px;
-            border-bottom: 2px solid #00ffff;
-            border-left: 2px solid #00ffff;
-            border-radius: 0 0 0 8px;
+            border-bottom: 1px solid #00ffff;
+            border-left: 1px solid #00ffff;
+            border-radius: 0 0 0 6px;
         }
         
         .corner-br {
             bottom: -1px;
             right: -1px;
-            border-bottom: 2px solid #00ffff;
-            border-right: 2px solid #00ffff;
-            border-radius: 0 0 8px 0;
+            border-bottom: 1px solid #00ffff;
+            border-right: 1px solid #00ffff;
+            border-radius: 0 0 6px 0;
         }
         
         #start-button {
@@ -226,13 +235,14 @@
         
         .particle {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 3px;
+            height: 3px;
             background: #00ffff;
             border-radius: 50%;
-            box-shadow: 0 0 10px #00ffff;
+            box-shadow: 0 0 5px #00ffff;
             animation: float-particle 10s infinite linear;
             z-index: 3;
+            opacity: 0.6;
         }
         
         @keyframes float-particle {
@@ -241,24 +251,24 @@
                 opacity: 0;
             }
             10% {
-                opacity: 1;
+                opacity: 0.6;
             }
             90% {
-                opacity: 1;
+                opacity: 0.6;
             }
             100% {
-                transform: translate(100px, -100px);
+                transform: translate(80px, -80px);
                 opacity: 0;
             }
         }
         
         .compass {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            border: 2px solid rgba(0, 255, 255, 0.7);
+            top: 15px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
+            border: 1px solid rgba(0, 255, 255, 0.5);
             border-radius: 50%;
             z-index: 10;
         }
@@ -267,63 +277,69 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 2px;
-            height: 25px;
+            width: 1px;
+            height: 20px;
             background: #ff3333;
             transform-origin: 0 0;
             transform: translate(-50%, -50%) rotate(0deg);
-            box-shadow: 0 0 10px #ff3333;
+            box-shadow: 0 0 5px #ff3333;
         }
         
         .compass-mark {
             position: absolute;
             color: #00ffff;
-            font-size: 0.7rem;
-            text-shadow: 0 0 5px #00ffff;
+            font-size: 0.6rem;
+            text-shadow: 0 0 3px #00ffff;
         }
         
         .compass-n {
-            top: 5px;
+            top: 3px;
             left: 50%;
             transform: translateX(-50%);
         }
         
         .compass-e {
             top: 50%;
-            right: 5px;
+            right: 3px;
             transform: translateY(-50%);
         }
         
         .compass-s {
-            bottom: 5px;
+            bottom: 3px;
             left: 50%;
             transform: translateX(-50%);
         }
         
         .compass-w {
             top: 50%;
-            left: 5px;
+            left: 3px;
             transform: translateY(-50%);
         }
         
         .close-button {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 0, 0, 0.3);
-            border: 1px solid rgba(255, 50, 50, 0.7);
+            top: 15px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 50, 50, 0.5);
             border-radius: 50%;
             color: #ff5555;
-            font-size: 1.2rem;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 100;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
             pointer-events: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .close-button.visible {
+            opacity: 1;
         }
         
         .error-message {
@@ -340,15 +356,48 @@
             z-index: 100;
             display: none;
         }
+        
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #00ffff;
+            font-size: 1rem;
+            text-align: center;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .loading-indicator.visible {
+            opacity: 1;
+        }
+        
+        .loading-dots:after {
+            content: '';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
     </style>
 </head>
 <body>
-    <div id="video-container" style="display: none;">
+    <div id="video-container">
         <video id="video" autoplay playsinline></video>
         
         <div class="ar-overlay">
             <div class="grid-overlay"></div>
             <div class="scan-line"></div>
+            
+            <div class="loading-indicator" id="loading-indicator">
+                初始化AR镜头<span class="loading-dots"></span>
+            </div>
             
             <div class="info-panel" id="location-panel">
                 <div class="corner corner-tl"></div>
@@ -489,14 +538,17 @@
             // 显示视频容器
             document.getElementById('video-container').style.display = 'block';
             
+            // 显示加载指示器
+            document.getElementById('loading-indicator').classList.add('visible');
+            
             // 请求摄像头权限
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 // 优先使用后置摄像头
                 const constraints = {
                     video: {
                         facingMode: { ideal: 'environment' },
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 }
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
                     }
                 };
                 
@@ -505,19 +557,52 @@
                         const video = document.getElementById('video');
                         video.srcObject = stream;
                         
-                        // 获取位置信息
-                        getLocationInfo();
-                        
-                        // 开始动画效果
-                        startAnimations();
+                        // 视频加载完成后显示信息面板
+                        video.onloadeddata = function() {
+                            // 隐藏加载指示器
+                            document.getElementById('loading-indicator').classList.remove('visible');
+                            
+                            // 显示信息面板和关闭按钮
+                            showInfoPanels();
+                            
+                            // 获取位置信息
+                            getLocationInfo();
+                            
+                            // 开始动画效果
+                            startAnimations();
+                        };
                     })
                     .catch(function(error) {
                         console.error('无法访问摄像头:', error);
                         document.getElementById('error-message').style.display = 'block';
+                        document.getElementById('loading-indicator').classList.remove('visible');
                     });
             } else {
                 alert('您的浏览器不支持摄像头功能');
+                document.getElementById('loading-indicator').classList.remove('visible');
             }
+        }
+        
+        function showInfoPanels() {
+            // 显示所有信息面板
+            const panels = document.querySelectorAll('.info-panel');
+            panels.forEach(panel => {
+                panel.classList.add('visible');
+            });
+            
+            // 显示关闭按钮
+            document.getElementById('close-button').classList.add('visible');
+        }
+        
+        function hideInfoPanels() {
+            // 隐藏所有信息面板
+            const panels = document.querySelectorAll('.info-panel');
+            panels.forEach(panel => {
+                panel.classList.remove('visible');
+            });
+            
+            // 隐藏关闭按钮
+            document.getElementById('close-button').classList.remove('visible');
         }
         
         function stopAR() {
@@ -529,6 +614,9 @@
                 tracks.forEach(track => track.stop());
                 video.srcObject = null;
             }
+            
+            // 隐藏信息面板
+            hideInfoPanels();
             
             // 隐藏视频容器
             document.getElementById('video-container').style.display = 'none';
@@ -639,7 +727,7 @@
         function addFloatingParticles() {
             const container = document.querySelector('.ar-overlay');
             
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 15; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 
