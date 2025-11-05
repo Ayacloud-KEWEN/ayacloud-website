@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>AR实景镜头应用</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+        
+        #video-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* 镜像翻转，使视频看起来更自然 */
+        }
+        
+        .ar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .grid-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 150, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 150, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 1;
+        }
+        
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            top: 30%;
+            animation: scan 4s linear infinite;
+            box-shadow: 0 0 10px #00ffff;
+            z-index: 2;
+        }
+        
+        @keyframes scan {
+            0% { top: 10%; }
+            50% { top: 90%; }
+            100% { top: 10%; }
+        }
+        
+        .info-panel {
+            position: absolute;
+            width: 85%;
+            max-width: 400px;
+            background: rgba(10, 25, 47, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3),
+                        inset 0 0 20px rgba(0, 255, 255, 0.1);
+            z-index: 10;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: auto;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0.5deg); }
+            50% { transform: translateY(-10px) rotate(-0.5deg); }
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .info-item {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .info-label {
+            color: #66ccff;
+            font-size: 0.9rem;
+        }
+        
+        .info-value {
+            color: #ffffff;
+            font-weight: 500;
+            text-align: right;
+        }
+        
+        .weather-icon {
+            font-size: 2rem;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        #location-panel {
+            top: 10%;
+            left: 5%;
+        }
+        
+        #weather-panel {
+            top: 10%;
+            right: 5%;
+        }
+        
+        #environment-panel {
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+        }
+        
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .corner-tl {
+            top: -1px;
+            left: -1px;
+            border-top: 2px solid #00ffff;
+            border-left: 2px solid #00ffff;
+            border-radius: 8px 0 0 0;
+        }
+        
+        .corner-tr {
+            top: -1px;
+            right: -1px;
+            border-top: 2px solid #00ffff;
+            border-right: 2px solid #00ffff;
+            border-radius: 0 8px 0 0;
+        }
+        
+        .corner-bl {
+            bottom: -1px;
+            left: -1px;
+            border-bottom: 2px solid #00ffff;
+            border-left: 2px solid #00ffff;
+            border-radius: 0 0 0 8px;
+        }
+        
+        .corner-br {
+            bottom: -1px;
+            right: -1px;
+            border-bottom: 2px solid #00ffff;
+            border-right: 2px solid #00ffff;
+            border-radius: 0 0 8px 0;
+        }
+        
+        #start-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 40px;
+            background: rgba(0, 40, 80, 0.7);
+            border: 2px solid #00aaff;
+            border-radius: 50px;
+            color: #00ffff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 170, 255, 0.5);
+            text-shadow: 0 0 10px #00ffff;
+        }
+        
+        #start-button:hover {
+            background: rgba(0, 60, 120, 0.8);
+            box-shadow: 0 0 30px rgba(0, 200, 255, 0.8);
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ffff;
+            animation: float-particle 10s infinite linear;
+            z-index: 3;
+        }
+        
+        @keyframes float-particle {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(100px, -100px);
+                opacity: 0;
+            }
+        }
+        
+        .compass {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(0, 255, 255, 0.7);
+            border-radius: 50%;
+            z-index: 10;
+        }
+        
+        .compass-needle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 25px;
+            background: #ff3333;
+            transform-origin: 0 0;
+            transform: translate(-50%, -50%) rotate(0deg);
+            box-shadow: 0 0 10px #ff3333;
+        }
+        
+        .compass-mark {
+            position: absolute;
+            color: #00ffff;
+            font-size: 0.7rem;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        
+        .compass-n {
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .compass-e {
+            top: 50%;
+            right: 5px;
+            transform: translateY(-50%);
+        }
+        
+        .compass-s {
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .compass-w {
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 0, 0, 0.3);
+            border: 1px solid rgba(255, 50, 50, 0.7);
+            border-radius: 50%;
+            color: #ff5555;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            pointer-events: auto;
+        }
+        
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ff3333;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            max-width: 80%;
+            z-index: 100;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container" style="display: none;">
+        <video id="video" autoplay playsinline></video>
+        
+        <div class="ar-overlay">
+            <div class="grid-overlay"></div>
+            <div class="scan-line"></div>
+            
+            <div class="info-panel" id="location-panel">
+                <div class="corner corner-tl"></div>
+                <div class="corner corner-tr"></div>
+                <div class="corner corner-bl"></div>
+                <div class="corner corner-br"></div>
+                
+                <div class="panel-header">
+                    <div class="panel-title">位置信息</div>
+                    <div class="status-indicator"></div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">经度:</div>
+                    <div class="info-value" id="longitude">--</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">纬度:</div>
+                    <div class="info-value" id="latitude">--</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">海拔:</div>
+                    <div class="info-value" id="altitude">--</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">地点:</div>
+                    <div class="info-value" id="location-name">--</div>
+                </div>
+            </div>
+            
+            <div class="info-panel" id="weather-panel">
+                <div class="corner corner-tl"></div>
+                <div class="corner corner-tr"></div>
+                <div class="corner corner-bl"></div>
+                <div class="corner corner-br"></div>
+                
+                <div class="panel-header">
+                    <div class="panel-title">天气状况</div>
+                    <div class="status-indicator"></div>
+                </div>
+                
+                <div class="weather-icon" id="weather-icon">🌤️</div>
+                
+                <div class="info-item">
+                    <div class="info-label">温度:</div>
+                    <div class="info-value" id="temperature">--</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">湿度:</div>
+                    <div class="info-value" id="humidity">--</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">风速:</div>
+                    <div class="info-value" id="wind-speed">--</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">气压:</div>
+                    <div class="info-value" id="pressure">--</div>
+                </div>
+            </div>
+            
+            <div class="info-panel" id="environment-panel">
+                <div class="corner corner-tl"></div>
+                <div class="corner corner-tr"></div>
+                <div class="corner corner-bl"></div>
+                <div class="corner corner-br"></div>
+                
+                <div class="panel-header">
+                    <div class="panel-title">周边环境</div>
+                    <div class="status-indicator"></div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">建筑密度:</div>
+                    <div class="info-value" id="building-density">--</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">绿地覆盖率:</div>
+                    <div class="info-value" id="green-coverage">--</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">噪音水平:</div>
+                    <div class="info-value" id="noise-level">--</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">空气质量:</div>
+                    <div class="info-value" id="air-quality">--</div>
+                </div>
+            </div>
+            
+            <div class="compass">
+                <div class="compass-needle" id="compass-needle"></div>
+                <div class="compass-mark compass-n">N</div>
+                <div class="compass-mark compass-e">E</div>
+                <div class="compass-mark compass-s">S</div>
+                <div class="compass-mark compass-w">W</div>
+            </div>
+            
+            <div class="close-button" id="close-button">×</div>
+        </div>
+    </div>
+    
+    <button id="start-button">打开AR</button>
+    
+    <div class="error-message" id="error-message">
+        <h3>无法访问摄像头</h3>
+        <p>请确保您已授予摄像头权限，并且使用的是支持摄像头的设备。</p>
+        <button id="retry-button" style="margin-top: 15px; padding: 8px 16px; background: #ff5555; color: white; border: none; border-radius: 5px; cursor: pointer;">重试</button>
+    </div>
+
+    <script>
+        document.getElementById('start-button').addEventListener('click', function() {
+            startAR();
+        });
+        
+        document.getElementById('close-button').addEventListener('click', function() {
+            stopAR();
+        });
+        
+        document.getElementById('retry-button').addEventListener('click', function() {
+            document.getElementById('error-message').style.display = 'none';
+            startAR();
+        });
+        
+        function startAR() {
+            // 隐藏开始按钮
+            document.getElementById('start-button').style.display = 'none';
+            
+            // 显示视频容器
+            document.getElementById('video-container').style.display = 'block';
+            
+            // 请求摄像头权限
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                // 优先使用后置摄像头
+                const constraints = {
+                    video: {
+                        facingMode: { ideal: 'environment' },
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 }
+                    }
+                };
+                
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function(stream) {
+                        const video = document.getElementById('video');
+                        video.srcObject = stream;
+                        
+                        // 获取位置信息
+                        getLocationInfo();
+                        
+                        // 开始动画效果
+                        startAnimations();
+                    })
+                    .catch(function(error) {
+                        console.error('无法访问摄像头:', error);
+                        document.getElementById('error-message').style.display = 'block';
+                    });
+            } else {
+                alert('您的浏览器不支持摄像头功能');
+            }
+        }
+        
+        function stopAR() {
+            // 停止视频流
+            const video = document.getElementById('video');
+            const stream = video.srcObject;
+            if (stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+                video.srcObject = null;
+            }
+            
+            // 隐藏视频容器
+            document.getElementById('video-container').style.display = 'none';
+            
+            // 显示开始按钮
+            document.getElementById('start-button').style.display = 'block';
+        }
+        
+        function getLocationInfo() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        // 更新位置信息
+                        document.getElementById('latitude').textContent = position.coords.latitude.toFixed(4) + '°';
+                        document.getElementById('longitude').textContent = position.coords.longitude.toFixed(4) + '°';
+                        document.getElementById('altitude').textContent = (position.coords.altitude || 0).toFixed(1) + '米';
+                        
+                        // 模拟获取位置名称（实际应用中应使用逆地理编码API）
+                        document.getElementById('location-name').textContent = getLocationName(position.coords.latitude, position.coords.longitude);
+                        
+                        // 更新天气信息（模拟数据）
+                        updateWeatherInfo();
+                        
+                        // 更新环境信息（模拟数据）
+                        updateEnvironmentInfo();
+                    },
+                    function(error) {
+                        // 如果位置获取失败，使用默认值
+                        console.error('位置获取失败:', error);
+                        updateWeatherInfo();
+                        updateEnvironmentInfo();
+                    }
+                );
+            } else {
+                // 浏览器不支持地理位置
+                updateWeatherInfo();
+                updateEnvironmentInfo();
+            }
+        }
+        
+        // 模拟根据经纬度获取位置名称
+        function getLocationName(lat, lng) {
+            // 在实际应用中，这里应该调用逆地理编码API
+            // 这里仅返回模拟数据
+            if (lat > 31.2 && lat < 31.3 && lng > 121.4 && lng < 121.5) {
+                return "上海市中心";
+            } else if (lat > 39.9 && lat < 40.0 && lng > 116.3 && lng < 116.5) {
+                return "北京市中心";
+            } else {
+                return "未知位置";
+            }
+        }
+        
+        // 更新天气信息（模拟数据）
+        function updateWeatherInfo() {
+            // 在实际应用中，这里应该调用天气API
+            const temperature = Math.round(Math.random() * 15 + 15); // 15-30°C
+            const humidity = Math.round(Math.random() * 30 + 40); // 40-70%
+            const windSpeed = (Math.random() * 5).toFixed(1); // 0-5 m/s
+            const pressure = Math.round(Math.random() * 20 + 1000); // 1000-1020 hPa
+            
+            // 根据温度选择天气图标
+            let weatherIcon = '🌤️';
+            if (temperature > 28) {
+                weatherIcon = '☀️';
+            } else if (temperature < 18) {
+                weatherIcon = '🌧️';
+            }
+            
+            document.getElementById('weather-icon').textContent = weatherIcon;
+            document.getElementById('temperature').textContent = temperature + '°C';
+            document.getElementById('humidity').textContent = humidity + '%';
+            document.getElementById('wind-speed').textContent = windSpeed + ' m/s';
+            document.getElementById('pressure').textContent = pressure + ' hPa';
+        }
+        
+        // 更新环境信息（模拟数据）
+        function updateEnvironmentInfo() {
+            // 模拟环境数据
+            const buildingDensityOptions = ['低', '中', '高'];
+            const airQualityOptions = ['优', '良好', '中等', '较差'];
+            
+            document.getElementById('building-density').textContent = 
+                buildingDensityOptions[Math.floor(Math.random() * buildingDensityOptions.length)];
+            document.getElementById('green-coverage').textContent = 
+                Math.round(Math.random() * 40 + 20) + '%';
+            document.getElementById('noise-level').textContent = 
+                Math.round(Math.random() * 30 + 50) + ' dB';
+            document.getElementById('air-quality').textContent = 
+                airQualityOptions[Math.floor(Math.random() * airQualityOptions.length)];
+        }
+        
+        function startAnimations() {
+            // 开始罗盘动画
+            const needle = document.getElementById('compass-needle');
+            let angle = 0;
+            
+            setInterval(() => {
+                angle = (angle + 1) % 360;
+                needle.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+            }, 50);
+            
+            // 添加浮动粒子效果
+            addFloatingParticles();
+        }
+        
+        // 添加浮动粒子效果
+        function addFloatingParticles() {
+            const container = document.querySelector('.ar-overlay');
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // 随机位置
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                particle.style.left = left + '%';
+                particle.style.top = top + '%';
+                
+                // 随机动画延迟
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                
+                container.appendChild(particle);
+            }
+        }
+    </script>
+</body>
+</html>
