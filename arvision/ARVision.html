@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +30,8 @@
             color: var(--light);
             overflow-x: hidden;
             line-height: 1.6;
+            scroll-behavior: smooth;
+            /* <-- 启用原生平滑滚动 */
         }
 
         .container {
@@ -111,6 +114,7 @@
         }
 
         .cta-button {
+            text-decoration: none;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             color: var(--darker);
             border: none;
@@ -128,7 +132,7 @@
 
         /* Hero Section Styles */
         .hero {
-            min-height: 100vh;
+            min-height: 50vh;
             display: flex;
             align-items: center;
             padding-top: 80px;
@@ -208,9 +212,12 @@
         }
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0) rotate(0deg);
             }
+
             50% {
                 transform: translateY(-20px) rotate(10deg);
             }
@@ -270,6 +277,13 @@
         .app-image i {
             font-size: 5rem;
             color: rgba(255, 255, 255, 0.8);
+        }
+
+        .app-image img.app-icon-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
         }
 
         .app-content {
@@ -404,39 +418,39 @@
         }
 
         /* Video Container Styles */
-.video-container {
+        .video-container {
             margin: 25px 0;
             border-radius: 12px;
             overflow: hidden;
             position: relative;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            height: 280px; 
+            height: 280px;
         }
-        
-        
+
+
         .actual-video {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; 
+            object-fit: cover;
             display: block !important;
-            z-index: 1; 
+            z-index: 1;
         }
-        
+
         .video-placeholder {
             width: 100%;
-            height: 100%; 
+            height: 100%;
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: absolute; 
+            position: absolute;
             cursor: pointer;
             transition: all 0.3s ease;
-            z-index: 2; 
+            z-index: 2;
             display: none;
         }
 
@@ -622,40 +636,42 @@
                 font-size: 1rem;
             }
 
-            .apps-grid, .platforms {
+            .apps-grid,
+            .platforms {
                 grid-template-columns: 1fr;
             }
 
             .section-title {
                 font-size: 2rem;
             }
-            
+
             .video-placeholder {
                 height: 200px;
             }
-            
+
             .play-button {
                 width: 60px;
                 height: 60px;
             }
-            
+
             .play-button i {
                 font-size: 1.5rem;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <header>
         <div class="container">
             <nav class="navbar">
-        <div class="logo">
-            <a href="index.html" class="logo-icon-link">
-                <img src="../img/ayacloud.png" alt="Logo Icon" class="logo-icon-img">
-            </a>
-            <span>AR Vision</span>
-        </div>
+                <div class="logo">
+                    <a href="../index.html" class="logo-icon-link">
+                        <img src="../img/ayacloud.png" alt="Logo Icon" class="logo-icon-img">
+                    </a>
+                    <span>AR Vision</span>
+                </div>
                 <div class="nav-links">
                     <a href="#home">Home</a>
                     <a href="#apps">Apps</a>
@@ -663,7 +679,7 @@
                     <a href="#platforms">Platforms</a>
                     <a href="#contact">Contact</a>
                 </div>
-                <button class="cta-button">Get Started</button>
+                <a href="ARD6.html" class="cta-button">Get Started</a>
             </nav>
         </div>
     </header>
@@ -673,8 +689,8 @@
         <div class="container">
             <div class="hero-content">
                 <h1>Experience the Future with Augmented Reality</h1>
-                <p>AR Vision seamlessly blends digital content with the real world, creating unprecedented interactive experiences. From education to entertainment, our AR solutions are redefining the future.</p>
-                <button class="cta-button">Explore Apps <i class="fas fa-arrow-right"></i></button>
+                <p>AR Vision seamlessly blends digital content with the real world, creating unprecedented interactive
+                    experiences. From education to entertainment, our AR solutions are redefining the future.</p>
             </div>
         </div>
         <div class="hero-bg"></div>
@@ -690,37 +706,61 @@
         <div class="container">
             <h2 class="section-title">Featured AR Applications</h2>
             <div class="apps-grid">
-                <!-- App Card 1 -->
-                <div class="app-card">
-                    <div class="app-image">
-                        <i class="fas fa-user-friends"></i>
-                    </div>
-                    <div class="app-content">
-                        <h3>Face Recognition AR</h3>
-                        <p>Our advanced AR technology can identify individuals in real-time and overlay relevant information. Perfect for networking events, security applications, and personalized experiences. The system can recognize facial features, and even emotional states.</p>
-                        <div class="app-tags">
-                            <span class="app-tag">AI Recognition</span>
-                            <span class="app-tag">Real-time</span>
-                            <span class="app-tag">Security</span>
-                        </div>
-                        <a href="ARD2.html" class="app-link">Learn More <i class="fas fa-chevron-right"></i></a>
-                    </div>
-                </div>
 
                 <!-- App Card 2 -->
                 <div class="app-card">
                     <div class="app-image">
-                        <i class="fas fa-utensils"></i>
+                        <img src="002.png" alt="Food Recognition AR" class="app-icon-img">
                     </div>
                     <div class="app-content">
                         <h3>Food Recognition AR</h3>
-                        <p>Simply point your device at any dish to instantly identify ingredients, nutritional information, and potential allergens. Our AR food recognition helps with dietary planning, cooking assistance, and discovering new recipes based on what you see.</p>
+                        <p>Simply point your device at any dish to instantly identify ingredients, nutritional
+                            information, and potential allergens. Our AR food recognition helps with dietary planning,
+                            cooking assistance, and discovering new recipes based on what you see.</p>
                         <div class="app-tags">
                             <span class="app-tag">Nutrition</span>
                             <span class="app-tag">Cooking</span>
                             <span class="app-tag">Health</span>
                         </div>
-                        <a href="ARD3.html" class="app-link">Learn More <i class="fas fa-chevron-right"></i></a>
+                        <a href="ARD3.html" class="app-link"> DEMO <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- App Card 1 -->
+                <div class="app-card">
+                    <div class="app-image">
+                        <img src="001.png" alt="Face Recognition AR" class="app-icon-img">
+                    </div>
+                    <div class="app-content">
+                        <h3>Face Recognition AR</h3>
+                        <p>Our advanced AR technology can identify individuals in real-time and overlay relevant
+                            information. Perfect for networking events, security applications, and personalized
+                            experiences. The system can recognize facial features, and even emotional states.</p>
+                        <div class="app-tags">
+                            <span class="app-tag">AI Recognition</span>
+                            <span class="app-tag">Real-time</span>
+                            <span class="app-tag">Security</span>
+                        </div>
+                        <a href="ARD2.html" class="app-link"> DEMO <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- App Card 3 -->
+                <div class="app-card">
+                    <div class="app-image">
+                        <img src="003.png" alt="City Information AR" class="app-icon-img">
+                    </div>
+                    <div class="app-content">
+                        <h3>City Information AR</h3>
+                        <p>Simply point your device at buildings, landmarks, or streets to instantly access real-time
+                            contextual data. AR overlays historical facts,local reviews,
+                            and transit schedules onto the physical environment, wayfinding & tourism into a rich, interactive experience.</p>
+                        <div class="app-tags">
+                            <span class="app-tag">Location</span>
+                            <span class="app-tag">Weather</span>
+                            <span class="app-tag">Information</span>
+                        </div>
+                        <a href="ARD6.html" class="app-link"> DEMO <i class="fas fa-chevron-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -779,24 +819,28 @@
                         </div>
                         <h3>Mirrorworld</h3>
                     </div>
-                    <p>Our Mirrorworld platform creates a perfect digital replica of the physical world, allowing for persistent AR experiences that multiple users can interact with simultaneously. This revolutionary technology maintains state across sessions, enabling complex applications that evolve over time.
-                    Key applications include persistent virtual art installations, location-based gaming, and design environments where changes made by one user are visible to all participants in real-time.</p>
-                    
+                    <p>Our Mirrorworld platform creates a perfect digital replica of the physical world, allowing for
+                        persistent AR experiences that multiple users can interact with simultaneously. This
+                        revolutionary technology maintains state across sessions, enabling complex applications that
+                        evolve over time.
+                        Key applications include persistent virtual art installations, location-based gaming, and design
+                        environments where changes made by one user are visible to all participants in real-time.</p>
+
                     <div class="video-container">
-                        <div class="video-placeholder" id="placeholder-mirrorworld" onclick="playVideo('video-mirrorworld')">
+                        <div class="video-placeholder" id="placeholder-mirrorworld"
+                            onclick="playVideo('video-mirrorworld')">
                             <div class="play-button">
                                 <i class="fas fa-play"></i>
                             </div>
                             <div class="video-title">Mirrorworld Platform Demo</div>
                         </div>
-                        <video id="video-mirrorworld" class="actual-video" 
-                               autoplay muted loop playsinline 
-                               preload="auto"
-                               poster="placeholder_image.jpg"> <source src="Mirrorworld.mp4" type="video/mp4">
+                        <video id="video-mirrorworld" class="actual-video" autoplay muted loop playsinline
+                            preload="auto" poster="placeholder_image.jpg">
+                            <source src="Mirrorworld.mp4" type="video/mp4">
                             Your browser does not support HTML5 video playback.
                         </video>
                     </div>
-                    
+
                     <div class="app-tags">
                         <span class="app-tag">Persistent</span>
                         <span class="app-tag">Multi-user</span>
@@ -811,24 +855,28 @@
                         </div>
                         <h3>Immersive Map</h3>
                     </div>
-                    <p>Immersive Map transforms traditional navigation by overlaying interactive digital information directly onto the physical environment. Our platform understands terrain, buildings, and points of interest to create rich, context-aware experiences.</p>
-                    <p>Beyond basic navigation, Immersive Map enables historical recreations, future city planning visualizations, and interactive tourism experiences that bring locations to life with stories, data, and digital artifacts.</p>
-                    
+                    <p>Immersive Map transforms traditional navigation by overlaying interactive digital information
+                        directly onto the physical environment. Our platform understands terrain, buildings, and points
+                        of interest to create rich, context-aware experiences.</p>
+                    <p>Beyond basic navigation, Immersive Map enables historical recreations, future city planning
+                        visualizations, and interactive tourism experiences that bring locations to life with stories,
+                        data, and digital artifacts.</p>
+
                     <div class="video-container">
-                        <div class="video-placeholder" id="placeholder-immersive-map" onclick="playVideo('video-immersive-map')">
+                        <div class="video-placeholder" id="placeholder-immersive-map"
+                            onclick="playVideo('video-immersive-map')">
                             <div class="play-button">
                                 <i class="fas fa-play"></i>
                             </div>
                             <div class="video-title">Immersive Map in Action</div>
                         </div>
-                        <video id="video-immersive-map" class="actual-video" 
-                               autoplay muted loop playsinline 
-                               preload="auto"
-                               poster="placeholder_image_2.jpg"> <source src="Immersive_Map.mp4" type="video/mp4">
+                        <video id="video-immersive-map" class="actual-video" autoplay muted loop playsinline
+                            preload="auto" poster="placeholder_image_2.jpg">
+                            <source src="Immersive_Map.mp4" type="video/mp4">
                             Your browser does not support HTML5 video playback.
                         </video>
                     </div>
-                    
+
                     <div class="app-tags">
                         <span class="app-tag">Navigation</span>
                         <span class="app-tag">Context-aware</span>
@@ -843,7 +891,8 @@
     <section class="cta-section">
         <div class="container">
             <h2>Ready to Begin Your AR Journey?</h2>
-            <p>Join thousands of businesses already using AR Vision to enhance their operations and customer experiences.</p>
+            <p>Join thousands of businesses already using AR Vision to enhance their operations and customer
+                experiences.</p>
             <button class="cta-button">Get Started Now <i class="fas fa-rocket"></i></button>
         </div>
     </section>
@@ -904,55 +953,28 @@
     </footer>
 
     <script>
-        // Simple scroll effect
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
 
-        // CTA button click effect
-        document.querySelectorAll('.cta-button').forEach(button => {
-            button.addEventListener('click', function() {
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 200);
-                
-                // In a real application, this would navigate or open a modal
-                alert('Thank you for your interest! In a real application, this would guide you to the experience flow.');
-            });
-        });
+
+
 
         // Video play function
-       function playVideo(videoId) {
+        function playVideo(videoId) {
             const videoElement = document.getElementById(videoId);
             // 假设占位符在视频元素的前一个兄弟节点
-            const placeholder = videoElement.previousElementSibling; 
+            const placeholder = videoElement.previousElementSibling;
 
             if (videoElement) {
                 // 1. 取消静音
                 videoElement.muted = false;
-                
+
                 // 2. 隐藏占位符
                 if (placeholder) {
                     placeholder.style.display = 'none';
                 }
-                
+
                 // 3. 显示视频控制条
-                videoElement.controls = true; 
-                
+                videoElement.controls = true;
+
                 // 4. 尝试播放（虽然已经自动播放，但这是个安全措施，并处理可能被阻止的音频）
                 videoElement.play().catch(error => {
                     console.error("Video playback/unmute failed:", error);
@@ -964,4 +986,5 @@
         }
     </script>
 </body>
+
 </html>
