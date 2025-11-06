@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Robot Actions - AyaRoboTech</title>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary-color: #00D4FF;
@@ -37,7 +40,10 @@
                 radial-gradient(circle at 50% 50%, rgba(255, 64, 129, 0.05) 0%, transparent 30%);
         }
 
-        h1, h2, h3, h4 {
+        h1,
+        h2,
+        h3,
+        h4 {
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
         }
@@ -571,7 +577,8 @@
             <model-viewer id="model-viewer" src="./Jump.glb" alt="Intelligent Robot Model" ar
                 ar-modes="webxr scene-viewer quick-look" environment-image="neutral" shadow-intensity="1"
                 camera-controls auto-rotate auto-rotate-delay="0" interaction-prompt="none"
-                camera-orbit="0deg 75deg 105%" field-of-view="30deg" animation-name="Dance" camera-target="0m 0.8m 0m" autoplay>
+                camera-orbit="0deg 75deg 105%" field-of-view="30deg" animation-name="Dance" camera-target="0m 0.8m 0m"
+                autoplay>
 
                 <div class="loading" slot="poster">
                     <div class="spinner"></div>
@@ -616,8 +623,12 @@
                     <span class="meta-value">Medium</span>
                 </div>
             </div>
-            <p>The GUARDIAN-X jump movement showcases its exceptional balance capabilities and flexible joint control. Through precision algorithm control, the robot can smoothly execute complex jump movement sequences while maintaining a stable posture.</p>
-            <p style="margin-top: 1rem;">Technical features: Uses inverse kinematics algorithms to ensure movement fluidity, built-in gyroscope and accelerometer for real-time posture adjustment to prevent imbalance. Movement sequences are programmable and support custom choreography.</p>
+            <p>The GUARDIAN-X jump movement showcases its exceptional balance capabilities and flexible joint control.
+                Through precision algorithm control, the robot can smoothly execute complex jump movement sequences
+                while maintaining a stable posture.</p>
+            <p style="margin-top: 1rem;">Technical features: Uses inverse kinematics algorithms to ensure movement
+                fluidity, built-in gyroscope and accelerometer for real-time posture adjustment to prevent imbalance.
+                Movement sequences are programmable and support custom choreography.</p>
         </div>
     </section>
 
@@ -626,7 +637,8 @@
         <div class="footer-content">
             <div class="footer-column">
                 <h3>ROBOTECH</h3>
-                <p style="margin-top: 1rem;">Advancing artificial intelligence and robotics technology to create smarter, more convenient future living.</p>
+                <p style="margin-top: 1rem;">Advancing artificial intelligence and robotics technology to create
+                    smarter, more convenient future living.</p>
             </div>
             <div class="footer-column">
                 <h3>Quick Links</h3>
@@ -692,26 +704,36 @@
                 modelDisplay.classList.add('model-loaded');
             });
 
+            modelViewer.addEventListener('activate-ar', (event) => {
+                // 确保动画名已设置（在你的 HTML 中是 animation-name="Dance"）
+                if (modelViewer.animationName) {
+                    // 强制播放动画
+                    modelViewer.play({ repetition: Infinity });
+                }
+            });
+
             // Action selection change
             actionSelect.addEventListener('change', function () {
                 const selectedOption = actionSelect.options[actionSelect.selectedIndex];
                 const modelSrc = selectedOption.value;
                 const actionInfo = selectedOption.getAttribute('data-info');
-                
+
                 // Show loading animation
                 modelDisplay.classList.remove('model-loaded');
-                
+
                 // Update model source
                 modelViewer.src = modelSrc;
-                
+
                 // Update action details
                 updateActionDetails(actionInfo);
             });
 
+
+
             // Update action details section
             function updateActionDetails(action) {
                 const actionInfo = actionData[action] || actionData['dance'];
-                
+
                 const detailsSection = document.querySelector('.action-details');
                 detailsSection.innerHTML = `
                     <h2>GUARDIAN-X ${actionInfo.name}</h2>
@@ -740,4 +762,5 @@
         });
     </script>
 </body>
+
 </html>
