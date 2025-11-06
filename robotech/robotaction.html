@@ -723,7 +723,14 @@
                 // Show loading animation
                 modelDisplay.classList.remove('model-loaded');
                 modelViewer.animationName = animationName;
-                modelViewer.play({ repetition: Infinity });
+                modelViewer.addEventListener('load', function handleLoad() {
+                    // 4. 加载完成后，再强制播放动画
+                    modelViewer.play({ repetition: Infinity });
+                    modelDisplay.classList.add('model-loaded');
+
+                    // 5. 移除监听器，防止重复执行
+                    modelViewer.removeEventListener('load', handleLoad);
+                });
 
                 // Update model source
                 modelViewer.src = modelSrc;
