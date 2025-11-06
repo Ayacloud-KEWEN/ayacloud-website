@@ -577,7 +577,7 @@
             <model-viewer id="model-viewer" src="./Jump.glb" alt="Intelligent Robot Model" ar
                 ar-modes="webxr scene-viewer quick-look" environment-image="neutral" shadow-intensity="1"
                 camera-controls auto-rotate auto-rotate-delay="0" interaction-prompt="none"
-                camera-orbit="0deg 75deg 105%" field-of-view="30deg" animation-name="Dance" camera-target="0m 0.8m 0m"
+                camera-orbit="0deg 75deg 105%" field-of-view="30deg"  camera-target="0m 0.8m 0m"
                 autoplay ar-placement="floor" animation-play="all">
 
                 <div class="loading" slot="poster">
@@ -705,11 +705,9 @@
             });
 
             modelViewer.addEventListener('activate-ar', (event) => {
-                // 确保动画名已设置（在你的 HTML 中是 animation-name="Dance"）
-                if (modelViewer.animationName) {
-                    // 强制播放动画
+                modelViewer.animationName = modelViewer.availableAnimations[0];
                     modelViewer.play({ repetition: Infinity });
-                }
+               
             });
 
             // Action selection change
