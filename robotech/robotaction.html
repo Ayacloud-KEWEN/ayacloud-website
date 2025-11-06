@@ -596,8 +596,9 @@
                 <div class="selection-label">Select Robot Action</div>
                 <div class="custom-select">
                     <select id="action-select">
-                        <option value="./Jump.glb" data-info="dance">Jump Movement</option>
-                        <option value="./Unarmed.glb" data-info="walking">Walking Movement</option>
+                        <option value="./Jump.glb" data-info="jump" data-animation="Jump_Action">Jump Movement</option>
+                        <option value="./Unarmed.glb" data-info="walking" data-animation="Walk_Action">Walking Movement
+                        </option>
                     </select>
                 </div>
             </div>
@@ -717,9 +718,12 @@
                 const selectedOption = actionSelect.options[actionSelect.selectedIndex];
                 const modelSrc = selectedOption.value;
                 const actionInfo = selectedOption.getAttribute('data-info');
+                const animationName = selectedOption.getAttribute('data-animation');
 
                 // Show loading animation
                 modelDisplay.classList.remove('model-loaded');
+                modelViewer.animationName = animationName;
+                modelViewer.play({ repetition: Infinity });
 
                 // Update model source
                 modelViewer.src = modelSrc;
