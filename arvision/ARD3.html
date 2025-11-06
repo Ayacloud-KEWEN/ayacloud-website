@@ -26,17 +26,23 @@
             max-width: 100%;
             margin: 0 auto;
             padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
         
         header {
             text-align: center;
             padding: 20px 0;
             position: relative;
+            margin-bottom: 30px;
         }
         
         h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
             background: linear-gradient(90deg, #4CAF50, #8BC34A);
             -webkit-background-clip: text;
             background-clip: text;
@@ -46,72 +52,19 @@
         }
         
         .subtitle {
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: #a0a0ff;
-            margin-bottom: 20px;
-        }
-        
-        .search-container {
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-            max-width: 300px;
-        }
-
-        .search-input {
-            padding: 10px;
-            border: 1px solid #4CAF50;
-            border-radius: 5px 0 0 5px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            width: 70%;
-        }
-
-        .search-input::placeholder {
-            color: #a0a0ff;
-        }
-
-        .search-button {
-            padding: 10px 15px;
-            background: #4CAF50;
-            border: none;
-            border-radius: 0 5px 5px 0;
-            color: white;
-            cursor: pointer;
-        }
-
-        .search-results {
-            margin: 20px auto;
+            margin-bottom: 40px;
             max-width: 600px;
-            background: rgba(30, 50, 70, 0.8);
-            border-radius: 10px;
-            padding: 15px;
-        }
-
-        .food-result {
-            background: rgba(40, 60, 80, 0.6);
-            border-radius: 8px;
-            padding: 12px;
-            margin: 10px 0;
-            border-left: 3px solid #4CAF50;
-        }
-
-        .food-result h4 {
-            color: #8BC34A;
-            margin-bottom: 8px;
-        }
-
-        .food-result p {
-            margin: 4px 0;
-            font-size: 0.9rem;
+            line-height: 1.5;
         }
         
         .ar-button {
             background: linear-gradient(135deg, #4CAF50, #8BC34A);
             border: none;
             border-radius: 50px;
-            padding: 15px 35px;
-            font-size: 1.1rem;
+            padding: 18px 45px;
+            font-size: 1.3rem;
             font-weight: bold;
             color: white;
             cursor: pointer;
@@ -120,12 +73,13 @@
             position: relative;
             overflow: hidden;
             z-index: 10;
-            width: 80%;
-            max-width: 300px;
+            width: 90%;
+            max-width: 350px;
+            margin: 20px 0;
         }
         
         .ar-button:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
             box-shadow: 0 0 35px rgba(76, 175, 80, 0.7);
         }
         
@@ -155,7 +109,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(10, 20, 30, 0.95);
+            background: rgba(10, 20, 30, 0.98);
             z-index: 100;
             flex-direction: column;
             align-items: center;
@@ -357,6 +311,7 @@
             flex-direction: column;
             align-items: center;
             margin: 40px 0;
+            width: 100%;
         }
         
         .feature-card {
@@ -400,6 +355,19 @@
             font-size: 0.8rem;
             border-top: 1px solid rgba(76, 175, 80, 0.1);
             margin-top: 30px;
+            width: 100%;
+        }
+        
+        .app-info {
+            margin-top: 30px;
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        .app-info p {
+            margin: 10px 0;
+            line-height: 1.5;
+            color: #a0a0ff;
         }
         
         @media (min-width: 768px) {
@@ -417,6 +385,14 @@
             .data-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
+            
+            h1 {
+                font-size: 3rem;
+            }
+            
+            .subtitle {
+                font-size: 1.4rem;
+            }
         }
     </style>
 </head>
@@ -426,12 +402,9 @@
             <h1>AR菜品识别系统</h1>
             <p class="subtitle">实时识别菜品并分析营养成分 - 支持90+种食材</p>
             
-            <div class="search-container">
-                <input type="text" id="foodSearch" placeholder="搜索食材..." class="search-input">
-                <button id="searchButton" class="search-button">搜索</button>
-            </div>
-            
-            <button class="ar-button" id="arButton">启动AR识别</button>
+            <button class="ar-button" id="arButton">
+                <span>启动AR识别</span>
+            </button>
         </header>
         
         <div class="permission-notice" id="permissionNotice">
@@ -461,6 +434,11 @@
                 <p class="feature-desc">识别结果直接显示在摄像头画面上，提供真正的AR体验。</p>
             </div>
         </section>
+        
+        <div class="app-info">
+            <p>将摄像头对准食物，系统将自动识别菜品并显示营养成分信息。</p>
+            <p>支持火锅、包子、饺子、宫保鸡丁等90多种常见中餐及食材。</p>
+        </div>
     </div>
     
     <div class="ar-interface" id="arInterface">
@@ -1055,8 +1033,6 @@
         const dataGrid = document.getElementById('dataGrid');
         const permissionNotice = document.getElementById('permissionNotice');
         const loadingElement = document.getElementById('loading');
-        const searchButton = document.getElementById('searchButton');
-        const foodSearch = document.getElementById('foodSearch');
         
         // 扩展的食物关键词识别
         function isLikelyFood(className) {
@@ -1136,63 +1112,6 @@
             return classNameLower.split(',')[0].split(' ')[0];
         }
         
-        // 搜索功能
-        searchButton.addEventListener('click', function() {
-            const searchTerm = foodSearch.value.toLowerCase().trim();
-            if (searchTerm) {
-                const results = searchFoodDatabase(searchTerm);
-                displaySearchResults(results);
-            }
-        });
-
-        // 支持按Enter键搜索
-        foodSearch.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchButton.click();
-            }
-        });
-
-        function searchFoodDatabase(searchTerm) {
-            const results = [];
-            for (const [key, food] of Object.entries(foodDatabase)) {
-                if (food.name.toLowerCase().includes(searchTerm) || 
-                    food.ingredients.some(ingredient => ingredient.toLowerCase().includes(searchTerm)) ||
-                    key.toLowerCase().includes(searchTerm)) {
-                    results.push({...food, key});
-                }
-            }
-            return results;
-        }
-
-        function displaySearchResults(results) {
-            // 创建或更新搜索结果展示
-            let resultsContainer = document.getElementById('searchResults');
-            if (!resultsContainer) {
-                resultsContainer = document.createElement('div');
-                resultsContainer.id = 'searchResults';
-                resultsContainer.className = 'search-results';
-                document.querySelector('.container').appendChild(resultsContainer);
-            }
-            
-            if (results.length === 0) {
-                resultsContainer.innerHTML = '<p>未找到相关食材</p>';
-                return;
-            }
-            
-            resultsContainer.innerHTML = `
-                <h3 style="color: #4CAF50; margin-bottom: 15px; text-align: center;">找到 ${results.length} 个相关食材</h3>
-                ${results.map(food => `
-                    <div class="food-result">
-                        <h4>${food.name}</h4>
-                        <p><span class="highlight">食材:</span> ${food.ingredients.join(', ')}</p>
-                        <p><span class="highlight">卡路里:</span> ${food.calories} kcal</p>
-                        <p><span class="highlight">蛋白质:</span> ${food.protein}g | <span class="highlight">碳水:</span> ${food.carbs}g | <span class="highlight">脂肪:</span> ${food.fat}g</p>
-                        <p><span class="highlight">健康评分:</span> ${'★'.repeat(food.healthScore)}${'☆'.repeat(10 - food.healthScore)} (${food.healthScore}/10)</p>
-                    </div>
-                `).join('')}
-            `;
-        }
-        
         // 初始化函数
         async function initialize() {
             // 加载图像分类模型
@@ -1228,316 +1147,178 @@
                 videoElement.srcObject = stream;
                 permissionNotice.style.display = 'none';
                 
-                // 开始菜品检测
-                startFoodDetection();
+                // 开始检测
+                startDetection();
                 
                 return true;
             } catch (error) {
-                console.error('摄像头访问失败:', error);
+                console.error('摄像头启动失败:', error);
                 permissionNotice.style.display = 'block';
                 return false;
             }
         }
         
-        // 开始菜品检测
-        function startFoodDetection() {
-            if (!model) return;
-            
-            // 清除之前的检测间隔
+        // 开始检测
+        function startDetection() {
             if (detectionInterval) {
                 clearInterval(detectionInterval);
             }
             
-            // 设置检测间隔
+            // 每2秒检测一次
             detectionInterval = setInterval(async () => {
-                if (!isARActive) return;
+                if (!model || videoElement.paused || videoElement.ended) {
+                    return;
+                }
                 
                 try {
                     // 使用MobileNet进行图像分类
                     const predictions = await model.classify(videoElement);
                     
-                    // 清除之前的覆盖层
+                    // 过滤食物相关的预测
+                    const foodPredictions = predictions.filter(prediction => 
+                        isLikelyFood(prediction.className)
+                    );
+                    
+                    // 清除之前的分析结果
                     analysisOverlay.innerHTML = '';
                     
-                    if (predictions.length > 0) {
-                        // 过滤出可能是食物的预测结果
-                        const foodPredictions = predictions.filter(p => 
-                            isLikelyFood(p.className)
-                        );
-                        
-                        if (foodPredictions.length > 0) {
-                            // 检测到食物
-                            displayFoodDetection(foodPredictions);
-                            updateAnalysisData(foodPredictions);
-                        } else {
-                            // 未检测到食物
-                            displayNoFoodDetected();
-                        }
-                    } else {
-                        displayNoFoodDetected();
+                    // 显示检测到的食物
+                    if (foodPredictions.length > 0) {
+                        displayFoodInfo(foodPredictions);
                     }
                 } catch (error) {
-                    console.error('菜品检测错误:', error);
+                    console.error('图像识别失败:', error);
                 }
-            }, 1000); // 每1秒检测一次
-        }
-        
-        // 显示食物检测结果
-        function displayFoodDetection(predictions) {
-            const videoWidth = videoElement.videoWidth;
-            const videoHeight = videoElement.videoHeight;
-            const displayWidth = videoElement.offsetWidth;
-            const displayHeight = videoElement.offsetHeight;
-            
-            // 计算缩放比例
-            const scaleX = displayWidth / videoWidth;
-            const scaleY = displayHeight / videoHeight;
-            
-            // 假设食物在画面中央区域
-            const centerX = displayWidth / 2;
-            const centerY = displayHeight / 2;
-            const boxSize = 150;
-            
-            // 绘制食物边界框
-            const foodBox = document.createElement('div');
-            foodBox.className = 'food-box';
-            foodBox.style.left = `${centerX - boxSize/2}px`;
-            foodBox.style.top = `${centerY - boxSize/2}px`;
-            foodBox.style.width = `${boxSize}px`;
-            foodBox.style.height = `${boxSize}px`;
-            
-            analysisOverlay.appendChild(foodBox);
-            
-            // 显示食物信息
-            displayFoodInfo(predictions[0], centerX, centerY, boxSize);
+            }, 2000);
         }
         
         // 显示食物信息
-        function displayFoodInfo(prediction, centerX, centerY, boxSize) {
-            const foodName = extractFoodName(prediction.className);
-            const foodData = foodDatabase[foodName] || createDefaultFoodData(foodName, prediction.probability);
+        function displayFoodInfo(predictions) {
+            // 清除之前的分析结果
+            analysisOverlay.innerHTML = '';
             
-            const foodInfo = document.createElement('div');
-            foodInfo.className = 'food-info';
+            // 只显示前3个最可能的食物
+            const topPredictions = predictions.slice(0, 3);
             
-            // 定位在食物框下方
-            foodInfo.style.left = `${centerX - 110}px`;
-            foodInfo.style.top = `${centerY + boxSize/2 + 10}px`;
-            
-            // 健康评分指示器
-            const healthIcons = '★'.repeat(foodData.healthScore) + '☆'.repeat(10 - foodData.healthScore);
-            
-            // 卡路里进度条
-            const caloriePercent = Math.min(100, (foodData.calories / 500) * 100);
-            
-            foodInfo.innerHTML = `
-                <h4>🍽️ ${foodData.name}</h4>
-                <p><span class="highlight">置信度:</span> ${Math.round(prediction.probability * 100)}%</p>
-                <p><span class="highlight">食材:</span> ${foodData.ingredients.slice(0, 3).join(', ')}${foodData.ingredients.length > 3 ? '...' : ''}</p>
-                <p><span class="highlight">卡路里:</span> ${foodData.calories} kcal</p>
-                <div class="calorie-bar">
-                    <div class="calorie-fill" style="width: ${caloriePercent}%"></div>
-                </div>
-                <p><span class="highlight">营养:</span> 蛋白质 ${foodData.protein}g | 碳水 ${foodData.carbs}g | 脂肪 ${foodData.fat}g</p>
-                <p><span class="highlight">健康评分:</span> ${healthIcons}</p>
-            `;
-            
-            analysisOverlay.appendChild(foodInfo);
+            // 为每个预测创建显示元素
+            topPredictions.forEach((prediction, index) => {
+                const foodName = extractFoodName(prediction.className);
+                const foodData = foodDatabase[foodName];
+                
+                if (foodData) {
+                    // 创建食物信息框
+                    const foodInfo = document.createElement('div');
+                    foodInfo.className = 'food-info';
+                    
+                    // 随机位置（在实际应用中，应该使用物体检测来定位）
+                    const left = 10 + (index * 30) + '%';
+                    const top = 20 + (index * 15) + '%';
+                    
+                    foodInfo.style.left = left;
+                    foodInfo.style.top = top;
+                    
+                    // 健康评分条
+                    const healthBarWidth = foodData.healthScore * 10;
+                    
+                    // 食物信息内容
+                    foodInfo.innerHTML = `
+                        <h4>${foodData.name}</h4>
+                        <p>置信度: <span class="highlight">${(prediction.probability * 100).toFixed(1)}%</span></p>
+                        <p>热量: <span class="highlight">${foodData.calories}</span> 卡路里</p>
+                        <p>蛋白质: <span class="highlight">${foodData.protein}g</span></p>
+                        <p>碳水化合物: <span class="highlight">${foodData.carbs}g</span></p>
+                        <p>脂肪: <span class="highlight">${foodData.fat}g</span></p>
+                        <p>健康评分:</p>
+                        <div class="calorie-bar">
+                            <div class="calorie-fill" style="width: ${healthBarWidth}%"></div>
+                        </div>
+                        <p>主要成分: ${foodData.ingredients.slice(0, 3).join(', ')}</p>
+                    `;
+                    
+                    analysisOverlay.appendChild(foodInfo);
+                    
+                    // 更新数据面板
+                    updateDataPanel(foodData);
+                }
+            });
         }
         
-        // 创建默认食物数据
-        function createDefaultFoodData(foodName, probability) {
-            // 根据食物名称猜测一些属性
-            const isFruit = foodName.includes('apple') || foodName.includes('banana') || 
-                           foodName.includes('orange') || foodName.includes('fruit');
-            const isVegetable = foodName.includes('broccoli') || foodName.includes('carrot') || 
-                               foodName.includes('vegetable');
-            const isFastFood = foodName.includes('pizza') || foodName.includes('burger') || 
-                              foodName.includes('hotdog');
-            const isChinese = foodName.includes('bao') || foodName.includes('jiao') || 
-                             foodName.includes('huo') || foodName.includes('zhou');
+        // 更新数据面板
+        function updateDataPanel(foodData) {
+            dataGrid.innerHTML = '';
             
-            let calories, protein, carbs, fat, healthScore;
+            const dataItems = [
+                { label: '菜品名称', value: foodData.name },
+                { label: '热量', value: `${foodData.calories} 卡路里` },
+                { label: '蛋白质', value: `${foodData.protein}g` },
+                { label: '碳水化合物', value: `${foodData.carbs}g` },
+                { label: '脂肪', value: `${foodData.fat}g` },
+                { label: '健康评分', value: `${foodData.healthScore}/10` },
+                { label: '主要成分', value: foodData.ingredients.slice(0, 3).join(', ') }
+            ];
             
-            if (isFruit) {
-                calories = 60;
-                protein = 0.5;
-                carbs = 15;
-                fat = 0.2;
-                healthScore = 9;
-            } else if (isVegetable) {
-                calories = 40;
-                protein = 2;
-                carbs = 8;
-                fat = 0.3;
-                healthScore = 10;
-            } else if (isFastFood) {
-                calories = 300;
-                protein = 12;
-                carbs = 35;
-                fat = 15;
-                healthScore = 4;
-            } else if (isChinese) {
-                calories = 200;
-                protein = 10;
-                carbs = 25;
-                fat = 8;
-                healthScore = 7;
+            dataItems.forEach(item => {
+                const dataItem = document.createElement('div');
+                dataItem.className = 'data-item';
+                dataItem.innerHTML = `
+                    <div class="data-label">${item.label}</div>
+                    <div class="data-value">${item.value}</div>
+                `;
+                dataGrid.appendChild(dataItem);
+            });
+        }
+        
+        // 启动AR识别
+        async function startAR() {
+            if (isARActive) return;
+            
+            // 显示AR界面
+            arInterface.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // 启动摄像头
+            const cameraStarted = await startCamera();
+            
+            if (cameraStarted) {
+                isARActive = true;
             } else {
-                calories = 200;
-                protein = 10;
-                carbs = 25;
-                fat = 8;
-                healthScore = 6;
+                // 如果摄像头启动失败，3秒后自动关闭AR界面
+                setTimeout(() => {
+                    closeAR();
+                }, 3000);
+            }
+        }
+        
+        // 关闭AR识别
+        function closeAR() {
+            arInterface.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            isARActive = false;
+            
+            // 停止检测
+            if (detectionInterval) {
+                clearInterval(detectionInterval);
+                detectionInterval = null;
             }
             
-            return {
-                name: foodName.charAt(0).toUpperCase() + foodName.slice(1),
-                ingredients: ['未知食材'],
-                calories: calories,
-                protein: protein,
-                carbs: carbs,
-                fat: fat,
-                healthScore: healthScore
-            };
-        }
-        
-        // 更新分析数据
-        function updateAnalysisData(predictions) {
-            if (!predictions || predictions.length === 0) {
-                displayNoFoodDetected();
-                return;
-            }
-            
-            const foodName = extractFoodName(predictions[0].className);
-            const foodData = foodDatabase[foodName] || createDefaultFoodData(foodName, predictions[0].probability);
-            
-            dataGrid.innerHTML = `
-                <div class="data-item">
-                    <div class="data-label">识别菜品</div>
-                    <div class="data-value">${foodData.name}</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">置信度</div>
-                    <div class="data-value">${Math.round(predictions[0].probability * 100)}%</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">卡路里</div>
-                    <div class="data-value">${foodData.calories} kcal</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">蛋白质</div>
-                    <div class="data-value">${foodData.protein}g</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">碳水化合物</div>
-                    <div class="data-value">${foodData.carbs}g</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">脂肪</div>
-                    <div class="data-value">${foodData.fat}g</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">健康评分</div>
-                    <div class="data-value">${foodData.healthScore}/10</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">分析状态</div>
-                    <div class="data-value">实时更新</div>
-                </div>
-            `;
-        }
-        
-        // 显示未检测到食物
-        function displayNoFoodDetected() {
-            dataGrid.innerHTML = `
-                <div class="data-item" style="grid-column: 1 / -1; text-align: center;">
-                    <div class="data-label">状态</div>
-                    <div class="data-value">未检测到食物，请将摄像头对准菜品</div>
-                </div>
-            `;
-            
-            // 添加提示信息到覆盖层
-            const noFoodMessage = document.createElement('div');
-            noFoodMessage.style.position = 'absolute';
-            noFoodMessage.style.top = '50%';
-            noFoodMessage.style.left = '50%';
-            noFoodMessage.style.transform = 'translate(-50%, -50%)';
-            noFoodMessage.style.color = '#ff6464';
-            noFoodMessage.style.fontSize = '1.2rem';
-            noFoodMessage.style.textAlign = 'center';
-            noFoodMessage.style.background = 'rgba(0, 0, 0, 0.7)';
-            noFoodMessage.style.padding = '10px 20px';
-            noFoodMessage.style.borderRadius = '10px';
-            noFoodMessage.style.border = '1px solid #ff6464';
-            noFoodMessage.textContent = '未检测到食物';
-            
-            analysisOverlay.appendChild(noFoodMessage);
-        }
-        
-        // 停止摄像头
-        function stopCamera() {
+            // 停止摄像头
             if (videoElement.srcObject) {
                 const tracks = videoElement.srcObject.getTracks();
                 tracks.forEach(track => track.stop());
                 videoElement.srcObject = null;
             }
             
-            if (detectionInterval) {
-                clearInterval(detectionInterval);
-                detectionInterval = null;
-            }
-        }
-        
-        // 事件监听
-        arButton.addEventListener('click', async function() {
-            // 显示AR界面
-            arInterface.style.display = 'flex';
-            isARActive = true;
-            
-            // 启动摄像头
-            const cameraStarted = await startCamera();
-            
-            if (!cameraStarted) {
-                // 如果摄像头启动失败，3秒后自动关闭AR界面
-                setTimeout(() => {
-                    if (isARActive) {
-                        closeARInterface();
-                    }
-                }, 3000);
-            }
-        });
-        
-        closeButton.addEventListener('click', closeARInterface);
-        
-        function closeARInterface() {
-            // 隐藏AR界面
-            arInterface.style.display = 'none';
-            isARActive = false;
-            
-            // 停止摄像头
-            stopCamera();
-            
-            // 清除覆盖层
+            // 清除分析结果
             analysisOverlay.innerHTML = '';
+            dataGrid.innerHTML = '';
         }
         
-        // 页面加载完成后初始化
-        window.addEventListener('load', initialize);
+        // 事件监听器
+        arButton.addEventListener('click', startAR);
+        closeButton.addEventListener('click', closeAR);
         
-        // 处理页面可见性变化
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden && isARActive) {
-                // 页面隐藏时停止检测以节省资源
-                if (detectionInterval) {
-                    clearInterval(detectionInterval);
-                    detectionInterval = null;
-                }
-            } else if (!document.hidden && isARActive) {
-                // 页面重新可见时恢复检测
-                startFoodDetection();
-            }
-        });
+        // 初始化应用
+        initialize();
     </script>
 </body>
 </html>
