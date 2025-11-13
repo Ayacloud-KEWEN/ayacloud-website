@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Reading</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+
+        .text-selection {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px dashed #6c757d;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .text-selection:hover {
+            border-color: #2575fc;
+            background-color: #e9ecef;
+        }
+
+        .text-selection h2 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .selection-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .file-input {
+            margin: 15px 0;
+        }
+
+        .file-input label {
+            display: inline-block;
+            background-color: #2575fc;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .file-input label:hover {
+            background-color: #1a68e3;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .text-display {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            line-height: 1.6;
+            font-size: 1.1rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .sentence {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sentence:hover {
+            background-color: #e7f3ff;
+        }
+
+        .sentence.active {
+            background-color: #cfe2ff;
+            color: #0d6efd;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #2575fc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: #1a68e3;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .voice-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            font-size: 1rem;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .language-tag {
+            display: inline-block;
+            background-color: #6f42c1;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .controls,
+            .voice-controls,
+            .selection-controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Read Every Day</h1>
+    <p class="subtitle">选择预制文本或上传文件，点击任意句子即可朗读（支持中文、英文、法文）</p>
+
+    <div class="container">
+        <div class="text-selection">
+            <h2>选择文本</h2>
+            <div class="selection-controls">
+                <div>
+                    <label for="bookSelect">选择预制文本：</label>
+                    <select id="bookSelect">
+                        <option value="">-- 请选择预制文本 --</option>
+                        <!-- 预制文本选项将通过JavaScript动态添加 -->
+                    </select>
+                </div>
+                <div style="margin: 0 10px; align-self: center; font-weight: bold;">或</div>
+                <div class="file-input">
+                    <input type="file" id="fileInput" accept=".txt,.text" style="display: none;">
+                    <label for="fileInput">上传文本文件</label>
+                    <div class="file-name" id="fileName">未选择文件</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-display" id="textDisplay">
+            <p style="text-align: center; color: #6c757d; margin-top: 150px;">
+                请选择预制文本或上传文本文件以开始使用
+            </p>
+        </div>
+
+        <div class="voice-controls">
+            <label for="voiceSelect">选择语音：</label>
+            <select id="voiceSelect"></select>
+            <label for="rateSelect">语速：</label>
+            <select id="rateSelect">
+                <option value="0.5">慢速</option>
+                <option value="1" selected>正常</option>
+                <option value="1.5">快速</option>
+                <option value="2">极快</option>
+            </select>
+            <label for="languageSelect">文本语言：</label>
+            <select id="languageSelect">
+                <option value="auto">自动检测</option>
+                <option value="zh-CN">中文</option>
+                <option value="en-US">英文</option>
+                <option value="fr-FR">法文</option>
+            </select>
+        </div>
+
+        <div class="controls">
+            <button id="playBtn" disabled>播放</button>
+            <button id="pauseBtn" disabled>暂停</button>
+            <button id="resumeBtn" disabled>继续</button>
+            <button id="stopBtn" disabled>停止</button>
+        </div>
+
+        <div class="status" id="status">准备就绪</div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const bookSelect = document.getElementById('bookSelect');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const textDisplay = document.getElementById('textDisplay');
+        const voiceSelect = document.getElementById('voiceSelect');
+        const rateSelect = document.getElementById('rateSelect');
+        const languageSelect = document.getElementById('languageSelect');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resumeBtn = document.getElementById('resumeBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const status = document.getElementById('status');
+
+        // 初始化语音合成
+        let speechSynthesis = window.speechSynthesis;
+        let speechUtterance = null;
+        let sentences = [];
+        let currentSentenceIndex = -1;
+        let voices = [];
+        let detectedLanguage = 'zh-CN';
+
+        // 预制文本库
+        const books = {
+            
+            'english_story_goldilocks': {
+                title: 'Goldilocks and the Three Bears',
+                language: 'en-GB',
+                content: `Goldilocks and the Three Bears.
+Once upon a time there were three bears who lived in a little house in a wood. 
+Father Bear was a very big bear. Mother Bear was a medium sized bear, and Baby Bear was just a tiny little bear.
+One morning, Mother Bear cooked some porridge for breakfast. She put it into three bowls. There was
+a very big bowl for Father Bear, a medium sized bowl for Mother Bear and a tiny little bowl for Baby Bear.
+The porridge was very hot, so the three bears went for a walk in the wood while it was cooling.
+At the edge of the wood, in another little house, there lived a little girl. Her golden hair was so long that she could sit on it and everyone called her Goldilocks.
+That morning, Goldilocks was walking in the wood.`
+            },
+            'chinese_poem': {
+                title: '中文诗歌 - 静夜思',
+                language: 'zh-CN',
+                content: `床前明月光，疑是地上霜。
+举头望明月，低头思故乡。
+
+春眠不觉晓，处处闻啼鸟。
+夜来风雨声，花落知多少。
+
+白日依山尽，黄河入海流。
+欲穷千里目，更上一层楼。`
+            },
+            'english_poem': {
+                title: '英文诗歌 - 经典选段',
+                language: 'en-US',
+                content: `Two roads diverged in a yellow wood,
+And sorry I could not travel both
+And be one traveler, long I stood
+And looked down one as far as I could
+To where it bent in the undergrowth;
+
+Shall I compare thee to a summer's day?
+Thou art more lovely and more temperate:
+Rough winds do shake the darling buds of May,
+And summer's lease hath all too short a date;
+
+I wandered lonely as a cloud
+That floats on high o'er vales and hills,
+When all at once I saw a crowd,
+A host, of golden daffodils;`
+            },
+            'french_poem': {
+                title: '法文诗歌 - 经典选段',
+                language: 'fr-FR',
+                content: `Demain, dès l'aube, à l'heure où blanchit la campagne,
+Je partirai. Vois-tu, je sais que tu m'attends.
+J'irai par la forêt, j'irai par la montagne.
+Je ne puis demeurer loin de toi plus longtemps.
+
+Je marcherai les yeux fixés sur mes pensées,
+Sans rien voir au dehors, sans entendre aucun bruit,
+Seul, inconnu, le dos courbé, les mains croisées,
+Triste, et le jour pour moi sera comme la nuit.
+
+Si tu veux, nous irons par les champs, par les grèves,
+Par les monts, par les bois, par les sommets des monts,
+Nous irons écouter le bruit que font les rêves,
+Et le chant des oiseaux et le bruit des demons.`
+            },
+            'english_story_tortoise': {
+                title: '英文故事 - 龟兔赛跑',
+                language: 'en-US',
+                content: `Once upon a time, there was a hare who was very proud of his speed. He often made fun of the tortoise for being so slow.
+One day, the tortoise got tired of the hare's teasing and challenged him to a race. The hare laughed and accepted the challenge.
+All the animals in the forest gathered to watch the race. The fox was chosen as the referee. He marked the starting and finishing points, and the race began.
+The hare quickly ran ahead and was soon out of sight. He thought to himself, "The tortoise is so slow. I have time to take a nap."
+So the hare found a shady tree and lay down for a nap. He was sure he would win the race easily.
+Meanwhile, the tortoise kept moving slowly but steadily. He didn't stop for a moment.
+When the hare woke up, he saw the tortoise was near the finish line. He ran as fast as he could, but it was too late. The tortoise had already crossed the finish line.
+The moral of the story is: slow and steady wins the race.`
+            }
+        };
+
+        // 初始化预制文本下拉菜单
+        function initializeBookSelect() {
+            // 清空现有选项（除了第一个提示选项）
+            while (bookSelect.options.length > 1) {
+                bookSelect.remove(1);
+            }
+
+            // 添加预制文本选项
+            Object.keys(books).forEach(key => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = books[key].title;
+                bookSelect.appendChild(option);
+            });
+        }
+
+        // 语言检测函数
+        function detectLanguage(text) {
+            // 简单基于字符的语言检测
+            const chineseChars = text.match(/[\u4e00-\u9fff]/g) || [];
+            const frenchChars = text.match(/[éèêëàâæôœùûüÿç]/gi) || [];
+
+            // 计算中文字符比例
+            const chineseRatio = chineseChars.length / text.length;
+
+            if (chineseRatio > 0.1) {
+                return 'zh-CN';
+            } else if (frenchChars.length > text.length * 0.05) {
+                return 'fr-FR';
+            } else {
+                return 'en-US';
+            }
+        }
+
+        // 加载可用语音
+        function loadVoices() {
+            voices = speechSynthesis.getVoices();
+            voiceSelect.innerHTML = '';
+
+            // 根据检测到的语言过滤语音
+            const filteredVoices = voices.filter(voice => {
+                if (detectedLanguage === 'zh-CN') {
+                    return voice.lang.includes('zh') || voice.lang.includes('cn');
+                } else if (detectedLanguage === 'fr-FR') {
+                    return voice.lang.includes('fr');
+                } else {
+                    return voice.lang.includes('en');
+                }
+            });
+
+            if (filteredVoices.length > 0) {
+                filteredVoices.forEach(voice => {
+                    const option = document.createElement('option');
+                    option.value = voice.name;
+                    option.textContent = `${voice.name} (${voice.lang})`;
+                    voiceSelect.appendChild(option);
+                });
+            } else {
+                // 如果没有匹配的语音，显示所有可用语音
+                voices.forEach(voice => {
+                    const option = document.createElement('option');
+                    option.value = voice.name;
+                    option.textContent = `${voice.name} (${voice.lang})`;
+                    voiceSelect.appendChild(option);
+                });
+            }
+        }
+
+        // 语音加载事件
+        speechSynthesis.onvoiceschanged = loadVoices;
+
+        // 预制文本选择处理
+        bookSelect.addEventListener('change', function (e) {
+            const selectedBook = e.target.value;
+            if (selectedBook && books[selectedBook]) {
+                // 清空文件输入
+                fileInput.value = '';
+                fileName.textContent = '未选择文件';
+
+                // 处理预制文本
+                processText(books[selectedBook].content, books[selectedBook].language);
+                status.textContent = `已加载: ${books[selectedBook].title}`;
+            }
+        });
+
+        // 文件上传处理
+        fileInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileName.textContent = file.name;
+                // 清空预制文本选择
+                bookSelect.value = '';
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const text = e.target.result;
+                    processText(text);
+                    status.textContent = '文件加载成功，点击任意句子开始朗读';
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // 处理文本，分割成句子
+        function processText(text, predefinedLanguage = null) {
+            // 根据选择的语言或自动检测的语言分割句子
+            const selectedLanguage = predefinedLanguage || languageSelect.value;
+            if (selectedLanguage === 'auto') {
+                detectedLanguage = detectLanguage(text);
+            } else {
+                detectedLanguage = selectedLanguage;
+            }
+
+            // 根据语言使用不同的句子分割规则
+            let sentenceRegex;
+            if (detectedLanguage === 'zh-CN') {
+                sentenceRegex = /(?<=[。！？])/;
+            } else if (detectedLanguage === 'fr-FR') {
+                sentenceRegex = /(?<=[.!?])/;
+            } else {
+                sentenceRegex = /(?<=[.!?])/;
+            }
+
+            sentences = text.split(sentenceRegex).filter(s => s.trim().length > 0);
+
+            // 清空文本显示区域
+            textDisplay.innerHTML = '';
+
+            // 创建句子元素
+            sentences.forEach((sentence, index) => {
+                const sentenceElement = document.createElement('div');
+                sentenceElement.className = 'sentence';
+
+                // 添加语言标签
+                const languageTag = document.createElement('span');
+                languageTag.className = 'language-tag';
+                if (detectedLanguage === 'zh-CN') {
+                    languageTag.textContent = '中文';
+                    languageTag.style.backgroundColor = '#6f42c1';
+                } else if (detectedLanguage === 'fr-FR') {
+                    languageTag.textContent = 'Français';
+                    languageTag.style.backgroundColor = '#d63384';
+                } else {
+                    languageTag.textContent = 'English';
+                    languageTag.style.backgroundColor = '#0d6efd';
+                }
+
+                sentenceElement.textContent = sentence.trim();
+                sentenceElement.appendChild(languageTag);
+                sentenceElement.dataset.index = index;
+
+                sentenceElement.addEventListener('click', () => {
+                    speakSentence(index);
+                });
+
+                textDisplay.appendChild(sentenceElement);
+            });
+
+            // 重新加载语音列表
+            loadVoices();
+
+            // 启用播放按钮
+            playBtn.disabled = false;
+        }
+
+        // 朗读指定句子
+        function speakSentence(index) {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+
+            // 移除之前的高亮
+            document.querySelectorAll('.sentence.active').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // 高亮当前句子
+            const currentSentence = document.querySelector(`.sentence[data-index="${index}"]`);
+            currentSentence.classList.add('active');
+
+            // 滚动到当前句子
+            currentSentence.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // 创建语音合成实例
+            speechUtterance = new SpeechSynthesisUtterance(sentences[index]);
+
+            // 设置语音参数
+            const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
+            if (selectedVoice) {
+                speechUtterance.voice = selectedVoice;
+            }
+
+            speechUtterance.rate = parseFloat(rateSelect.value);
+            speechUtterance.pitch = 1;
+            speechUtterance.volume = 1;
+            speechUtterance.lang = detectedLanguage;
+
+            // 设置事件处理
+            speechUtterance.onstart = () => {
+                status.textContent = `正在朗读: ${sentences[index].substring(0, 30)}...`;
+                currentSentenceIndex = index;
+                updateControlButtons(true);
+            };
+
+            speechUtterance.onend = () => {
+                status.textContent = '朗读完成';
+                currentSentence.classList.remove('active');
+                currentSentenceIndex = -1;
+                updateControlButtons(false);
+            };
+
+            speechUtterance.onerror = (event) => {
+                status.textContent = `朗读出错: ${event.error}`;
+                currentSentence.classList.remove('active');
+                currentSentenceIndex = -1;
+                updateControlButtons(false);
+            };
+
+            // 开始朗读
+            speechSynthesis.speak(speechUtterance);
+        }
+
+        // 更新控制按钮状态
+        function updateControlButtons(isSpeaking) {
+            if (isSpeaking) {
+                playBtn.disabled = true;
+                pauseBtn.disabled = false;
+                resumeBtn.disabled = true;
+                stopBtn.disabled = false;
+            } else {
+                playBtn.disabled = false;
+                pauseBtn.disabled = true;
+                resumeBtn.disabled = true;
+                stopBtn.disabled = true;
+            }
+        }
+
+        // 播放按钮事件
+        playBtn.addEventListener('click', () => {
+            if (sentences.length > 0) {
+                speakSentence(0);
+            }
+        });
+
+        // 暂停按钮事件
+        pauseBtn.addEventListener('click', () => {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.pause();
+                pauseBtn.disabled = true;
+                resumeBtn.disabled = false;
+                status.textContent = '已暂停';
+            }
+        });
+
+        // 继续按钮事件
+        resumeBtn.addEventListener('click', () => {
+            if (speechSynthesis.paused) {
+                speechSynthesis.resume();
+                pauseBtn.disabled = false;
+                resumeBtn.disabled = true;
+                status.textContent = '继续朗读';
+            }
+        });
+
+        // 停止按钮事件
+        stopBtn.addEventListener('click', () => {
+            if (speechSynthesis.speaking || speechSynthesis.paused) {
+                speechSynthesis.cancel();
+                document.querySelectorAll('.sentence.active').forEach(el => {
+                    el.classList.remove('active');
+                });
+                status.textContent = '已停止';
+                updateControlButtons(false);
+            }
+        });
+
+        // 语言选择变化时重新处理文本
+        languageSelect.addEventListener('change', () => {
+            if (sentences.length > 0) {
+                // 重新处理文本
+                const text = sentences.join('');
+                processText(text);
+            }
+        });
+
+        // 初始化
+        initializeBookSelect();
+        loadVoices();
+    </script>
+</body>
+
+</html>
