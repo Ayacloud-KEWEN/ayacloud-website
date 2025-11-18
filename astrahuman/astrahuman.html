@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astra Human | Next-Gen 3D Digital Human Technology</title>
+    <style>
+        :root {
+            --primary: #00a8ff;
+            --primary-dark: #0097e6;
+            --secondary: #8c7ae6;
+            --dark: #2f3640;
+            --light: #f5f6fa;
+            --gray: #dcdde1;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0a0e17;
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(10, 14, 23, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon-img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            box-shadow: 0 0 10px 5px rgba(0, 191, 255, 0.7);
+            border: 2px solid rgba(0, 191, 255, 0.5);
+        }
+
+        .logo span {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.8),
+                0 0 20px rgba(0, 191, 255, 0.6);
+            font-weight: 700;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .cta-button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 168, 255, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 180px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 168, 255, 0.1) 0%, rgba(10, 14, 23, 0) 70%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: var(--gray);
+        }
+
+        /* Technology Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .tech-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            transition: transform 0.3s, background 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tech-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .tech-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tech-icon i {
+            font-size: 30px;
+            color: white;
+        }
+
+        .tech-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .tech-card p {
+            color: var(--gray);
+        }
+
+        /* Video Section */
+        .video-section {
+            margin: 100px 0;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .video-placeholder {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-placeholder::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .video-placeholder:hover::before {
+            opacity: 0.1;
+        }
+
+        .play-button {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .play-button::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 15px solid white;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            margin-left: 5px;
+        }
+
+        .video-placeholder p {
+            color: var(--gray);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Applications Section */
+        .applications {
+            margin: 100px 0;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .app-card {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .app-icon i {
+            font-size: 35px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient);
+            padding: 80px 0;
+            text-align: center;
+            border-radius: 20px;
+            margin: 100px 0;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 14, 23, 0.95);
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+
+            .nav-links {
+                margin-top: 20px;
+            }
+
+            .nav-links li {
+                margin: 0 10px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <a href="../index.html" class="logo-icon-link">
+                        <img src="../img/ayacloud.png" alt="Logo Icon" class="logo-icon-img">
+                    </a>
+                    <span>Astra Human</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#technology">Technology</a></li>
+                    <li><a href="#applications">Applications</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <button class="cta-button">Request Investor Deck</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>The Future of Human-Digital Interaction</h1>
+            <p>Revolutionizing industries with hyper-realistic 3D digital humans powered by cutting-edge AI and
+                real-time rendering technology.</p>
+            <button class="cta-button">Schedule a Demo</button>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology" class="technology">
+        <div class="container">
+            <div class="section-title">
+                <h2>Core Technology Pillars</h2>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3>3D Modeling & Texturing</h3>
+                    <p>High-fidelity digital human creation using photogrammetry, 3D scanning, and advanced texturing
+                        with 4K/8K maps for unparalleled realism.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <h3>Animation & Rigging</h3>
+                    <p>Sophisticated skeletal systems with 200+ facial micro-movements for natural expressions and
+                        motion capture integration.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-lips"></i>
+                    </div>
+                    <h3>AI-Powered Lip Sync</h3>
+                    <p>Automatic viseme generation with emotional context awareness for perfectly synchronized and
+                        expressive communication.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Neural Text-to-Speech</h3>
+                    <p>Fluid, natural-sounding speech with emotional inflection and voice cloning capabilities from
+                        short audio samples.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-hands"></i>
+                    </div>
+                    <h3>Motion Adaptation</h3>
+                    <p>Context-aware gesturing with intelligent behavior adaptation and subtle idle motions for lifelike
+                        presence.</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <h3>Real-Time Rendering</h3>
+                    <p>Optimized for Unreal Engine and Unity with path-traced quality for both interactive and cinematic
+                        applications.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section id="demo" class="video-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Technology in Action</h2>
+            </div>
+            <div class="video-grid">
+                <div class="video-placeholder">
+                    <div class="play-button"></div>
+                    <p>Digital Human Creation Process</p>
+                </div>
+                <div class="video-placeholder">
+                    <div class="play-button"></div>
+                    <p>Real-Time Interaction Demo</p>
+                </div>
+                <div class="video-placeholder">
+                    <div class="play-button"></div>
+                    <p>Industry Applications</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Applications Section -->
+    <section id="applications" class="applications">
+        <div class="container">
+            <div class="section-title">
+                <h2>Market Applications</h2>
+            </div>
+            <div class="app-grid">
+                <div class="app-card">
+                    <div class="app-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h3>Entertainment & Media</h3>
+                    <p>Virtual influencers, AI-driven film characters, and interactive game NPCs.</p>
+                </div>
+                <div class="app-card">
+                    <div class="app-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>E-Commerce & Retail</h3>
+                    <p>Virtual shopping assistants and personalized customer service avatars.</p>
+                </div>
+                <div class="app-card">
+                    <div class="app-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Education & Training</h3>
+                    <p>Interactive tutors, corporate trainers, and simulation-based learning.</p>
+                </div>
+                <div class="app-card">
+                    <div class="app-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Healthcare</h3>
+                    <p>Therapeutic assistants, medical training simulations, and patient education.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Join the Digital Human Revolution</h2>
+            <p>Invest in the foundational technology that will power human-digital interaction for the next decade.</p>
+            <button class="cta-button" style="background: rgba(255,255,255,0.2);">Request Investor Package</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Astra Human</h3>
+                    <p>Creating the future of human-digital interaction with cutting-edge 3D digital human technology.
+                    </p>
+                </div>
+                <div class="footer-column">
+                    <h3>Technology</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">3D Modeling</a></li>
+                        <li><a href="#">Animation</a></li>
+                        <li><a href="#">AI Lip Sync</a></li>
+                        <li><a href="#">Neural TTS</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Team</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">News</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 AyaCloud SAS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple video placeholder interaction
+        document.querySelectorAll('.video-placeholder').forEach(placeholder => {
+            placeholder.addEventListener('click', function () {
+                alert('Video player would open here. In a real implementation, this would play a demo video.');
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
