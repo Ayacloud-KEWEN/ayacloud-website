@@ -1,0 +1,27 @@
+{
+  "english_goldilocks": {
+    "title": "Goldilocks and the Three Bears (English)",
+    "language": "en-US",
+    "content": "Goldilocks and the Three Bears. Once upon a time there were three bears who lived in a little house in a wood. Father Bear was a very big bear. Mother Bear was a medium sized bear, and Baby Bear was just a tiny little bear. One morning, Mother Bear cooked some porridge for breakfast. She put it into three bowls. There was a very big bowl for Father Bear, a medium sized bowl for Mother Bear and a tiny little bowl for Baby Bear. The porridge was very hot, so the three bears went for a walk in the wood while it was cooling. At the edge of the wood, in another little house, there lived a little girl. Her golden hair was so long that she could sit on it and everyone called her Goldilocks. That morning, Goldilocks was walking in the wood."
+  },
+  "english_tortoise": {
+    "title": "The Tortoise and the Hare (English)",
+    "language": "en-US",
+    "content": "Once upon a time, there was a hare who was very proud of his speed. He often made fun of the tortoise for being so slow. One day, the tortoise got tired of the hare's teasing and challenged him to a race. The hare laughed and accepted the challenge. All the animals in the forest gathered to watch the race. The fox was chosen as the referee. He marked the starting and finishing points, and the race began. The hare quickly ran ahead and was soon out of sight. He thought to himself, 'The tortoise is so slow. I have time to take a nap.' So the hare found a shady tree and lay down for a nap. He was sure he would win the race easily. Meanwhile, the tortoise kept moving slowly but steadily. He didn't stop for a moment. When the hare woke up, he saw the tortoise was near the finish line. He ran as fast as he could, but it was too late. The tortoise had already crossed the finish line. The moral of the story is: slow and steady wins the race."
+  },
+  "french_lion": {
+    "title": "Le Lion et le Rat (French)",
+    "language": "fr-FR",
+    "content": "Un lion, un jour, dormait dans son antre. Un rat, par hasard, vint à passer. Il grimpa sur le corps du lion, et se mit à courir et à jouer. Le lion se réveilla en sursaut. Il attrapa le rat et s'apprêta à le dévorer. Le rat implora pitié. 'Ô roi des animaux, épargne-moi, je t'en prie ! Un jour, peut-être, je pourrai te rendre service.' Le lion, amusé par cette idée, décida de libérer le petit rat. Quelque temps après, le lion fut pris dans un filet de chasseurs. Il rugit de toutes ses forces, mais ne put se libérer. Le rat entendit ses cries. Il accourut et se mit à ronger les cordes du filet. Peu à peu, il fit un trou assez grand pour que le lion puisse s'échapper. La moralité de cette histoire : on a toujours besoin d'un plus petit que soi."
+  },
+  "english_ants": {
+    "title": "The Ant and the Grasshopper (English)",
+    "language": "en-US",
+    "content": "One bright day in late autumn, a family of ants was bustling about in the warm sunshine. They were drying out the grain they had stored up during the summer. A grasshopper, half dead with hunger, came by. He asked the ants for a morsel to save his life. 'What did you do all summer?' asked the ants. 'I sang day and night,' replied the grasshopper. 'If you sang all summer,' said the ants, 'you can dance all winter!' The moral: There's a time for work and a time for play."
+  },
+  "french_fox": {
+    "title": "Le Renard et les Raisins (French)",
+    "language": "fr-FR",
+    "content": "Un renard affamé vit une belle grappe de raisins suspendue à une vigne. Il sauta pour l'attraper, mais elle était trop haute. Il sauta encore et encore, mais sans succès. Finalement, il s'éloigna en disant : 'Ces raisins sont trop verts, ils ne sont pas bons à manger.' La moralité : Il est facile de mépriser ce qu'on ne peut avoir."
+  }
+}
