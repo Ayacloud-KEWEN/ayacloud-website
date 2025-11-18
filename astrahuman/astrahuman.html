@@ -76,6 +76,7 @@
                 0 0 20px rgba(0, 191, 255, 0.6);
             font-weight: 700;
         }
+
         .nav-links {
             display: flex;
             list-style: none;
@@ -223,6 +224,76 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
+        }
+
+        .video-player {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            height: 250px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .video-element {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 14, 23, 0.7);
+            transition: background 0.3s;
+        }
+
+        .video-overlay:hover {
+            background: rgba(10, 14, 23, 0.5);
+        }
+
+        .video-player.playing .video-overlay {
+            display: none;
+        }
+
+        .video-player.playing .video-element {
+            display: block;
+        }
+
+        .play-button {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+        }
+
+        .play-button::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 15px solid white;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            margin-left: 5px;
         }
 
         .video-placeholder {
@@ -504,25 +575,38 @@
 
     <!-- Video Section -->
     <section id="demo" class="video-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Technology in Action</h2>
-            </div>
-            <div class="video-grid">
-                <div class="video-placeholder">
-                    <div class="play-button"></div>
-                    <p>Digital Human Creation Process</p>
-                </div>
-                <div class="video-placeholder">
-                    <div class="play-button"></div>
-                    <p>Real-Time Interaction Demo</p>
-                </div>
-                <div class="video-placeholder">
-                    <div class="play-button"></div>
-                    <p>Industry Applications</p>
-                </div>
-            </div>
+<div class="video-grid">
+    <div class="video-player">
+        <video controls class="video-element">
+            <source src="DHCommerce.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div class="video-overlay">
+            <div class="play-button"></div>
+            <p>E-Commerce & Retail Demo </p>
         </div>
+    </div>
+    <div class="video-player">
+        <video controls class="video-element">
+            <source src="DHEducation.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div class="video-overlay">
+            <div class="play-button"></div>
+            <p>Education & Training Demo</p>
+        </div>
+    </div>
+    <div class="video-player">
+        <video controls class="video-element">
+            <source src="DHTest.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div class="video-overlay">
+            <div class="play-button"></div>
+            <p>Digital Human Avatar Demo</p>
+        </div>
+    </div>
+</div>
     </section>
 
     <!-- Applications Section -->
@@ -609,10 +693,27 @@
     </footer>
 
     <script>
-        // Simple video placeholder interaction
-        document.querySelectorAll('.video-placeholder').forEach(placeholder => {
-            placeholder.addEventListener('click', function () {
-                alert('Video player would open here. In a real implementation, this would play a demo video.');
+        // 视频播放控制
+        document.querySelectorAll('.video-player').forEach(player => {
+            const video = player.querySelector('.video-element');
+            const overlay = player.querySelector('.video-overlay');
+
+            // 点击覆盖层播放视频
+            overlay.addEventListener('click', function () {
+                player.classList.add('playing');
+                video.play();
+            });
+
+            // 视频结束时显示覆盖层
+            video.addEventListener('ended', function () {
+                player.classList.remove('playing');
+            });
+
+            // 点击视频本身暂停
+            video.addEventListener('click', function (e) {
+                e.stopPropagation();
+                video.pause();
+                player.classList.remove('playing');
             });
         });
 
