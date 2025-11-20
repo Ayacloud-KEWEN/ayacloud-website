@@ -394,6 +394,7 @@ function initLanguageSelector() {
       portfolio_item6: "Web Map",
       portfolio_item7: "Mirrorworld",
       portfolio_item8: "AstraHuman",
+      portfolio_item9: "GameHub",
       contact_title: "Contact Us",
       contact_text: "Support Our Work",
       footer: "© 2025 AYA CLOUD SAS. All rights reserved."
@@ -427,6 +428,7 @@ function initLanguageSelector() {
       portfolio_item6: "数字地图",
       portfolio_item7: "镜像世界",
       portfolio_item8: "3D人类",
+      portfolio_item9: "游戏视觉",
       contact_title: "联系我们",
       contact_text: "请支持我们的项目和想法...",
       footer: "© 2025 AYA CLOUD 保留所有权利。"
@@ -460,6 +462,7 @@ function initLanguageSelector() {
       portfolio_item6: "Web Map",
       portfolio_item7: "Mirrorworld",
       portfolio_item8: "AstraHuman",
+      portfolio_item9: "GameHub",
       contact_title: "Contactez-nous",
       contact_text: "Soutenez notre travail et nos idées...",
       footer: "© 2025 AYA CLOUD. Tous droits réservés."
@@ -493,6 +496,7 @@ function initLanguageSelector() {
       portfolio_item6: "Web Map",
       portfolio_item7: "Mirrorworld",
       portfolio_item8: "AstraHuman",
+      portfolio_item9: "GameHub",
       contact_title: "Contáctenos",
       contact_text: "Nos encantaría saber de usted y discutir sus ideas de proyecto...",
       footer: "© 2025 AYA CLOUD. Todos los derechos reservados."
@@ -526,6 +530,7 @@ function initLanguageSelector() {
       portfolio_item6: "Web Map",
       portfolio_item7: "Mirrorworld",
       portfolio_item8: "AstraHuman",
+      portfolio_item9: "GameHub",
       contact_title: "Kontaktieren Sie uns",
       contact_text: "Unterstützen Sie unsere Arbeit und Ideen...",
       footer: "© 2025 AYA CLOUD. Alle Rechte vorbehalten."

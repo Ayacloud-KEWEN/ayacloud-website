@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameHub - Mini Web Games Collection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFD166;
+            --dark: #1A1A2E;
+            --light: #F7F7F7;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Pixel Art Background */
+        .pixel-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(255, 209, 102, 0.05) 0%, transparent 20%);
+            z-index: -1;
+        }
+
+        header {
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 3px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon-img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            box-shadow: 0 0 10px 5px rgba(0, 191, 255, 0.7);
+            border: 2px solid rgba(0, 191, 255, 0.5);
+        }
+
+        .logo span {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.8),
+                0 0 20px rgba(0, 191, 255, 0.6);
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            font-weight: 800;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+            color: var(--secondary);
+        }
+
+        .search-section {
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            margin: 2rem auto;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            max-width: 1000px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: 500;
+        }
+
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .category-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 2rem 0;
+        }
+
+        .game-card {
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-image {
+            height: 180px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-image::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, transparent 100%);
+        }
+
+        .game-info {
+            padding: 1.5rem;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-title i {
+            color: var(--accent);
+        }
+
+        .game-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .play-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .play-btn:active {
+            transform: translateY(1px);
+        }
+
+        .play-btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .play-btn:hover::after {
+            left: 100%;
+        }
+
+        footer {
+            background: rgba(26, 26, 46, 0.9);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        .game-icon {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .icon-1 {
+            top: 10px;
+            right: 10px;
+        }
+
+        .icon-2 {
+            bottom: 10px;
+            left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pixel-bg"></div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html" class="logo-icon-link">
+                    <img src="../img/ayacloud.png" alt="Logo Icon" class="logo-icon-img">
+                </a>
+            </div>
+            <h1><i class="fas fa-gamepad"></i> GameHub</h1>
+            <p class="subtitle">Your Ultimate Collection of Mini Web Games</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="search-section">
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search for games...">
+                <button class="play-btn" style="width: auto; padding: 0 25px;">Search</button>
+            </div>
+
+            <div class="category-filters">
+                <button class="category-btn active">All Games</button>
+                <button class="category-btn">Puzzle</button>
+                <button class="category-btn">Action</button>
+                <button class="category-btn">Strategy</button>
+                <button class="category-btn">Arcade</button>
+                <button class="category-btn">Educational</button>
+            </div>
+        </section>
+
+        <section class="games-grid">
+            <!-- Game 1 -->
+            <div class="game-card">
+                <div class="game-image" style="background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);">
+                    Tetris
+                    <i class="fas fa-puzzle-piece game-icon icon-1"></i>
+                    <i class="fas fa-brain game-icon icon-2"></i>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title"><i class="fas fa-puzzle-piece"></i> Tetris</h3>
+                    <p class="game-description">Test your problem-solving skills with this engaging puzzle game. Match
+                        pieces and solve challenging levels.</p>
+                    <div class="game-meta">
+                        <span>Difficulty: Medium</span>
+                        <span>Category: Puzzle</span>
+                    </div>
+                    <a href="Tetris.html" class="play-btn">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Game 2 -->
+            <div class="game-card">
+                <div class="game-image" style="background: linear-gradient(135deg, #4ECDC4 0%, #6FFFE0 100%);">
+                    Mars Ranch
+                    <i class="fas fa-rocket game-icon icon-1"></i>
+                    <i class="fas fa-meteor game-icon icon-2"></i>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title"><i class="fas fa-rocket"></i> Mars Ranch</h3>
+                    <p class="game-description">Navigate through space, avoid asteroids, and collect stars in this
+                        exciting arcade game.</p>
+                    <div class="game-meta">
+                        <span>Difficulty: Easy</span>
+                        <span>Category: Arcade</span>
+                    </div>
+                    <a href="Mars Ranch Prototype.html" class="play-btn">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Game 3 -->
+            <div class="game-card">
+                <div class="game-image" style="background: linear-gradient(135deg, #FFD166 0%, #FFE5A5 100%);">
+                    Suduku Solver
+                    <i class="fas fa-calculator game-icon icon-1"></i>
+                    <i class="fas fa-plus-circle game-icon icon-2"></i>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title"><i class="fas fa-calculator"></i> Suduku Solver</h3>
+                    <p class="game-description">Improve your math skills with this fun and educational game. Solve
+                        equations and earn points.</p>
+                    <div class="game-meta">
+                        <span>Difficulty: Variable</span>
+                        <span>Category: Educational</span>
+                    </div>
+                    <a href="sudu.html" class="play-btn">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Game 4 -->
+            <div class="game-card">
+                <div class="game-image" style="background: linear-gradient(135deg, #9B5DE5 0%, #C78EFF 100%);">
+                    Gomoku
+                    <i class="fas fa-memory game-icon icon-1"></i>
+                    <i class="fas fa-clone game-icon icon-2"></i>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title"><i class="fas fa-memory"></i> Gomoku</h3>
+                    <p class="game-description">Train your memory by matching pairs of cards. Multiple difficulty levels
+                        available.</p>
+                    <div class="game-meta">
+                        <span>Difficulty: Easy</span>
+                        <span>Category: Puzzle</span>
+                    </div>
+                    <a href="Gomoku.html" class="play-btn">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Game 5 -->
+            <div class="game-card">
+                <div class="game-image" style="background: linear-gradient(135deg, #F15BB5 0%, #FF9FDB 100%);">
+                    Uno
+                    <i class="fas fa-fort-awesome game-icon icon-1"></i>
+                    <i class="fas fa-shield-alt game-icon icon-2"></i>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title"><i class="fas fa-fort-awesome"></i> Uno</h3>
+                    <p class="game-description">Build towers and defend your base from waves of enemies in this
+                        strategic game.</p>
+                    <div class="game-meta">
+                        <span>Difficulty: Hard</span>
+                        <span>Category: Strategy</span>
+                    </div>
+                    <a href="Uno.html" class="play-btn">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Game 6 -->
+            <div class="game-card">
+                <div class="game-image" style="background: linear-gradient(135deg, #00BBF9 0%, #6CDAFF 100%);">
+                    Ebook Reading Aloud
+                    <i class="fas fa-font game-icon icon-1"></i>
+                    <i class="fas fa-search game-icon icon-2"></i>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title"><i class="fas fa-font"></i> Ebook Reading Aloud</h3>
+                    <p class="game-description">Find hidden words in a grid. Expand your vocabulary while having fun!
+                    </p>
+                    <div class="game-meta">
+                        <span>Difficulty: Medium</span>
+                        <span>Category: Educational</span>
+                    </div>
+                    <a href="ebook.html" class="play-btn">Play Now</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p><i class="fas fa-gamepad"></i> AyaCloud SAS. &copy; 2025</p>
+            <p>All games are free to play in your browser. No downloads required.</p>
+            <p>Enjoy your gaming experience!</p>
+        </div>
+    </footer>
+
+    <script>
+        // Category filter functionality
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const gameCards = document.querySelectorAll('.game-card');
+
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+
+                // Add active class to clicked button
+                button.classList.add('active');
+
+                const category = button.textContent;
+
+                // Show/hide games based on category
+                gameCards.forEach(card => {
+                    if (category === 'All Games') {
+                        card.style.display = 'block';
+                    } else {
+                        const gameCategory = card.querySelector('.game-meta span:last-child').textContent.split(': ')[1];
+                        if (gameCategory === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+
+        // Search functionality
+        const searchBox = document.querySelector('.search-box');
+        const searchButton = document.querySelector('.search-container .play-btn');
+
+        function performSearch() {
+            const searchTerm = searchBox.value.toLowerCase();
+
+            gameCards.forEach(card => {
+                const gameTitle = card.querySelector('.game-title').textContent.toLowerCase();
+                const gameDescription = card.querySelector('.game-description').textContent.toLowerCase();
+
+                if (gameTitle.includes(searchTerm) || gameDescription.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        searchButton.addEventListener('click', performSearch);
+        searchBox.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Add animation to game cards on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            gameCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+
+</html>
