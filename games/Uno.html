@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UNO Web</title>
+    <style>
+        :root {
+            --red: #ff5555;
+            --blue: #5555ff;
+            --green: #55aa55;
+            --yellow: #ffaa00;
+            --black: #222;
+            --bg: #0f380f; /* 经典的深绿色桌布背景 */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        /* 顶部对手区域 */
+        .opponents {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            height: 80px;
+        }
+
+        .bot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        .bot.active {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        .bot-avatar {
+            width: 40px; height: 40px;
+            background: #333;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 20px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        .bot.active .bot-avatar {
+            border-color: #ffaa00;
+            box-shadow: 0 0 10px #ffaa00;
+        }
+        .card-count {
+            font-size: 12px;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* 游戏中心桌子 */
+        .table-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            gap: 20px;
+        }
+
+        /* 卡牌样式 */
+        .card {
+            width: 70px;
+            height: 105px;
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: white; /* Base */
+        }
+
+        .card-inner {
+            width: 85%;
+            height: 90%;
+            border-radius: 50% / 40%; /* 椭圆 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            color: white;
+            text-shadow: 1px 1px 0 #000;
+            font-size: 40px;
+            transform: rotate(-45deg); /* UNO经典斜体 */
+        }
+        
+        /* 小角标 */
+        .card::before, .card::after {
+            content: attr(data-val);
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .card::before { top: 5px; left: 5px; }
+        .card::after { bottom: 5px; right: 5px; transform: rotate(180deg); }
+
+        /* 颜色定义 */
+        .card.red { background: var(--red); }
+        .card.blue { background: var(--blue); }
+        .card.green { background: var(--green); }
+        .card.yellow { background: var(--yellow); }
+        .card.black { background: var(--black); }
+
+        /* 牌背 */
+        .card.back {
+            background: #111;
+            border: 3px solid white;
+        }
+        .card.back .card-inner {
+            background: #ff5555;
+            font-size: 24px;
+            transform: rotate(0);
+            border-radius: 50%;
+            width: 60px; height: 60px;
+            border: 2px solid white;
+            box-shadow: inset 0 0 0 3px #111;
+        }
+        .card.back::before, .card.back::after { content: ''; }
+
+        /* 玩家手牌区 */
+        .player-hand {
+            height: 140px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start; /* 允许滚动 */
+            padding: 10px 20px;
+            overflow-x: auto;
+            gap: -30px; /* 叠牌效果 */
+            position: relative;
+            z-index: 10;
+        }
+        
+        .player-hand .card {
+            margin-right: -30px; /* 叠牌 */
+            flex-shrink: 0;
+            transform-origin: bottom center;
+        }
+        
+        .player-hand .card:hover, .player-hand .card:active {
+            transform: translateY(-20px) scale(1.1);
+            z-index: 100;
+            margin-right: 0; /* 展开一点 */
+        }
+
+        .player-hand .card.disabled {
+            filter: brightness(0.5);
+            pointer-events: none;
+        }
+
+        /* 控件区 */
+        .controls {
+            position: absolute;
+            right: 20px;
+            bottom: 160px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .uno-btn {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ffaa00, #ff5555);
+            color: white;
+            font-weight: bold;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            font-size: 16px;
+            cursor: pointer;
+            animation: pulse 2s infinite;
+            display: flex; justify-content: center; align-items: center;
+        }
+        
+        .uno-btn.pressed {
+            background: #55aa55;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* 颜色选择器 Modal */
+        .color-picker {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+        .picker-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .color-opt {
+            width: 80px; height: 80px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* 提示消息 */
+        .message-toast {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 150;
+            text-align: center;
+        }
+
+        /* 指示器 */
+        .direction-indicator {
+            position: absolute;
+            font-size: 40px;
+            color: rgba(255,255,255,0.2);
+            pointer-events: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="opponents">
+        <div class="bot" id="bot1">
+            <div class="bot-avatar">🤖</div>
+            <div class="card-count">7</div>
+        </div>
+        <div class="bot" id="bot2">
+            <div class="bot-avatar">👽</div>
+            <div class="card-count">7</div>
+        </div>
+        <div class="bot" id="bot3">
+            <div class="bot-avatar">👾</div>
+            <div class="card-count">7</div>
+        </div>
+    </div>
+
+    <div class="table-area">
+        <div class="direction-indicator" id="direction">↻</div>
+        
+        <div class="card back" id="draw-pile">
+            <div class="card-inner">UNO</div>
+        </div>
+
+        <div id="discard-pile">
+            </div>
+    </div>
+
+    <div class="controls">
+        <button class="uno-btn" id="uno-btn" onclick="callUno()">UNO</button>
+    </div>
+
+    <div class="player-hand" id="player-hand"></div>
+
+    <div class="color-picker" id="color-picker">
+        <div class="picker-content">
+            <div class="color-opt" style="background:var(--red)" onclick="pickColor('red')"></div>
+            <div class="color-opt" style="background:var(--blue)" onclick="pickColor('blue')"></div>
+            <div class="color-opt" style="background:var(--green)" onclick="pickColor('green')"></div>
+            <div class="color-opt" style="background:var(--yellow)" onclick="pickColor('yellow')"></div>
+        </div>
+    </div>
+
+    <div class="message-toast" id="toast"></div>
+
+    <script>
+        // --- 数据定义 ---
+        const COLORS = ['red', 'yellow', 'green', 'blue'];
+        const SPECIALS = ['skip', 'reverse', 'draw2'];
+        const WILDS = ['wild', 'draw4'];
+
+        // 游戏状态
+        let deck = [];
+        let discardPile = [];
+        let players = [
+            { id: 0, name: "You", isBot: false, hand: [] },
+            { id: 1, name: "Bot 1", isBot: true, hand: [] },
+            { id: 2, name: "Bot 2", isBot: true, hand: [] },
+            { id: 3, name: "Bot 3", isBot: true, hand: [] }
+        ];
+        let currentPlayer = 0; // 0 is Human
+        let direction = 1; // 1: clockwise, -1: counter-clockwise
+        let currentColor = ''; // 当前有效的颜色 (处理万能牌)
+        let unoCalled = false; // 玩家是否喊了 UNO
+        let gameActive = true;
+
+        // --- DOM 元素 ---
+        const playerHandEl = document.getElementById('player-hand');
+        const discardPileEl = document.getElementById('discard-pile');
+        const drawPileEl = document.getElementById('draw-pile');
+        const toastEl = document.getElementById('toast');
+        const colorPickerEl = document.getElementById('color-picker');
+        const unoBtn = document.getElementById('uno-btn');
+        const directionEl = document.getElementById('direction');
+
+        // --- 核心逻辑 ---
+
+        function initGame() {
+            createDeck();
+            shuffleDeck();
+            dealCards();
+            
+            // 翻开第一张牌
+            let firstCard = drawCardFromDeck();
+            while (firstCard.color === 'black') { // 防止第一张是功能牌，简单处理重抽
+                deck.push(firstCard);
+                shuffleDeck();
+                firstCard = drawCardFromDeck();
+            }
+            playCardToTable(firstCard, true);
+            
+            updateUI();
+            gameLoop();
+        }
+
+        function createDeck() {
+            deck = [];
+            COLORS.forEach(color => {
+                // 0 一张
+                deck.push({ color, type: 'number', value: 0 });
+                // 1-9 两张
+                for (let i = 1; i <= 9; i++) {
+                    deck.push({ color, type: 'number', value: i });
+                    deck.push({ color, type: 'number', value: i });
+                }
+                // 功能牌 两张
+                SPECIALS.forEach(type => {
+                    deck.push({ color, type: 'action', value: type });
+                    deck.push({ color, type: 'action', value: type });
+                });
+            });
+            // 万能牌 四张
+            WILDS.forEach(type => {
+                for (let i = 0; i < 4; i++) {
+                    deck.push({ color: 'black', type: 'wild', value: type });
+                }
+            });
+        }
+
+        function shuffleDeck() {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+
+        function dealCards() {
+            for (let i = 0; i < 7; i++) {
+                players.forEach(p => p.hand.push(drawCardFromDeck()));
+            }
+        }
+
+        function drawCardFromDeck() {
+            if (deck.length === 0) {
+                // 洗回弃牌堆 (保留最上面一张)
+                if (discardPile.length > 1) {
+                    let top = discardPile.pop();
+                    deck = discardPile;
+                    discardPile = [top];
+                    shuffleDeck();
+                    showToast("洗牌中...");
+                } else {
+                    showToast("没牌了！平局！");
+                    gameActive = false;
+                    return null;
+                }
+            }
+            return deck.pop();
+        }
+
+        // --- 游戏循环 ---
+
+        function gameLoop() {
+            if (!gameActive) return;
+
+            updateUI();
+
+            const player = players[currentPlayer];
+            
+            // 高亮当前玩家
+            document.querySelectorAll('.bot').forEach(el => el.classList.remove('active'));
+            if(currentPlayer !== 0) {
+                document.getElementById('bot'+currentPlayer).classList.add('active');
+            }
+
+            if (player.isBot) {
+                setTimeout(() => botTurn(player), 1500); // 延迟以模拟思考
+            } else {
+                // 等待玩家操作
+                // 检查是否有牌可出，如果没有，自动点亮抽牌堆
+                checkHumanMoves();
+            }
+        }
+
+        function nextTurn() {
+            // 检查胜利
+            if (players[currentPlayer].hand.length === 0) {
+                if (currentPlayer === 0) alert("你赢了! 🎉");
+                else alert(players[currentPlayer].name + " 赢了!");
+                gameActive = false;
+                return;
+            }
+
+            // 处理 UNO 检查 (如果在倒数第二张时没喊)
+            // 这里简化规则：如果玩家剩1张且状态 unoCalled 为 false，则罚牌
+            if (currentPlayer === 0 && players[0].hand.length === 1 && !unoCalled) {
+                showToast("忘记喊UNO！罚2张！");
+                players[0].hand.push(drawCardFromDeck());
+                players[0].hand.push(drawCardFromDeck());
+            }
+            // 重置 UNO 状态
+            if (currentPlayer === 0) {
+                unoCalled = false;
+                unoBtn.classList.remove('pressed');
+            }
+
+            currentPlayer += direction;
+            if (currentPlayer >= players.length) currentPlayer = 0;
+            if (currentPlayer < 0) currentPlayer = players.length - 1;
+
+            gameLoop();
+        }
+
+        // --- 核心规则 ---
+
+        function canPlay(card) {
+            const top = discardPile[discardPile.length - 1];
+            
+            // 万能牌随时可出
+            if (card.color === 'black') return true;
+            
+            // 同色
+            if (card.color === currentColor) return true;
+            
+            // 同数字/同功能
+            if (card.value === top.value) return true;
+
+            return false;
+        }
+
+        function playCardToTable(card, isSetup = false) {
+            discardPile.push(card);
+            currentColor = card.color === 'black' ? currentColor : card.color; // 如果是万能牌，暂不改变颜色，等指定
+            
+            renderDiscardPile();
+
+            if (isSetup) return;
+
+            // 处理效果
+            if (card.type === 'action') {
+                if (card.value === 'skip') {
+                    showToast("跳过!");
+                    skipPlayer();
+                } else if (card.value === 'reverse') {
+                    showToast("反转!");
+                    direction *= -1;
+                    directionEl.textContent = direction === 1 ? '↻' : '↺';
+                    // 两人规则：反转=跳过，但在4人局正常反转
+                    if (players.length === 2) skipPlayer(); 
+                } else if (card.value === 'draw2') {
+                    showToast("+2 !");
+                    drawCardsForNext(2);
+                }
+            } else if (card.type === 'wild') {
+                if (card.value === 'draw4') {
+                    showToast("+4 !");
+                    drawCardsForNext(4);
+                }
+                // 变色逻辑由 playCard 触发的后续 promise 处理，或者 AI 立即处理
+            }
+        }
+
+        function skipPlayer() {
+            currentPlayer += direction;
+            if (currentPlayer >= players.length) currentPlayer = 0;
+            if (currentPlayer < 0) currentPlayer = players.length - 1;
+        }
+
+        function drawCardsForNext(count) {
+            let nextP = currentPlayer + direction;
+            if (nextP >= players.length) nextP = 0;
+            if (nextP < 0) nextP = players.length - 1;
+            
+            for(let i=0; i<count; i++) {
+                players[nextP].hand.push(drawCardFromDeck());
+            }
+            // 被加牌的玩家通常会被跳过
+            skipPlayer();
+        }
+
+        // --- 玩家操作 ---
+
+        function checkHumanMoves() {
+            const playable = players[0].hand.some(c => canPlay(c));
+            // 如果没牌出，允许点击牌堆
+            drawPileEl.onclick = () => {
+                drawPileEl.onclick = null; // 防止连点
+                const newCard = drawCardFromDeck();
+                players[0].hand.push(newCard);
+                updateUI();
+                // 如果摸上来的能出，允许出，否则过
+                if (canPlay(newCard)) {
+                    showToast("摸到了能出的牌");
+                    // 保持当前回合，重新渲染
+                    // 自动高亮新牌
+                } else {
+                    showToast("摸牌过");
+                    setTimeout(nextTurn, 1000);
+                }
+            };
+        }
+
+        function playerPlayCard(index) {
+            if (currentPlayer !== 0) return;
+            const card = players[0].hand[index];
+
+            if (!canPlay(card)) {
+                showToast("这张牌不能出");
+                return;
+            }
+
+            // 移除手牌
+            players[0].hand.splice(index, 1);
+            
+            // 如果是黑色牌，需要选色
+            if (card.color === 'black') {
+                playCardToTable(card);
+                renderHand(); // 更新手牌显示
+                // 弹出选色框
+                colorPickerEl.style.display = 'flex';
+                // 逻辑暂停，等待选色回调
+            } else {
+                playCardToTable(card);
+                updateUI();
+                setTimeout(nextTurn, 500);
+            }
+        }
+
+        function pickColor(color) {
+            colorPickerEl.style.display = 'none';
+            currentColor = color;
+            // 更新弃牌堆最上面的视觉颜色（虽然它本身是黑色，但我们需要指示）
+            renderDiscardPile(color); 
+            showToast("变色为: " + color);
+            setTimeout(nextTurn, 500);
+        }
+
+        function callUno() {
+            if (players[0].hand.length <= 2) {
+                unoCalled = true;
+                unoBtn.classList.add('pressed');
+                showToast("UNO !!!");
+            }
+        }
+
+        // --- AI 逻辑 ---
+
+        function botTurn(bot) {
+            // 1. 找能出的牌
+            const playableCards = bot.hand.filter(c => canPlay(c));
+            
+            if (playableCards.length > 0) {
+                // 简单AI：优先出功能牌，然后是大数字，最后是变色
+                playableCards.sort((a, b) => {
+                     if (a.color === 'black') return 1;
+                     if (b.color === 'black') return -1;
+                     if (a.type === 'action') return -1;
+                     return 0;
+                });
+
+                const cardToPlay = playableCards[0];
+                const idx = bot.hand.indexOf(cardToPlay);
+                bot.hand.splice(idx, 1);
+
+                // 模拟喊UNO
+                if (bot.hand.length === 1) {
+                    if(Math.random() > 0.2) showToast(bot.name + ": UNO!");
+                }
+
+                playCardToTable(cardToPlay);
+
+                if (cardToPlay.color === 'black') {
+                    // AI 选色：选手里最多的颜色
+                    const counts = { red:0, blue:0, green:0, yellow:0 };
+                    bot.hand.forEach(c => { if(c.color!=='black') counts[c.color]++ });
+                    const bestColor = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+                    currentColor = bestColor;
+                    renderDiscardPile(bestColor);
+                    showToast(bot.name + " 选择了 " + bestColor);
+                }
+
+                updateUI();
+                setTimeout(nextTurn, 1000);
+
+            } else {
+                // 没牌出，摸牌
+                const newCard = drawCardFromDeck();
+                bot.hand.push(newCard);
+                updateUI();
+                showToast(bot.name + " 摸了一张");
+                
+                // 如果摸到了能出的，AI目前简单处理：还是过，简化逻辑
+                setTimeout(nextTurn, 1000);
+            }
+        }
+
+
+        // --- 渲染 UI ---
+
+        function updateUI() {
+            // 更新Bot牌数
+            for(let i=1; i<=3; i++) {
+                document.querySelector(`#bot${i} .card-count`).innerText = players[i].hand.length;
+            }
+            renderHand();
+        }
+
+        function renderHand() {
+            playerHandEl.innerHTML = '';
+            players[0].hand.forEach((card, index) => {
+                const el = createCardEl(card);
+                el.onclick = () => playerPlayCard(index);
+                
+                // 只有在轮到玩家时，检查是否可用
+                if (currentPlayer === 0) {
+                    if (!canPlay(card)) el.classList.add('disabled');
+                } else {
+                    el.classList.add('disabled');
+                }
+                
+                playerHandEl.appendChild(el);
+            });
+        }
+
+        function renderDiscardPile(overrideColor = null) {
+            discardPileEl.innerHTML = '';
+            const topCard = discardPile[discardPile.length - 1];
+            const el = createCardEl(topCard);
+            
+            // 如果是黑色牌且已选色，强制改变背景色以提示
+            if (topCard.color === 'black' && (currentColor || overrideColor)) {
+                el.style.background = `var(--${overrideColor || currentColor})`;
+            } else if (overrideColor) {
+                 // 为了视觉一致性
+                 // el.classList.remove(topCard.color);
+                 // el.style.background = `var(--${overrideColor})`;
+            }
+
+            discardPileEl.appendChild(el);
+        }
+
+        function createCardEl(card) {
+            const div = document.createElement('div');
+            div.className = `card ${card.color}`;
+            div.dataset.val = getCardSymbol(card);
+            
+            const inner = document.createElement('div');
+            inner.className = 'card-inner';
+            
+            // 渲染中间的大图标
+            inner.innerHTML = getCardContent(card);
+            
+            div.appendChild(inner);
+            return div;
+        }
+
+        function getCardSymbol(card) {
+            if (card.type === 'number') return card.value;
+            if (card.value === 'skip') return '⊘';
+            if (card.value === 'reverse') return '⇄';
+            if (card.value === 'draw2') return '+2';
+            if (card.value === 'wild') return 'W';
+            if (card.value === 'draw4') return '+4';
+            return '';
+        }
+
+        function getCardContent(card) {
+            if (card.type === 'number') return card.value;
+            if (card.value === 'skip') return '⊘';
+            if (card.value === 'reverse') return '⇄';
+            if (card.value === 'draw2') return '+2';
+            if (card.value === 'wild') return '🌈';
+            if (card.value === 'draw4') return '+4';
+            return '';
+        }
+
+        function showToast(msg) {
+            toastEl.innerText = msg;
+            toastEl.style.opacity = 1;
+            setTimeout(() => toastEl.style.opacity = 0, 1500);
+        }
+
+        // 启动
+        initGame();
+
+    </script>
+</body>
+</html>

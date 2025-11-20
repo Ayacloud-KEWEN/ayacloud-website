@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>四川麻将：血战到底</title>
+    <style>
+        :root {
+            --table-bg: #1e5e35;
+            --mat-texture: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 60%);
+            --tile-w: 36px;
+            --tile-h: 48px;
+            --tile-d: 6px; /* 厚度 */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            font-family: "Helvetica Neue", sans-serif;
+            overflow: hidden;
+            user-select: none;
+            touch-action: manipulation;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 麻将桌 */
+        .table {
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--table-bg);
+            background-image: var(--mat-texture);
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        /* 中心信息区 */
+        .center-info {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px; height: 120px;
+            border: 2px solid rgba(0,0,0,0.2);
+            border-radius: 10px;
+            background: rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+        }
+        .wall-count { font-size: 24px; color: #ffd700; font-weight: bold; }
+
+        /* 玩家区域布局 */
+        .player-area {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 头像与定缺状态 */
+        .avatar-box {
+            position: absolute;
+            width: 50px; height: 50px;
+            background: #333;
+            border: 2px solid #666;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            z-index: 10;
+        }
+        .que-mark {
+            position: absolute;
+            top: -10px; right: -10px;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: #ff4444;
+            color: white;
+            font-size: 12px;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            display: none; /* 默认隐藏 */
+        }
+        .hu-mark {
+            position: absolute;
+            bottom: -10px; left: 50%; transform: translateX(-50%);
+            background: #ffd700;
+            color: #b00;
+            padding: 2px 5px;
+            font-size: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: none;
+            white-space: nowrap;
+        }
+
+        /* 4个方位的具体位置 */
+        /* 下方（玩家） */
+        .p-bottom { bottom: 10px; left: 0; width: 100%; height: 80px; flex-direction: column; justify-content: flex-end; }
+        .p-bottom .avatar-box { left: 10px; bottom: 20px; }
+        .p-bottom .hand { margin-bottom: 10px; }
+        
+        /* 上方（机器人） */
+        .p-top { top: 10px; left: 0; width: 100%; height: 60px; transform: rotate(180deg); }
+        .p-top .avatar-box { left: 10px; bottom: 5px; transform: rotate(180deg); }
+
+        /* 左方 */
+        .p-left { top: 0; left: 10px; width: 60px; height: 100%; flex-direction: column; transform: rotate(90deg); }
+        .p-left .avatar-box { left: 10px; bottom: 10px; transform: rotate(-90deg); }
+
+        /* 右方 */
+        .p-right { top: 0; right: 10px; width: 60px; height: 100%; flex-direction: column; transform: rotate(-90deg); }
+        .p-right .avatar-box { left: 10px; bottom: 10px; transform: rotate(90deg); }
+
+        /* 手牌容器 */
+        .hand {
+            display: flex;
+            gap: -2px;
+            height: var(--tile-h);
+            align-items: flex-end;
+            perspective: 600px;
+        }
+
+        /* 弃牌堆 */
+        .discard-pile {
+            position: absolute;
+            display: flex;
+            flex-wrap: wrap;
+            width: 180px;
+            height: 90px;
+            gap: 2px;
+            justify-content: center;
+            align-content: center;
+        }
+        .d-bottom { bottom: 130px; left: 50%; transform: translateX(-50%); }
+        .d-top { top: 130px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+        .d-left { left: 130px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+        .d-right { right: 130px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+
+
+        /* 麻将牌样式 */
+        .tile {
+            width: var(--tile-w);
+            height: var(--tile-h);
+            position: relative;
+            margin: 0 1px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.2s, margin 0.2s;
+        }
+
+        /* 牌的实体 */
+        .tile-inner {
+            width: 100%;
+            height: 100%;
+            background: #f0f0f0; /* 牌面色 */
+            border-radius: 4px;
+            box-shadow: 
+                1px 1px 0 #bbb, 
+                2px 2px 0 #999, /* 模拟厚度 */
+                2px 4px 5px rgba(0,0,0,0.4); /* 阴影 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            color: #333;
+            overflow: hidden;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+        }
+        
+        /* 牌背 */
+        .tile.back .tile-inner {
+            background: #2c6e9e; /* 蓝色牌背 */
+            border: 1px solid #1a4d75;
+            box-shadow: 1px 1px 0 #1a4d75, 2px 2px 0 #0f3350, 2px 4px 5px rgba(0,0,0,0.4);
+        }
+        .tile.back .tile-inner::after {
+            content: ''; /* 简单的花纹 */
+            width: 80%; height: 80%;
+            border: 1px dashed rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+
+        /* 躺着的牌 (碰/杠/弃) */
+        .tile.ground {
+            width: 28px; height: 38px;
+        }
+        .tile.ground .tile-inner {
+            font-size: 22px;
+            background: #e6e6e6;
+        }
+
+        /* 选中的牌 */
+        .tile.selected {
+            transform: translateY(-15px);
+        }
+        /* 摸来的牌 (稍微隔开) */
+        .tile.new-draw {
+            margin-left: 15px;
+        }
+        
+        /* 禁用的牌 (定缺时非缺牌，或没轮到你) */
+        .tile.disabled .tile-inner {
+            background: #ccc;
+            color: rgba(0,0,0,0.2);
+        }
+
+        /* 花色颜色 */
+        .suit-0 { color: #b31010; } /* 万 - 红 */
+        .suit-1 { color: #1a66b3; } /* 筒 - 蓝/黑 */
+        .suit-2 { color: #2a8a2a; } /* 条 - 绿 */
+
+        /* 操作面板 */
+        .action-panel {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none; /* JS控制 */
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .btn {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            display: flex; justify-content: center; align-items: center;
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.9); }
+        .btn-hu { background: #ff4444; font-size: 24px; animation: pulse 1s infinite; }
+        .btn-gang { background: #ffaa00; }
+        .btn-peng { background: #4facfe; }
+        .btn-pass { background: #999; font-size: 16px; }
+
+        /* 定缺面板 */
+        .dingque-panel {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .dq-options { display: flex; gap: 20px; margin-top: 30px; }
+        .dq-btn {
+            width: 80px; height: 100px;
+            background: #eee;
+            color: #333;
+            border-radius: 10px;
+            font-size: 40px;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer;
+        }
+        
+        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.1);} 100% {transform: scale(1);} }
+
+        /* 胡牌动画文字 */
+        .hu-anim {
+            position: absolute;
+            font-size: 80px;
+            font-weight: bold;
+            color: gold;
+            text-shadow: 0 0 20px red;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 300;
+            transition: all 0.5s;
+        }
+        .hu-anim.show { opacity: 1; transform: scale(1.5); }
+
+    </style>
+</head>
+<body>
+
+    <div class="table">
+        <div class="center-info">
+            <div style="margin-bottom:5px">血战到底</div>
+            <div class="wall-count" id="wall-count">108</div>
+            <div style="font-size:12px; margin-top:5px" id="turn-indicator">准备开始</div>
+        </div>
+
+        <div class="player-area p-top">
+            <div class="avatar-box">
+                Bot3
+                <div class="que-mark" id="que-3"></div>
+                <div class="hu-mark" id="hu-3">胡</div>
+            </div>
+            <div class="hand" id="hand-3"></div>
+        </div>
+        <div class="discard-pile d-top" id="disc-3"></div>
+
+        <div class="player-area p-left">
+            <div class="avatar-box">
+                Bot2
+                <div class="que-mark" id="que-2"></div>
+                <div class="hu-mark" id="hu-2">胡</div>
+            </div>
+            <div class="hand" id="hand-2"></div>
+        </div>
+        <div class="discard-pile d-left" id="disc-2"></div>
+
+        <div class="player-area p-right">
+            <div class="avatar-box">
+                Bot1
+                <div class="que-mark" id="que-1"></div>
+                <div class="hu-mark" id="hu-1">胡</div>
+            </div>
+            <div class="hand" id="hand-1"></div>
+        </div>
+        <div class="discard-pile d-right" id="disc-1"></div>
+
+        <div class="player-area p-bottom">
+            <div class="avatar-box">
+                我
+                <div class="que-mark" id="que-0"></div>
+                <div class="hu-mark" id="hu-0">胡</div>
+            </div>
+            <div class="hand" id="hand-0"></div>
+        </div>
+        <div class="discard-pile d-bottom" id="disc-0"></div>
+        
+        <div class="action-panel" id="action-panel">
+            </div>
+
+        <div class="hu-anim" id="hu-effect">胡!</div>
+    </div>
+
+    <div class="dingque-panel" id="dq-panel">
+        <h2>请选择一门不需要的牌 (定缺)</h2>
+        <div class="dq-options">
+            <div class="dq-btn suit-0" onclick="userSelectQue(0)">万</div>
+            <div class="dq-btn suit-1" onclick="userSelectQue(1)">筒</div>
+            <div class="dq-btn suit-2" onclick="userSelectQue(2)">条</div>
+        </div>
+    </div>
+
+    <script>
+        // --- 基础数据结构 ---
+        // 0: 万, 1: 筒, 2: 条
+        // Unicode: 万(1F007-1F00F), 条(1F010-1F018), 筒(1F019-1F021)
+        const SUIT_CHARS = [
+            ['🀇','🀈','🀉','🀊','🀋','🀌','🀍','🀎','🀏'], // 万
+            ['🀙','🀚','🀛','🀜','🀝','🀞','🀟','🀠','🀡'], // 筒
+            ['🀐','🀑','🀒','🀓','🀔','🀕','🀖','🀗','🀘']  // 条
+        ];
+        
+        const SUIT_NAMES = ['万', '筒', '条'];
+
+        class Tile {
+            constructor(suit, value) {
+                this.suit = suit; // 0, 1, 2
+                this.value = value; // 1-9
+                this.uid = Math.random().toString(36).substr(2, 9); // 唯一ID用于DOM
+            }
+            
+            // 排序权重: 万 < 筒 < 条
+            get sortValue() {
+                return this.suit * 10 + this.value;
+            }
+
+            get char() {
+                return SUIT_CHARS[this.suit][this.value - 1];
+            }
+        }
+
+        // --- 全局状态 ---
+        let wall = [];
+        let players = []; // 0: Human, 1,2,3: Bots
+        let turnIndex = 0; // 0-3
+        let phase = 'deal'; // deal, dingque, play, over
+        let lastDiscard = null; // {tile, fromPlayerIdx}
+        let winners = []; // 已经胡牌的玩家索引
+
+        // --- 初始化游戏 ---
+        function initGame() {
+            // 1. 洗牌 (108张: 3花色 * 9数值 * 4张)
+            wall = [];
+            for (let s = 0; s < 3; s++) {
+                for (let v = 1; v <= 9; v++) {
+                    for (let k = 0; k < 4; k++) {
+                        wall.push(new Tile(s, v));
+                    }
+                }
+            }
+            shuffle(wall);
+
+            // 2. 初始化玩家
+            players = [];
+            for (let i = 0; i < 4; i++) {
+                players.push({
+                    id: i,
+                    hand: [],
+                    peng: [], // 碰/杠的牌
+                    discards: [],
+                    que: -1, // 定缺的花色
+                    hasHu: false,
+                    isBot: i !== 0
+                });
+            }
+
+            // 3. 发牌 (每人13张)
+            for (let i = 0; i < 13; i++) {
+                for (let p = 0; p < 4; p++) {
+                    players[p].hand.push(wall.pop());
+                }
+            }
+            
+            // 排序手牌
+            players.forEach(p => sortHand(p.hand));
+            
+            updateUI();
+            startDingQue();
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function sortHand(hand) {
+            hand.sort((a, b) => a.sortValue - b.sortValue);
+        }
+
+        // --- 定缺阶段 ---
+        function startDingQue() {
+            phase = 'dingque';
+            document.getElementById('dq-panel').style.display = 'flex';
+            
+            // 机器人定缺逻辑：选花色最少的那门
+            for (let i = 1; i < 4; i++) {
+                const counts = [0, 0, 0];
+                players[i].hand.forEach(t => counts[t.suit]++);
+                // 找数量最少的（如果有0张直接选，否则选最少的）
+                let min = 14, minSuit = 0;
+                for(let s=0; s<3; s++){
+                    if(counts[s] < min) { min = counts[s]; minSuit = s; }
+                }
+                players[i].que = minSuit;
+            }
+        }
+
+        function userSelectQue(suit) {
+            players[0].que = suit;
+            document.getElementById('dq-panel').style.display = 'none';
+            finishDingQue();
+        }
+
+        function finishDingQue() {
+            // 显示定缺图标
+            for(let i=0; i<4; i++){
+                const qEl = document.getElementById(`que-${i}`);
+                qEl.innerText = SUIT_NAMES[players[i].que];
+                qEl.className = `que-mark suit-${players[i].que}`;
+                qEl.style.display = 'flex';
+            }
+
+            phase = 'play';
+            turnIndex = 0; // 庄家先手（简化固定为0）
+            drawTile(turnIndex);
+        }
+
+        // --- 游戏主循环 ---
+
+        function drawTile(pIdx) {
+            // 血战规则：如果牌墙没了，游戏结束
+            if (wall.length === 0) {
+                endGame();
+                return;
+            }
+            
+            // 如果该玩家已经胡了，跳过
+            if (players[pIdx].hasHu) {
+                nextTurn();
+                return;
+            }
+
+            updateWallCount();
+
+            const newTile = wall.pop();
+            players[pIdx].hand.push(newTile);
+            // 暂不排序，把新摸的放在最后方便UI显示
+
+            updateUI();
+            
+            // 检查自摸胡 / 杠
+            if (pIdx === 0) {
+                checkSelfActions(newTile);
+            } else {
+                setTimeout(() => botPlay(pIdx, newTile), 800);
+            }
+        }
+
+        function discardTile(pIdx, tileIndex) {
+            const p = players[pIdx];
+            const tile = p.hand.splice(tileIndex, 1)[0];
+            sortHand(p.hand); // 整理手牌
+            
+            p.discards.push(tile);
+            lastDiscard = { tile: tile, from: pIdx };
+            
+            updateUI();
+
+            // 检查其他人是否可以 碰/杠/胡
+            checkOtherActions(pIdx, tile);
+        }
+
+        function nextTurn() {
+            // 检查是否所有未胡玩家都已经查过
+            let activePlayers = players.filter(p => !p.hasHu).length;
+            if (activePlayers <= 1) {
+                endGame(); // 剩一家或都胡了
+                return;
+            }
+
+            turnIndex = (turnIndex + 1) % 4;
+            drawTile(turnIndex);
+        }
+
+        // --- 逻辑判断 ---
+
+        // 简单胡牌算法 (4面子+1雀头)
+        // 必须缺一门，不能有定缺花色的牌
+        function canHu(hand, queSuit) {
+            // 1. 检查是否有缺门牌
+            for (let t of hand) {
+                if (t.suit === queSuit) return false;
+            }
+
+            // 2. 拷贝手牌进行计算
+            // 将手牌转化为 counts 数组 [suit][val]
+            let counts = [[0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0]];
+            for(let t of hand) {
+                counts[t.suit][t.value]++;
+            }
+
+            // 尝试以每一对做将
+            for (let s = 0; s < 3; s++) {
+                for (let v = 1; v <= 9; v++) {
+                    if (counts[s][v] >= 2) {
+                        counts[s][v] -= 2; // 移除将
+                        if (checkMelds(counts)) return true;
+                        counts[s][v] += 2; // 回溯
+                    }
+                }
+            }
+            return false;
+        }
+
+        function checkMelds(counts) {
+            for (let s = 0; s < 3; s++) {
+                for (let v = 1; v <= 9; v++) {
+                    if (counts[s][v] > 0) {
+                        // 刻子
+                        if (counts[s][v] >= 3) {
+                            counts[s][v] -= 3;
+                            if (checkMelds(counts)) return true;
+                            counts[s][v] += 3;
+                        }
+                        // 顺子 (只有万筒条可以顺，这里都是)
+                        if (v <= 7 && counts[s][v+1] > 0 && counts[s][v+2] > 0) {
+                            counts[s][v]--; counts[s][v+1]--; counts[s][v+2]--;
+                            if (checkMelds(counts)) return true;
+                            counts[s][v]++; counts[s][v+1]++; counts[s][v+2]++;
+                        }
+                        return false; // 如果还有牌但无法组成刻子或顺子
+                    }
+                }
+            }
+            return true; // 所有牌都用完了
+        }
+
+        // --- 玩家交互 ---
+
+        function checkSelfActions(newTile) {
+            const p = players[0];
+            const actionPanel = document.getElementById('action-panel');
+            actionPanel.innerHTML = '';
+            let hasAction = false;
+
+            // 1. 检查胡 (自摸)
+            if (canHu(p.hand, p.que)) {
+                addActionButton('胡', 'btn-hu', () => performHu(0, newTile, true));
+                hasAction = true;
+            }
+
+            // 2. 检查暗杠 (由于简化，这里暂不处理加杠，只处理手里4张一样的)
+            // 为了简化demo，杠逻辑比较复杂，暂只做“碰”和“胡”
+            // 如果要加杠，逻辑太多。这里只做基础胡牌演示。
+
+            if (hasAction) {
+                addActionButton('过', 'btn-pass', () => {
+                    actionPanel.style.display = 'none';
+                    // 用户必须打出一张牌
+                    enableHandClick();
+                });
+                actionPanel.style.display = 'flex';
+            } else {
+                enableHandClick();
+            }
+        }
+
+        function checkOtherActions(fromIdx, tile) {
+            // 血战规则：胡 > 碰/杠
+            // 多人可以同时胡 (一炮多响)
+            
+            let canHuList = [];
+            
+            // 检查其他人能否胡
+            for (let i = 0; i < 4; i++) {
+                if (i === fromIdx || players[i].hasHu) continue;
+                
+                // 模拟把牌加入手牌检查
+                let tempHand = [...players[i].hand, tile];
+                sortHand(tempHand);
+                if (canHu(tempHand, players[i].que)) {
+                    canHuList.push(i);
+                }
+            }
+
+            // 玩家操作优先级
+            if (canHuList.includes(0)) {
+                showHuPrompt(tile, canHuList);
+                return; // 等待玩家决定
+            }
+
+            // 如果玩家不能胡，处理机器人胡
+            if (canHuList.length > 0) {
+                // 机器人直接胡
+                canHuList.forEach(idx => performHu(idx, tile, false));
+                // 一炮多响后，出牌权给下家
+                if (players[turnIndex].hasHu) { 
+                     // 如果出牌者下家胡了，继续流转
+                }
+                // 简单处理：只要有人胡，牌就被消掉了，流程继续
+                nextTurn();
+                return;
+            }
+
+            // 检查碰 (只检查下家? 不，碰是任意家)
+            // 简化：只检查玩家是否能碰
+            if (!players[0].hasHu && fromIdx !== 0) {
+                let count = 0;
+                players[0].hand.forEach(t => { if(t.suit === tile.suit && t.value === tile.value) count++; });
+                if (count >= 2) {
+                    // 玩家可以碰
+                    showPengPrompt(tile);
+                    return;
+                }
+            }
+
+            // 如果没人胡也没人碰，轮到下家
+            nextTurn();
+        }
+
+        function showHuPrompt(tile, huList) {
+            const actionPanel = document.getElementById('action-panel');
+            actionPanel.innerHTML = '';
+            addActionButton('胡', 'btn-hu', () => {
+                performHu(0, tile, false);
+                // 处理其他机器人胡
+                huList.filter(id => id !== 0).forEach(id => performHu(id, tile, false));
+                actionPanel.style.display = 'none';
+                nextTurn();
+            });
+            addActionButton('过', 'btn-pass', () => {
+                 // 处理其他机器人胡
+                huList.filter(id => id !== 0).forEach(id => performHu(id, tile, false));
+                actionPanel.style.display = 'none';
+                nextTurn();
+            });
+            actionPanel.style.display = 'flex';
+        }
+
+        function showPengPrompt(tile) {
+             const actionPanel = document.getElementById('action-panel');
+             actionPanel.innerHTML = '';
+             addActionButton('碰', 'btn-peng', () => {
+                 performPeng(0, tile);
+                 actionPanel.style.display = 'none';
+                 enableHandClick(); // 碰完要出牌
+             });
+             addActionButton('过', 'btn-pass', () => {
+                 actionPanel.style.display = 'none';
+                 nextTurn();
+             });
+             actionPanel.style.display = 'flex';
+        }
+
+        function performHu(pIdx, tile, isZimo) {
+            players[pIdx].hasHu = true;
+            if (!isZimo) players[pIdx].hand.push(tile); // 点炮要把牌拿进来展示
+            sortHand(players[pIdx].hand);
+            
+            // 视觉效果
+            document.getElementById(`hu-${pIdx}`).style.display = 'block';
+            showHuAnim(pIdx);
+            updateUI();
+            
+            winners.push(pIdx);
+        }
+        
+        function performPeng(pIdx, tile) {
+            const p = players[pIdx];
+            // 移除手牌里的两张
+            let removed = 0;
+            for(let i=p.hand.length-1; i>=0; i--){
+                if(p.hand[i].suit === tile.suit && p.hand[i].value === tile.value) {
+                    p.hand.splice(i, 1);
+                    removed++;
+                    if(removed===2) break;
+                }
+            }
+            // 加入碰牌区
+            p.peng.push(tile); 
+            turnIndex = pIdx; // 抢得回合
+            updateUI();
+        }
+
+        function enableHandClick() {
+            const handDiv = document.getElementById('hand-0');
+            const tiles = handDiv.getElementsByClassName('tile');
+            const p = players[0];
+
+            for (let i = 0; i < tiles.length; i++) {
+                // 规则：如果有定缺牌，必须先出定缺牌
+                const t = p.hand[i];
+                let hasQue = p.hand.some(x => x.suit === p.que);
+                
+                if (hasQue && t.suit !== p.que) {
+                    tiles[i].classList.add('disabled');
+                    tiles[i].onclick = null;
+                } else {
+                    tiles[i].classList.remove('disabled');
+                    tiles[i].onclick = () => {
+                        // 移除事件
+                        for(let el of tiles) el.onclick = null;
+                        discardTile(0, i);
+                    };
+                }
+            }
+        }
+
+        // --- 机器人 AI ---
+
+        function botPlay(pIdx, newTile) {
+            const p = players[pIdx];
+            
+            // 1. 能胡就胡
+            if (canHu(p.hand, p.que)) {
+                performHu(pIdx, newTile, true);
+                nextTurn();
+                return;
+            }
+
+            // 2. 出牌逻辑
+            // 优先出定缺牌
+            let discardIdx = -1;
+            
+            // 找定缺牌
+            for (let i = 0; i < p.hand.length; i++) {
+                if (p.hand[i].suit === p.que) {
+                    discardIdx = i;
+                    break;
+                }
+            }
+
+            // 没有定缺牌，随机出一张非对子、非刻子的孤张 (简化为随机出)
+            if (discardIdx === -1) {
+                discardIdx = Math.floor(Math.random() * p.hand.length);
+                // 稍微聪明一点：尽量不拆对子
+                // 这里简化demo，直接随机
+            }
+
+            discardTile(pIdx, discardIdx);
+        }
+
+        // --- UI 渲染 ---
+
+        function updateUI() {
+            document.getElementById('wall-count').innerText = wall.length;
+            
+            // 渲染手牌
+            for (let i = 0; i < 4; i++) {
+                renderHand(i);
+                renderDiscard(i);
+            }
+        }
+
+        function renderHand(pIdx) {
+            const el = document.getElementById(`hand-${pIdx}`);
+            el.innerHTML = '';
+            
+            const p = players[pIdx];
+
+            // 渲染碰/杠的牌
+            p.peng.forEach(t => {
+                // 碰显示3张
+                for(let k=0; k<3; k++) el.appendChild(createTileEl(t, 'ground'));
+            });
+
+            // 渲染手牌
+            p.hand.forEach((t, index) => {
+                // 如果不是玩家自己，且没胡，显示背面
+                let type = 'normal';
+                if (pIdx !== 0 && !p.hasHu) {
+                    type = 'back';
+                }
+                
+                const tileEl = createTileEl(t, type);
+                // 如果是新摸的牌 (最后一张且刚摸牌阶段)
+                // 简化处理：不加特别的margin，除非...
+                el.appendChild(tileEl);
+            });
+        }
+
+        function renderDiscard(pIdx) {
+            const el = document.getElementById(`disc-${pIdx}`);
+            el.innerHTML = '';
+            players[pIdx].discards.forEach(t => {
+                el.appendChild(createTileEl(t, 'ground'));
+            });
+        }
+
+        function createTileEl(tile, type = 'normal') { // normal, back, ground
+            const div = document.createElement('div');
+            div.className = `tile ${type}`;
+            if (type !== 'back') {
+                div.innerHTML = `<div class="tile-inner suit-${tile.suit}">${tile.char}</div>`;
+            } else {
+                div.innerHTML = `<div class="tile-inner"></div>`;
+            }
+            return div;
+        }
+
+        function updateWallCount() {
+             const el = document.getElementById('turn-indicator');
+             const dirs = ['南(我)', '东(下)', '北(对)', '西(上)'];
+             el.innerText = "当前: " + dirs[turnIndex];
+        }
+
+        function addActionButton(text, cls, callback) {
+            const btn = document.createElement('div');
+            btn.className = `btn ${cls}`;
+            btn.innerText = text;
+            btn.onclick = callback;
+            document.getElementById('action-panel').appendChild(btn);
+        }
+
+        function showHuAnim(pIdx) {
+            const el = document.getElementById('hu-effect');
+            // 简单的位置调整
+            el.style.top = '50%';
+            el.style.left = '50%';
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 1500);
+        }
+
+        function endGame() {
+            alert("本局结束! 胡牌玩家: " + (winners.length > 0 ? winners.map(i => i===0?"我":`Bot${i}`) : "无 (流局)"));
+            location.reload();
+        }
+
+        // 启动
+        initGame();
+
+    </script>
+</body>
+</html>

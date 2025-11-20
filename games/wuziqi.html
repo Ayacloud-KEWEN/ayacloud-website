@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>真实质感五子棋</title>
+    <style>
+        :root {
+            --board-color: #eeb55e; /* 榧木色 */
+            --board-shadow: #c49144;
+            --line-color: #5e4020;
+            --black-stone: radial-gradient(circle at 30% 30%, #666, #000 40%, #000);
+            --white-stone: radial-gradient(circle at 30% 30%, #fff, #e6e6e6 40%, #ccc);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #2c2c2c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            touch-action: manipulation; /* 优化触摸响应 */
+        }
+
+        /* 顶部信息栏 */
+        .header {
+            color: #eee;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .turn-indicator {
+            font-size: 1.1rem;
+            padding: 5px 15px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* 棋盘容器 */
+        .board-container {
+            position: relative;
+            width: 95vw; /* 移动端留一点边距 */
+            max-width: 600px;
+            aspect-ratio: 1/1;
+            background-color: var(--board-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5), 
+                        inset 0 0 20px rgba(120, 80, 30, 0.3);
+            border-radius: 4px;
+            padding: 10px; /* 木框边缘 */
+            box-sizing: border-box;
+        }
+
+        /* 实际的网格区域 */
+        #game-board {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            /* 利用CSS渐变绘制棋盘线，比大量DIV性能更好 */
+            background-image: 
+                linear-gradient(var(--line-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--line-color) 1px, transparent 1px);
+            background-size: calc(100% / 14) calc(100% / 14); /* 15条线，14个格 */
+            background-position: center;
+            cursor: pointer;
+        }
+
+        /* 天元和星位 (5个小黑点) */
+        .star-point {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--line-color);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+
+        /* 棋子通用样式 */
+        .stone {
+            position: absolute;
+            width: 6.5%; /* 稍微小于网格宽度以避免拥挤 */
+            height: 6.5%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            z-index: 1;
+            box-shadow: 2px 2px 3px var(--shadow-color);
+            animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(0.9); opacity: 1; }
+        }
+
+        .stone.black {
+            background: var(--black-stone);
+        }
+
+        .stone.white {
+            background: var(--white-stone);
+        }
+
+        /* 最后一步的标记 */
+        .stone::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20%;
+            height: 20%;
+            background: transparent;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .stone.last-move::after {
+            background: #ff3b30; /* 红色标记 */
+            box-shadow: 0 0 4px #ff3b30;
+        }
+
+        /* 控制按钮 */
+        .controls {
+            margin-top: 30px;
+        }
+
+        button {
+            background: #eeb55e;
+            color: #3e2b14;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 0 4px 0 #c49144, 0 5px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #c49144, inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .winner-text {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>GOMOKU</h1>
+        <div class="status-bar">
+            <div class="turn-indicator" id="turn-display">
+                <span class="indicator-dot" id="turn-dot" style="background: black;"></span>
+                <span id="turn-text">黑方执子</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="board-container">
+        <div id="game-board">
+            </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="resetGame()">重新开始</button>
+    </div>
+
+    <div class="modal" id="win-modal">
+        <div class="modal-content">
+            <div class="winner-text" id="winner-message">黑方获胜!</div>
+            <button onclick="resetGame()">再来一局</button>
+        </div>
+    </div>
+
+    <script>
+        const BOARD_SIZE = 15;
+        let currentPlayer = 'black'; // black or white
+        let gameBoard = [];
+        let isGameOver = false;
+        let lastMove = null; // 记录最后一步的位置 [x, y]
+
+        const boardElement = document.getElementById('game-board');
+        const turnText = document.getElementById('turn-text');
+        const turnDot = document.getElementById('turn-dot');
+        const modal = document.getElementById('win-modal');
+        const winnerMsg = document.getElementById('winner-message');
+
+        // 初始化游戏
+        function initGame() {
+            // 生成5个星位 (3,3), (11,3), (7,7), (3,11), (11,11) 索引从0开始则减1? 不，通常是 3, 11 (第4线和第12线)
+            // 对于15路棋盘，星位在 3, 7, 11 (索引)
+            const stars = [
+                {x: 3, y: 3}, {x: 11, y: 3},
+                {x: 7, y: 7},
+                {x: 3, y: 11}, {x: 11, y: 11}
+            ];
+            
+            // 清空棋盘显示
+            boardElement.innerHTML = '';
+            
+            // 绘制星位
+            stars.forEach(pos => {
+                const star = document.createElement('div');
+                star.className = 'star-point';
+                star.style.left = (pos.x / (BOARD_SIZE - 1) * 100) + '%';
+                star.style.top = (pos.y / (BOARD_SIZE - 1) * 100) + '%';
+                boardElement.appendChild(star);
+            });
+
+            // 重置数据
+            gameBoard = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null));
+            currentPlayer = 'black';
+            isGameOver = false;
+            lastMove = null;
+            updateStatus();
+            modal.classList.remove('show');
+        }
+
+        // 更新状态栏
+        function updateStatus() {
+            if (currentPlayer === 'black') {
+                turnText.textContent = "黑方执子";
+                turnDot.style.background = "black";
+                turnDot.style.boxShadow = "none";
+            } else {
+                turnText.textContent = "白方执子";
+                turnDot.style.background = "white";
+                turnDot.style.boxShadow = "0 0 2px grey";
+            }
+        }
+
+        // 处理点击事件
+        boardElement.addEventListener('click', function(e) {
+            if (isGameOver) return;
+
+            const rect = boardElement.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // 计算点击的是哪个交叉点
+            // 棋盘宽度 / (格子数 - 1) 得到间距，但这里我们用百分比布局
+            // 实际上有15条线，范围是0到14
+            
+            const width = rect.width;
+            const height = rect.height;
+            const cellWidth = width / (BOARD_SIZE - 1); // 间距
+            const cellHeight = height / (BOARD_SIZE - 1);
+
+            // 加上0.5来实现四舍五入到最近的线
+            let gridX = Math.round(x / cellWidth);
+            let gridY = Math.round(y / cellHeight);
+
+            // 边界检查
+            if (gridX < 0) gridX = 0;
+            if (gridX >= BOARD_SIZE) gridX = BOARD_SIZE - 1;
+            if (gridY < 0) gridY = 0;
+            if (gridY >= BOARD_SIZE) gridY = BOARD_SIZE - 1;
+
+            // 检查该位置是否已有棋子
+            if (gameBoard[gridY][gridX]) return;
+
+            placeStone(gridX, gridY);
+        });
+
+        function placeStone(x, y) {
+            // 逻辑落子
+            gameBoard[y][x] = currentPlayer;
+
+            // 视觉落子
+            const stone = document.createElement('div');
+            stone.classList.add('stone', currentPlayer);
+            stone.style.left = (x / (BOARD_SIZE - 1) * 100) + '%';
+            stone.style.top = (y / (BOARD_SIZE - 1) * 100) + '%';
+            
+            // 移除上一步的标记
+            const prevLast = document.querySelector('.stone.last-move');
+            if (prevLast) prevLast.classList.remove('last-move');
+            
+            // 添加标记到当前子
+            stone.classList.add('last-move');
+            
+            boardElement.appendChild(stone);
+            lastMove = [x, y];
+
+            // 检查胜利
+            if (checkWin(x, y)) {
+                isGameOver = true;
+                setTimeout(() => {
+                    winnerMsg.textContent = (currentPlayer === 'black' ? "黑方" : "白方") + " 获胜!";
+                    modal.classList.add('show');
+                }, 300); // 稍作延迟等待落子动画
+                return;
+            }
+
+            // 切换回合
+            currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+            updateStatus();
+        }
+
+        // 胜利判断算法
+        function checkWin(x, y) {
+            const directions = [
+                [1, 0],  // 水平
+                [0, 1],  // 垂直
+                [1, 1],  // 右下斜
+                [1, -1]  // 左下斜
+            ];
+
+            const color = gameBoard[y][x];
+
+            for (let d of directions) {
+                let count = 1; // 当前子算1个
+                const dx = d[0];
+                const dy = d[1];
+
+                // 正向检查
+                let i = 1;
+                while (true) {
+                    const nx = x + dx * i;
+                    const ny = y + dy * i;
+                    if (nx < 0 || nx >= BOARD_SIZE || ny < 0 || ny >= BOARD_SIZE) break;
+                    if (gameBoard[ny][nx] !== color) break;
+                    count++;
+                    i++;
+                }
+
+                // 反向检查
+                i = 1;
+                while (true) {
+                    const nx = x - dx * i;
+                    const ny = y - dy * i;
+                    if (nx < 0 || nx >= BOARD_SIZE || ny < 0 || ny >= BOARD_SIZE) break;
+                    if (gameBoard[ny][nx] !== color) break;
+                    count++;
+                    i++;
+                }
+
+                if (count >= 5) return true;
+            }
+            return false;
+        }
+
+        function resetGame() {
+            initGame();
+        }
+
+        // 启动
+        initGame();
+
+    </script>
+</body>
+</html>

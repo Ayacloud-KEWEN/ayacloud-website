@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>轨道卫士 - Orbit Guard</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a2e;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            touch-action: none; /* 禁止手机端双击缩放 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #gameCanvas {
+            display: block;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #e94560;
+            display: none; /* 游戏中隐藏 */
+        }
+
+        #scoreBoard {
+            position: absolute;
+            top: 20%;
+            font-size: 80px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.1);
+            z-index: -1;
+        }
+
+        #startMsg, #gameOverMsg {
+            background: rgba(22, 33, 62, 0.9);
+            padding: 20px 40px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #0f3460;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        #startMsg:active, #gameOverMsg:active {
+            transform: scale(0.95);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        p { margin: 5px 0; color: #a0a0a0; }
+        .btn-text { font-size: 24px; color: #fff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="ui-layer">
+        <div id="scoreBoard">0</div>
+        
+        <div id="startMsg">
+            <div class="btn-text">点击开始</div>
+            <p>点击屏幕改变旋转方向</p>
+            <p>保护核心，撞击红点</p>
+        </div>
+
+        <div id="gameOverMsg" class="hidden">
+            <div class="btn-text">游戏结束</div>
+            <p>最终得分: <span id="finalScore">0</span></p>
+            <p>点击重新开始</p>
+        </div>
+    </div>
+
+<script>
+    // --- 游戏设置 ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // UI 元素
+    const scoreEl = document.getElementById('scoreBoard');
+    const startMsg = document.getElementById('startMsg');
+    const gameOverMsg = document.getElementById('gameOverMsg');
+    const finalScoreEl = document.getElementById('finalScore');
+
+    // 响应式画布
+    let width, height, centerX, centerY;
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        centerX = width / 2;
+        centerY = height / 2;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // --- 游戏变量 ---
+    let gameRunning = false;
+    let score = 0;
+    let frameCount = 0;
+    
+    // 玩家（护盾）
+    const player = {
+        orbitRadius: 60, // 轨道半径
+        angle: 0,        // 当前角度
+        speed: 0.08,     // 旋转速度
+        dir: 1,          // 方向：1 或 -1
+        size: 12,        // 大小
+        color: '#00d4ff' // 青色
+    };
+
+    // 核心（被保护的目标）
+    const core = {
+        size: 25,
+        color: '#e94560', // 红色核心
+        health: 1,
+        pulse: 0
+    };
+
+    // 敌人数组
+    let enemies = [];
+    // 粒子数组（爆炸效果）
+    let particles = [];
+
+    // --- 核心逻辑 ---
+
+    function initGame() {
+        score = 0;
+        scoreEl.innerText = score;
+        enemies = [];
+        particles = [];
+        player.angle = 0;
+        player.dir = 1;
+        frameCount = 0;
+        gameRunning = true;
+        
+        startMsg.classList.add('hidden');
+        gameOverMsg.classList.add('hidden');
+        
+        loop();
+    }
+
+    function gameOver() {
+        gameRunning = false;
+        finalScoreEl.innerText = score;
+        gameOverMsg.classList.remove('hidden');
+        // 震动反馈（如果是手机）
+        if(navigator.vibrate) navigator.vibrate(200);
+    }
+
+    // 输入控制 (点击任意位置)
+    function handleInput(e) {
+        e.preventDefault(); // 防止默认触摸行为
+        if (!gameRunning) {
+            if (!startMsg.classList.contains('hidden')) initGame();
+            else if (!gameOverMsg.classList.contains('hidden')) initGame();
+            return;
+        }
+        // 改变方向
+        player.dir *= -1;
+    }
+
+    document.addEventListener('mousedown', handleInput);
+    document.addEventListener('touchstart', handleInput, {passive: false});
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') handleInput(e);
+    });
+
+    // 生成敌人
+    function spawnEnemy() {
+        // 随着分数提高，生成频率加快
+        let spawnRate = 60; 
+        if (score > 10) spawnRate = 50;
+        if (score > 25) spawnRate = 40;
+        if (score > 50) spawnRate = 30;
+
+        if (frameCount % spawnRate === 0) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.max(width, height) / 1.5; // 从屏幕外生成
+            
+            // 敌人速度随分数增加
+            let speed = 2 + (score / 20); 
+            if(speed > 8) speed = 8; // 速度上限
+
+            enemies.push({
+                x: centerX + Math.cos(angle) * dist,
+                y: centerY + Math.sin(angle) * dist,
+                vx: Math.cos(angle) * -speed, // 向中心移动
+                vy: Math.sin(angle) * -speed,
+                size: 8,
+                color: '#fff'
+            });
+        }
+    }
+
+    // 生成粒子
+    function createParticles(x, y, color) {
+        for(let i=0; i<8; i++) {
+            particles.push({
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * 5,
+                vy: (Math.random() - 0.5) * 5,
+                life: 1.0,
+                color: color
+            });
+        }
+    }
+
+    // --- 游戏循环 ---
+    function loop() {
+        if (!gameRunning) return;
+        
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, width, height); // 清除画布
+
+        // 1. 更新玩家
+        player.angle += player.speed * player.dir;
+        const px = centerX + Math.cos(player.angle) * player.orbitRadius;
+        const py = centerY + Math.sin(player.angle) * player.orbitRadius;
+
+        // 2. 绘制轨道线
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, player.orbitRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 3. 绘制核心
+        // 简单的脉冲动画
+        core.pulse += 0.05;
+        const currentCoreSize = core.size + Math.sin(core.pulse) * 2;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, currentCoreSize, 0, Math.PI * 2);
+        ctx.fillStyle = core.color;
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = core.color;
+        ctx.fill();
+        ctx.shadowBlur = 0; // 重置
+
+        // 4. 更新和绘制敌人
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            let e = enemies[i];
+            e.x += e.vx;
+            e.y += e.vy;
+
+            // 绘制敌人
+            ctx.beginPath();
+            ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+            ctx.fillStyle = e.color;
+            ctx.fill();
+
+            // 碰撞检测：敌人 vs 核心 (输)
+            const distToCore = Math.hypot(e.x - centerX, e.y - centerY);
+            if (distToCore < core.size + e.size) {
+                createParticles(centerX, centerY, core.color);
+                gameOver();
+                return; // 停止循环
+            }
+
+            // 碰撞检测：敌人 vs 玩家 (得分)
+            const distToPlayer = Math.hypot(e.x - px, e.y - py);
+            if (distToPlayer < player.size + e.size + 10) { // +10 增加判定范围，手感更好
+                // 销毁敌人
+                createParticles(e.x, e.y, '#00d4ff');
+                enemies.splice(i, 1);
+                score++;
+                scoreEl.innerText = score;
+                
+                // 稍微增加一点屏幕震动感（可选）
+                continue;
+            }
+        }
+
+        // 5. 绘制玩家
+        ctx.beginPath();
+        ctx.arc(px, py, player.size, 0, Math.PI * 2);
+        ctx.fillStyle = player.color;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = player.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // 连接玩家和核心的线 (视觉糖果)
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(px, py);
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 6. 更新和绘制粒子
+        for (let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.05;
+            
+            if(p.life <= 0) {
+                particles.splice(i, 1);
+            } else {
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, 4, 4);
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        frameCount++;
+        spawnEnemy();
+        requestAnimationFrame(loop);
+    }
+
+    // 初始画面绘制
+    ctx.fillStyle = '#1a1a2e';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+</script>
+</body>
+</html>

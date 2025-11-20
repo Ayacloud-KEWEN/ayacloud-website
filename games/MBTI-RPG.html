@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>异世界人格冒险</title>
+    <style>
+        :root {
+            --bg-color: #fff0f5; /* 薰衣草粉 */
+            --card-bg: #ffffff;
+            --primary: #ff9a9e;
+            --secondary: #fad0c4;
+            --accent: #a18cd1;
+            --text: #555;
+            --btn-shadow: rgba(255, 154, 158, 0.4);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: "Nunito", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(120deg, #a18cd1 0%, #fbc2eb 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* 游戏容器 */
+        .game-container {
+            width: 90%;
+            max-width: 450px;
+            height: 85vh;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            border: 6px solid #fff;
+        }
+
+        /* 通用页面样式 */
+        .page {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.9);
+        }
+        .page.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        /* 首页 */
+        .start-page { justify-content: center; text-align: center; }
+        .logo { font-size: 80px; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
+        .title { font-size: 28px; color: #6a11cb; font-weight: 800; margin-bottom: 10px; }
+        .subtitle { color: #888; margin-bottom: 40px; line-height: 1.6; }
+        
+        /* 题目页 */
+        .question-page { justify-content: flex-start; }
+        .progress-bar {
+            width: 100%; height: 10px;
+            background: #eee;
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; background: var(--primary);
+            width: 0%; transition: width 0.3s;
+            border-radius: 10px;
+        }
+        
+        .question-card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(161, 140, 209, 0.2);
+            margin: 40px 0;
+            width: 100%;
+            text-align: center;
+            animation: slideIn 0.5s;
+        }
+        .q-emoji { font-size: 50px; margin-bottom: 15px; display: block; }
+        .q-text { font-size: 20px; font-weight: bold; color: #444; line-height: 1.5; }
+
+        .options-container { width: 100%; display: flex; flex-direction: column; gap: 15px; }
+        .option-btn {
+            background: white;
+            border: 2px solid #eee;
+            padding: 15px;
+            border-radius: 15px;
+            color: #555;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .option-btn:active {
+            transform: scale(0.96);
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+        }
+
+        /* 结果页 */
+        .result-page { overflow-y: auto; padding-bottom: 60px; }
+        .result-card {
+            background: linear-gradient(135deg, #fff 0%, #f3e7e9 100%);
+            width: 100%;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 4px solid white;
+            margin-top: 20px;
+        }
+        .res-img { font-size: 80px; margin-bottom: 10px; }
+        .res-type { font-size: 36px; font-weight: 900; color: var(--accent); letter-spacing: 2px; }
+        .res-title { font-size: 20px; color: #ff9a9e; margin-bottom: 20px; font-weight: bold; }
+        .res-desc { text-align: left; font-size: 15px; color: #666; line-height: 1.8; background: rgba(255,255,255,0.6); padding: 15px; border-radius: 10px; }
+        
+        .radar-box {
+            margin-top: 20px;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .tag { background: #a18cd1; color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px; }
+
+        /* 按钮 */
+        .big-btn {
+            background: linear-gradient(to right, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 10px 20px var(--btn-shadow);
+            cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+
+        /* 动画定义 */
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        
+        <div class="page start-page active" id="p-start">
+            <div class="logo">🏰</div>
+            <h1 class="title">异世界<br>人格冒险</h1>
+            <p class="subtitle">如果穿越到魔法世界，<br>你会是什么职业？<br>通过12道情景题测出你的真实MBTI</p>
+            <button class="big-btn" onclick="startGame()">开始冒险</button>
+        </div>
+
+        <div class="page question-page" id="p-quiz">
+            <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+            
+            <div class="question-card">
+                <span class="q-emoji" id="q-emoji">🎒</span>
+                <div class="q-text" id="q-text">加载中...</div>
+            </div>
+
+            <div class="options-container" id="options-box">
+                </div>
+        </div>
+
+        <div class="page result-page" id="p-result">
+            <div style="font-size: 18px; color: #888; margin-top: 20px;">你的灵魂职业是...</div>
+            
+            <div class="result-card">
+                <div class="res-img" id="res-icon">🧙‍♀️</div>
+                <div class="res-type" id="res-code">INFP</div>
+                <div class="res-title" id="res-job">治愈系·森林德鲁伊</div>
+                <div class="res-desc" id="res-text">
+                    你拥有丰富的内心世界和强大的共情能力...
+                </div>
+                <div class="radar-box" id="res-tags"></div>
+            </div>
+
+            <button class="big-btn" style="margin-top: 30px; font-size: 16px; padding: 12px 30px;" onclick="location.reload()">重新转生</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 题库数据 (模拟MBTI维度) ---
+        // EI: 外向/内向, SN: 实感/直觉, TF: 理性/感性, JP: 判断/感知
+        // 为了演示，这里精简为12题（每维度3题）
+        const questions = [
+            // E vs I
+            {
+                emoji: "🏰",
+                text: "初次抵达王都，广场上正在举办盛大的庆典，你会？",
+                options: [
+                    { text: "立刻加入人群跳舞，结识新朋友！", type: "E" },
+                    { text: "在边缘找个安静角落，默默观察。", type: "I" }
+                ]
+            },
+            {
+                emoji: "🍻",
+                text: "冒险了一天，晚上在酒馆休息时，你更喜欢？",
+                options: [
+                    { text: "和大家一起吹牛、拼酒、大笑。", type: "E" },
+                    { text: "独自擦拭武器，或者看地图思考明天。", type: "I" }
+                ]
+            },
+            {
+                emoji: "🗣️",
+                text: "队伍需要招募新成员，你通常会？",
+                options: [
+                    { text: "主动去和路人搭话，推销我们的队伍。", type: "E" },
+                    { text: "等待别人来询问，或者让队友去说。", type: "I" }
+                ]
+            },
+            // S vs N
+            {
+                emoji: "🗺️",
+                text: "当你拿到一张藏宝图，你更关注？",
+                options: [
+                    { text: "具体的路线、地标和距离数据。", type: "S" },
+                    { text: "宝藏背后的传说故事和可能隐藏的秘密。", type: "N" }
+                ]
+            },
+            {
+                emoji: "🍄",
+                text: "在森林里看到一种从未见过的发光蘑菇，你会？",
+                options: [
+                    { text: "观察它的颜色、形状，判断是否有毒。", type: "S" },
+                    { text: "联想它是不是精灵的房子？或者某种魔法媒介？", type: "N" }
+                ]
+            },
+            {
+                emoji: "⚔️",
+                text: "学习新技能时，你更习惯？",
+                options: [
+                    { text: "跟着师傅一步步模仿动作，直到熟练。", type: "S" },
+                    { text: "理解技能的原理，然后自创招式。", type: "N" }
+                ]
+            },
+            // T vs F
+            {
+                emoji: "⚖️",
+                text: "两个队友吵架了，影响了赶路进度，你会？",
+                options: [
+                    { text: "分析谁对谁错，按规矩解决问题。", type: "T" },
+                    { text: "安抚两人的情绪，哪怕耽误一点时间也要和好。", type: "F" }
+                ]
+            },
+            {
+                emoji: "🧟",
+                text: "遇到一个被诅咒变成怪物的村民，理智告诉你必须消灭他，但他在哭泣。你会？",
+                options: [
+                    { text: "为了保护更多人，果断挥剑。", type: "T" },
+                    { text: "下不了手，试图寻找解咒的方法直到最后。", type: "F" }
+                ]
+            },
+            {
+                emoji: "💰",
+                text: "任务完成了，分配赏金时，你认为？",
+                options: [
+                    { text: "按贡献分配，谁出力多谁拿得多。", type: "T" },
+                    { text: "大家平分，或者照顾比较困难的队友。", type: "F" }
+                ]
+            },
+            // J vs P
+            {
+                emoji: "📜",
+                text: "出发去讨伐魔王前，你会？",
+                options: [
+                    { text: "列好清单，规划好每一天的路线和补给。", type: "J" },
+                    { text: "带上武器就走，遇到问题再随机应变。", type: "P" }
+                ]
+            },
+            {
+                emoji: "🎁",
+                text: "原本计划去打怪，突然听说隔壁村有稀有商人出现，你会？",
+                options: [
+                    { text: "还是按原计划去打怪，不想打乱节奏。", type: "J" },
+                    { text: "立刻改道去看看！打怪什么时候都能去。", type: "P" }
+                ]
+            },
+            {
+                emoji: "🏠",
+                text: "你的冒险背包通常是？",
+                options: [
+                    { text: "分类整齐，药水、卷轴都在固定位置。", type: "J" },
+                    { text: "乱七八糟，但是总能摸出需要的东西。", type: "P" }
+                ]
+            }
+        ];
+
+        // --- 结果映射库 ---
+        const results = {
+            "ISTJ": { job: "皇家守卫", icon: "🛡️", desc: "严肃可靠的守护者。你做事井井有条，注重传统与荣誉。在队伍中，你是最坚实的后盾，绝不会在值夜时睡着。", tags: ["靠谱", "严谨", "执行力"] },
+            "ISFJ": { job: "圣光牧师", icon: "✨", desc: "温暖的守护者。你总是默默照顾队友，确保每个人都状态良好。比起冲锋陷阵，你更愿意守护大家的后背。", tags: ["温柔", "奉献", "细心"] },
+            "INFJ": { job: "预言先知", icon: "🔮", desc: "神秘的引路人。你能洞察人心，也充满理想主义。你看到的不仅是眼前的战斗，更是拯救世界的长远未来。", tags: ["深邃", "直觉", "理想"] },
+            "INTJ": { job: "黑魔法师", icon: "♟️", desc: "幕后的战略家。你拥有宏大的计划和冷静的头脑。虽然看起来高冷，但整个战局的每一步都在你的计算之中。", tags: ["谋略", "独立", "完美主义"] },
+            "ISTP": { job: "孤狼刺客", icon: "🗡️", desc: "冷静的技巧大师。你不爱废话，擅长动手解决问题。无论是开锁还是制造陷阱，没人比你更在行。", tags: ["冷静", "手巧", "务实"] },
+            "ISFP": { job: "吟游诗人", icon: "🎨", desc: "自由的艺术家。你活在当下，享受冒险中的每一处风景。你的存在让枯燥的旅途充满了色彩和美感。", tags: ["审美", "随性", "善良"] },
+            "INFP": { job: "森林德鲁伊", icon: "🦌", desc: "治愈系梦想家。你内心柔软，与自然万物共情。虽然不擅长争斗，但你的信念能净化最黑暗的诅咒。", tags: ["治愈", "共情", "幻想"] },
+            "INTP": { job: "炼金术士", icon: "⚗️", desc: "好奇的分析师。你对世界的构造充满好奇，总是沉迷于研究各种奇怪的理论，哪怕炸掉几次实验室。", tags: ["逻辑", "好奇", "宅"] },
+            "ESTP": { job: "赏金猎人", icon: "💰", desc: "无畏的行动派。哪里有刺激你就去哪里。你反应极快，活在当下，是解决突发麻烦的高手。", tags: ["冒险", "机智", "冲动"] },
+            "ESFP": { job: "庆典舞者", icon: "💃", desc: "天生的表演者。你是队伍的气氛组，只要有你在，就没有无聊的时刻。你用热情感染着每一个人。", tags: ["热情", "乐天", "聚焦"] },
+            "ENFP": { job: "元气召唤师", icon: "🦄", desc: "热情的追梦人。你脑子里有一万个鬼点子，总能和各种奇怪的生物交朋友。你是队伍里的开心果。", tags: ["脑洞", "社交", "自由"] },
+            "ENTP": { job: "地精发明家", icon: "💣", desc: "机智的辩论家。你喜欢打破常规，寻找捷径。虽然你的发明偶尔会出故障，但总能出奇制胜。", tags: ["创新", "反骨", "聪明"] },
+            "ESTJ": { job: "帝国统帅", icon: "👑", desc: "高效的管理者。你天生就是做领导的料，能迅速组织起混乱的队伍，制定明确的计划并带领大家获胜。", tags: ["领导", "秩序", "果断"] },
+            "ESFJ": { job: "公会会长", icon: "🤝", desc: "热心的供给官。你关心每一个人，擅长协调关系。你确保每个人都有饭吃，是大家最信赖的大家长。", tags: ["热心", "周到", "合群"] },
+            "ENFJ": { job: "圣骑士团长", icon: "⚔️", desc: "魅力的领导者。你充满正义感，能通过演讲激励人心。大家追随你不仅仅是因为命令，更是因为信赖。", tags: ["魅力", "利他", "鼓舞"] },
+            "ENTJ": { job: "领主霸主", icon: "🏰", desc: "天生的指挥官。你霸气侧漏，目光长远。对于你来说，没有攻不下的城池，只有还没想好的策略。", tags: ["野心", "强势", "效率"] }
+        };
+
+        // --- 游戏逻辑 ---
+        let currentQ = 0;
+        let scores = { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 };
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function startGame() {
+            currentQ = 0;
+            scores = { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 };
+            renderQuestion();
+            showPage('p-quiz');
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQ];
+            document.getElementById('q-emoji').innerText = q.emoji;
+            document.getElementById('q-text').innerText = q.text;
+            document.getElementById('progress').style.width = ((currentQ / questions.length) * 100) + '%';
+            
+            const box = document.getElementById('options-box');
+            box.innerHTML = '';
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerText = opt.text;
+                btn.onclick = () => selectOption(opt.type);
+                box.appendChild(btn);
+            });
+        }
+
+        function selectOption(type) {
+            scores[type]++;
+            
+            // 稍微延迟一点翻页，增加点击感
+            setTimeout(() => {
+                currentQ++;
+                if (currentQ < questions.length) {
+                    renderQuestion();
+                } else {
+                    calculateResult();
+                }
+            }, 150);
+        }
+
+        function calculateResult() {
+            // 计算四个维度
+            const dim1 = scores.E >= scores.I ? 'E' : 'I';
+            const dim2 = scores.S >= scores.N ? 'S' : 'N';
+            const dim3 = scores.T >= scores.F ? 'T' : 'F';
+            const dim4 = scores.J >= scores.P ? 'J' : 'P';
+            
+            const mbti = dim1 + dim2 + dim3 + dim4;
+            showResult(mbti);
+        }
+
+        function showResult(mbti) {
+            const data = results[mbti];
+            
+            document.getElementById('res-icon').innerText = data.icon;
+            document.getElementById('res-code').innerText = mbti;
+            document.getElementById('res-job').innerText = data.job;
+            document.getElementById('res-text').innerText = data.desc;
+            
+            const tagBox = document.getElementById('res-tags');
+            tagBox.innerHTML = '';
+            data.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'tag';
+                span.innerText = "#" + tag;
+                tagBox.appendChild(span);
+            });
+
+            showPage('p-result');
+        }
+
+    </script>
+</body>
+</html>

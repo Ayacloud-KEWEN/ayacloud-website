@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lecteur Magique Pro 🌟</title>
+    <style>
+        :root {
+            --bg-paper: #fdfbf7;
+            --text-ink: #2c3e50;
+            --highlight: #fffacd; /* 正在朗读的句子高亮 */
+            --sentence-hover: #eef2f3; /* 鼠标/手指悬停句子颜色 */
+            --accent: #ff85a2;
+            --accent-blue: #4facfe;
+            --word-highlight: #ffeb3b; /* 查词时的高亮 */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- 顶部控制栏 --- */
+        .navbar {
+            width: 100%;
+            background: white;
+            padding: 10px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .nav-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 语言切换开关 */
+        .lang-switch {
+            display: flex;
+            background: #f0f0f0;
+            border-radius: 20px;
+            padding: 2px;
+            cursor: pointer;
+        }
+        .lang-opt {
+            padding: 5px 12px;
+            border-radius: 18px;
+            font-size: 1.2rem;
+            opacity: 0.5;
+            transition: 0.3s;
+        }
+        .lang-opt.active {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        /* 下拉选书 */
+        select#book-select {
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            max-width: 150px;
+        }
+
+        /* 导入按钮 */
+        .file-btn {
+            background: var(--accent-blue);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* --- 阅读区域 --- */
+        .reader-container {
+            flex: 1;
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--bg-paper);
+            overflow-y: auto;
+            padding: 40px 30px;
+            box-sizing: border-box;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #content-area {
+            font-family: 'Georgia', serif;
+            font-size: 1.5rem;
+            line-height: 1.8;
+            color: var(--text-ink);
+            text-align: justify;
+        }
+
+        /* 句子和单词样式 */
+        .sentence {
+            border-radius: 5px;
+            padding: 2px 0;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .sentence:hover {
+            background-color: var(--sentence-hover);
+        }
+        .sentence.reading {
+            background-color: var(--highlight);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .word {
+            display: inline-block;
+            border-radius: 3px;
+            padding: 0 1px;
+        }
+        .word:active {
+            background-color: var(--accent);
+            color: white;
+        }
+        .word.selected {
+            background-color: var(--word-highlight);
+            text-decoration: underline;
+        }
+
+        /* --- 底部播放栏 --- */
+        .controls {
+            width: 100%;
+            background: white;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            border-top: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        
+        .ctrl-btn {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            border: 2px solid #eee;
+            background: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .ctrl-btn:active { transform: scale(0.95); }
+
+        /* --- 单词弹窗 --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .word-card {
+            background: white;
+            width: 300px;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .wc-word { font-size: 2rem; font-weight: bold; color: var(--accent); margin-bottom: 10px; }
+        .wc-trans { font-size: 1.2rem; color: #555; margin-bottom: 20px; min-height: 1.5em;}
+
+        /* 隐藏的文件输入框 */
+        #file-input { display: none; }
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="nav-group">
+            <div class="lang-switch">
+                <div class="lang-opt active" id="lang-en" onclick="setLang('en')">🇬🇧 English</div>
+                <div class="lang-opt" id="lang-fr" onclick="setLang('fr')">🇫🇷 Français</div>
+            </div>
+        </div>
+
+        <div class="nav-group">
+            <select id="book-select" onchange="loadSelectedBook()">
+                <option value="story1">Little Red Riding Hood (EN)</option>
+                <option value="story2">The Three Little Pigs (EN)</option>
+                <option value="story_fr1">Le Petit Prince (Extrait) (FR)</option>
+            </select>
+            
+            <label for="file-input" class="file-btn">
+                📂 Ouvrir
+            </label>
+            <input type="file" id="file-input" accept=".txt" onchange="handleFileUpload(event)">
+        </div>
+    </div>
+
+    <div class="reader-container">
+        <div id="content-area"></div>
+    </div>
+
+    <div class="controls">
+        <button class="ctrl-btn" onclick="changeSpeed(0.8)">🐢</button>
+        <button class="ctrl-btn" onclick="playAll()" id="play-btn" style="border-color:var(--accent); color:var(--accent)">▶️</button>
+        <button class="ctrl-btn" onclick="changeSpeed(1.2)">🐇</button>
+    </div>
+
+    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+        <div class="word-card" onclick="event.stopPropagation()">
+            <div style="position:absolute; top:10px; right:15px; font-size:24px; color:#ccc; cursor:pointer" onclick="closeModal()">×</div>
+            <div class="wc-word" id="modal-word">Word</div>
+            <div class="wc-trans" id="modal-action">
+                </div>
+            <div style="display:flex; justify-content:center; gap:15px">
+                <button class="ctrl-btn" onclick="speakSelectedWord()" style="background:#f0f0f0">🔊</button>
+                <button class="ctrl-btn" onclick="openTranslation()" style="background:#e0f7fa">🌐 Traduction</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. 预置图书数据 ---
+        const library = {
+            story1: `Once upon a time, there was a little girl named Little Red Riding Hood. She loved her grandmother very much. One day, her mother said, "Here is a cake for grandmother. Do not stop in the forest." But the little girl met a big bad wolf.`,
+            story2: `Once upon a time, there were three little pigs. The first pig built a house of straw. The second pig built a house of sticks. The third pig built a house of bricks. The big bad wolf came and huffed and puffed.`,
+            story_fr1: `Lorsque j'avais six ans j'ai vu, une fois, une magnifique image, dans un livre sur la Forêt Vierge qui s'appelait "Histoires Vécues". Ça représentait un serpent boa qui avalait un fauve. Voilà la copie du dessin.`
+        };
+
+        // --- 2. 全局状态 ---
+        let currentLang = 'en'; // 'en' or 'fr'
+        let speechRate = 1.0;
+        let currentText = "";
+        let selectedWord = "";
+        let synth = window.speechSynthesis;
+        let currentUtterance = null;
+
+        // --- 3. 初始化 ---
+        window.onload = function() {
+            loadSelectedBook();
+        };
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+            document.getElementById('lang-fr').classList.toggle('active', lang === 'fr');
+            
+            // 停止朗读，因为语音包变了
+            stopSpeaking();
+        }
+
+        // --- 4. 图书加载与解析 ---
+        function loadSelectedBook() {
+            const key = document.getElementById('book-select').value;
+            // 自动判断语言
+            if(key.includes('fr')) setLang('fr');
+            else setLang('en');
+            
+            renderText(library[key]);
+        }
+
+        // 处理文件上传
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                // 简单猜测语言：如果有 "the" 可能是英文，有 "le/la" 可能是法文
+                // 这里不做复杂检测，默认保持当前，或者让用户自己切
+                renderText(text);
+                // 重置下拉框
+                document.getElementById('book-select').value = ""; 
+            };
+            reader.readAsText(file);
+        }
+
+        // 核心渲染逻辑：分段 -> 分句 -> 分词
+        function renderText(text) {
+            currentText = text;
+            stopSpeaking();
+            const container = document.getElementById('content-area');
+            container.innerHTML = '';
+
+            // 1. 分段 (按换行)
+            const paragraphs = text.split(/\n+/);
+
+            paragraphs.forEach(para => {
+                if(!para.trim()) return;
+                const pDiv = document.createElement('div');
+                pDiv.style.marginBottom = '20px';
+
+                // 2. 分句 (正则匹配 . ! ? 但保留符号)
+                // 这是一个比较复杂的正则，用于尽量准确切分句子
+                const sentences = para.match(/[^.!?]+[.!?]+["']?|[^.!?]+$/g);
+
+                if(sentences) {
+                    sentences.forEach(sentText => {
+                        const spanSent = document.createElement('span');
+                        spanSent.className = 'sentence';
+                        spanSent.onclick = (e) => playSentence(sentText, spanSent, e);
+                        
+                        // 3. 分词 (为了点击单词)
+                        // 将句子拆成 单词 和 非单词(标点空格)
+                        const tokens = sentText.split(/([a-zA-Zà-üÀ-Ü0-9]+)/g);
+                        
+                        tokens.forEach(token => {
+                            if(token.match(/[a-zA-Zà-üÀ-Ü0-9]+/)) {
+                                const spanWord = document.createElement('span');
+                                spanWord.className = 'word';
+                                spanWord.innerText = token;
+                                spanWord.onclick = (e) => handleWordClick(token, e);
+                                spanSent.appendChild(spanWord);
+                            } else {
+                                spanSent.appendChild(document.createTextNode(token));
+                            }
+                        });
+
+                        pDiv.appendChild(spanSent);
+                        // 加个空格防止句子粘连
+                        pDiv.appendChild(document.createTextNode(' ')); 
+                    });
+                }
+                container.appendChild(pDiv);
+            });
+        }
+
+        // --- 5. 交互功能 ---
+
+        // 点击单词
+        function handleWordClick(word, event) {
+            event.stopPropagation(); // 阻止冒泡，防止触发句读
+            stopSpeaking(); // 停止正在读的句子
+
+            selectedWord = word;
+            document.getElementById('modal-word').innerText = word;
+            
+            // 根据当前书的语言提示
+            const actionText = currentLang === 'en' 
+                ? "Mot anglais 🇬🇧" 
+                : "Mot français 🇫🇷";
+            document.getElementById('modal-action').innerText = actionText;
+
+            // 显示弹窗
+            document.getElementById('modal').style.display = 'flex';
+            
+            // 自动朗读单词
+            speakText(word, currentLang === 'en' ? 'en-US' : 'fr-FR');
+        }
+
+        function closeModal(e) {
+            if(e && e.target !== document.getElementById('modal') && e.target.innerText !== '×') return;
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // 朗读句子
+        function playSentence(text, element, event) {
+            // 视觉高亮
+            document.querySelectorAll('.sentence').forEach(el => el.classList.remove('reading'));
+            element.classList.add('reading');
+
+            speakText(text, currentLang === 'en' ? 'en-US' : 'fr-FR', () => {
+                element.classList.remove('reading');
+            });
+        }
+
+        // 全文朗读
+        function playAll() {
+            if(synth.speaking) {
+                stopSpeaking();
+                return;
+            }
+            document.getElementById('play-btn').innerText = "⏹️";
+            // 这里简单处理，直接读整段文本。
+            // 如果想实现句子逐个高亮，逻辑会复杂很多，考虑到孩子使用，
+            // 建议主要用“点读句子”功能，这里作为备用。
+            speakText(currentText, currentLang === 'en' ? 'en-US' : 'fr-FR', () => {
+                document.getElementById('play-btn').innerText = "▶️";
+            });
+        }
+
+        // --- 6. 语音合成核心 ---
+        function speakText(text, langCode, onEndCallback) {
+            stopSpeaking();
+            
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = langCode;
+            u.rate = speechRate;
+            
+            // 尝试获取更好的语音 (iOS Safari 通常会自动处理，但加上这步更保险)
+            // 注意：getVoices是异步的，但在iPad Safari上通常不需要等待
+            const voices = synth.getVoices();
+            // 优先找 Lang 匹配的 voice
+            const targetVoice = voices.find(v => v.lang.includes(langCode));
+            if(targetVoice) u.voice = targetVoice;
+
+            u.onend = function() {
+                if(onEndCallback) onEndCallback();
+            };
+
+            synth.speak(u);
+        }
+
+        function speakSelectedWord() {
+            speakText(selectedWord, currentLang === 'en' ? 'en-US' : 'fr-FR');
+        }
+
+        function stopSpeaking() {
+            synth.cancel();
+            document.querySelectorAll('.sentence').forEach(el => el.classList.remove('reading'));
+            document.getElementById('play-btn').innerText = "▶️";
+        }
+
+        function changeSpeed(rate) {
+            speechRate = rate;
+            // 简单的反馈动画
+            event.target.style.transform = "scale(1.2)";
+            setTimeout(() => event.target.style.transform = "scale(1)", 200);
+        }
+
+        // --- 7. 翻译跳转 ---
+        function openTranslation() {
+            // 动态生成 Google 翻译链接
+            let src = currentLang;
+            let target = currentLang === 'en' ? 'fr' : 'en'; // 如果是英文书译成法文，法文书译成英文
+            const url = `https://translate.google.com/?sl=${src}&tl=${target}&text=${encodeURIComponent(selectedWord)}&op=translate`;
+            window.open(url, '_blank');
+        }
+
+    </script>
+</body>
+</html>

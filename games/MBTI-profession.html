@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>职场潜能测评</title>
+    <style>
+        :root {
+            --primary: #2563eb; /* 商务蓝 */
+            --secondary: #eff6ff; /* 浅蓝背景 */
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --accent: #0f172a;
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f1f5f9;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-dark);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            height: 100%;
+            max-height: 900px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 500px) {
+            .app-container {
+                height: 90vh;
+                border-radius: 20px;
+                box-shadow: var(--card-shadow);
+            }
+        }
+
+        /* 页面通用样式 */
+        .page {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(20px);
+            background: white;
+        }
+
+        .page.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        /* 1. 欢迎页 */
+        .welcome-page {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+        }
+        .logo-icon { font-size: 60px; margin-bottom: 20px; }
+        .welcome-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
+        .welcome-subtitle { font-size: 16px; color: #94a3b8; line-height: 1.6; margin-bottom: 40px; max-width: 300px;}
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.96); }
+        .btn-outline { background: transparent; border: 2px solid #cbd5e1; color: #64748b; margin-top: 15px; }
+
+        /* 2. 答题页 */
+        .quiz-header {
+            margin-bottom: 30px;
+        }
+        .progress-track {
+            width: 100%; height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%; background: var(--primary); width: 0%; transition: width 0.3s ease;
+        }
+        .question-counter {
+            font-size: 12px; color: var(--text-light); margin-top: 8px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+        }
+        
+        .question-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .scenario-tag {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            align-self: flex-start;
+        }
+        .question-text {
+            font-size: 22px; font-weight: 700; line-height: 1.4; margin-bottom: 40px;
+        }
+        
+        .option-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .option-btn:hover { border-color: var(--primary); }
+        .option-btn:active { background: var(--secondary); border-color: var(--primary); transform: scale(0.98); }
+        .option-btn span { font-size: 16px; color: var(--text-dark); font-weight: 500; }
+
+        /* 3. 加载页 */
+        .loading-page {
+            justify-content: center;
+            align-items: center;
+            background: white;
+        }
+        .loader {
+            width: 50px; height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        .loading-text { color: var(--text-light); font-size: 14px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* 4. 结果页 */
+        .result-page {
+            background: #f8fafc;
+            padding: 0;
+            overflow-y: auto;
+        }
+        .result-header {
+            background: white;
+            padding: 40px 30px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .mbti-code {
+            font-size: 48px; font-weight: 900; color: var(--primary); letter-spacing: 2px; margin: 10px 0;
+        }
+        .role-title {
+            font-size: 20px; font-weight: 600; color: var(--text-dark); margin-bottom: 5px;
+        }
+        .role-tagline {
+            font-size: 14px; color: var(--text-light);
+        }
+
+        .result-content { padding: 30px; }
+        .analysis-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .card-title {
+            font-size: 14px; font-weight: 700; color: var(--text-light); text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;
+        }
+        .tag-container { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag { padding: 6px 12px; border-radius: 6px; font-size: 13px; background: #f1f5f9; color: var(--text-dark); }
+        
+        .highlight-list { list-style: none; padding: 0; margin: 0; }
+        .highlight-list li {
+            position: relative; padding-left: 20px; margin-bottom: 10px; font-size: 14px; color: #334155; line-height: 1.6;
+        }
+        .highlight-list li::before {
+            content: "•"; color: var(--primary); font-weight: bold; position: absolute; left: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <div class="page welcome-page active" id="p-welcome">
+            <div class="logo-icon">💼</div>
+            <h1 class="welcome-title">职业性格雷达</h1>
+            <p class="welcome-subtitle">基于 MBTI 理论的职场风格测评。<br>12道情景题，定位你的职场优势、沟通偏好及最适合的岗位。</p>
+            <button class="btn" onclick="startQuiz()">开始测评</button>
+            <div style="font-size: 12px; color: #64748b; margin-top: 20px; opacity: 0.6;">预计耗时: 2 分钟</div>
+        </div>
+
+        <div class="page quiz-page" id="p-quiz">
+            <div class="quiz-header">
+                <div class="question-counter">Question <span id="q-current">1</span> / 12</div>
+                <div class="progress-track">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+            </div>
+            
+            <div class="question-card">
+                <div class="scenario-tag" id="q-tag">会议场景</div>
+                <div class="question-text" id="q-text">加载中...</div>
+                <div id="options-container"></div>
+            </div>
+        </div>
+
+        <div class="page loading-page" id="p-loading">
+            <div class="loader"></div>
+            <div class="loading-text">正在构建您的职业画像...</div>
+        </div>
+
+        <div class="page result-page" id="p-result">
+            <div class="result-header">
+                <div style="font-size: 40px;">🎯</div>
+                <div class="mbti-code" id="res-code">ESTJ</div>
+                <div class="role-title" id="res-role">高管型·执行官</div>
+                <div class="role-tagline" id="res-desc">效率至上的行动派，天生的领导者</div>
+            </div>
+
+            <div class="result-content">
+                
+                <div class="analysis-card">
+                    <div class="card-title">✨ 核心优势 (Core Strengths)</div>
+                    <ul class="highlight-list" id="res-strengths"></ul>
+                </div>
+
+                <div class="analysis-card">
+                    <div class="card-title">💬 面试官眼中的你</div>
+                    <div style="font-size: 14px; color: #334155; line-height: 1.6; font-style: italic;" id="res-impression"></div>
+                </div>
+
+                <div class="analysis-card">
+                    <div class="card-title">🚀 推荐岗位</div>
+                    <div class="tag-container" id="res-jobs"></div>
+                </div>
+
+                <button class="btn" style="width: 100%;" onclick="location.reload()">重新测评</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 职场版 MBTI 题库 (12题，每维度3题)
+        const questions = [
+            // E/I
+            {
+                tag: "团队协作",
+                text: "遇到棘手的工作难题时，你更倾向于？",
+                options: [
+                    { text: "拉上同事开个短会，头脑风暴讨论解决。", type: "E" },
+                    { text: "戴上耳机，自己查资料、梳理逻辑，独立解决。", type: "I" }
+                ]
+            },
+            {
+                tag: "办公环境",
+                text: "哪种办公环境让你效率更高？",
+                options: [
+                    { text: "开放式工位，随时能和周围人交流。", type: "E" },
+                    { text: "安静的独立空间，没人打扰。", type: "I" }
+                ]
+            },
+            {
+                tag: "会议发言",
+                text: "在大型部门会议上，通常情况下你会？",
+                options: [
+                    { text: "积极发言，经常是打破冷场的那个人。", type: "E" },
+                    { text: "多听少说，深思熟虑后才发表关键意见。", type: "I" }
+                ]
+            },
+            // S/N
+            {
+                tag: "项目执行",
+                text: "老板交给你一个新项目，你更关心？",
+                options: [
+                    { text: "具体的执行步骤、预算、时间表和过往案例。", type: "S" },
+                    { text: "项目的核心价值、未来愿景和创新空间。", type: "N" }
+                ]
+            },
+            {
+                tag: "工作风格",
+                text: "你更擅长处理哪类工作？",
+                options: [
+                    { text: "需要细心、严谨、处理大量细节和数据的工作。", type: "S" },
+                    { text: "需要宏观把控、战略规划和创意构思的工作。", type: "N" }
+                ]
+            },
+            {
+                tag: "方案汇报",
+                text: "在做PPT汇报时，你更倾向于？",
+                options: [
+                    { text: "列出详实的数据图表和事实依据。", type: "S" },
+                    { text: "讲述引人入胜的概念和未来蓝图。", type: "N" }
+                ]
+            },
+            // T/F
+            {
+                tag: "决策时刻",
+                text: "作为Team Leader，需要辞退一名业绩不达标但很努力的员工，你会？",
+                options: [
+                    { text: "虽然难过，但为了团队绩效，必须按规则执行。", type: "T" },
+                    { text: "非常纠结，试图为他争取最后的机会或转岗。", type: "F" }
+                ]
+            },
+            {
+                tag: "同事评价",
+                text: "你希望同事们如何评价你？",
+                options: [
+                    { text: "专业、高效、逻辑性强。", type: "T" },
+                    { text: "友善、体贴、好相处。", type: "F" }
+                ]
+            },
+            {
+                tag: "意见冲突",
+                text: "与同事发生观点分歧时，你会？",
+                options: [
+                    { text: "据理力争，对事不对人，只看谁的逻辑对。", type: "T" },
+                    { text: "顾及对方感受，寻找折中的、不伤和气的方法。", type: "F" }
+                ]
+            },
+            // J/P
+            {
+                tag: "时间管理",
+                text: "面对截止日期（Deadline），你的状态通常是？",
+                options: [
+                    { text: "提前规划，按部就班，甚至提前完成。", type: "J" },
+                    { text: "不到最后时刻不动手，压力越大灵感越多。", type: "P" }
+                ]
+            },
+            {
+                tag: "计划变更",
+                text: "原本计划好的工作流程被突发事件打断，你会？",
+                options: [
+                    { text: "感到焦虑烦躁，希望能尽快回到计划轨道。", type: "J" },
+                    { text: "觉得无所谓，灵活调整，享受解决突发状况。", type: "P" }
+                ]
+            },
+            {
+                tag: "桌面整理",
+                text: "看一眼你的电脑桌面或办公桌？",
+                options: [
+                    { text: "文件分类归档，井井有条。", type: "J" },
+                    { text: "比较随性，文件铺开，但我知道东西在哪。", type: "P" }
+                ]
+            }
+        ];
+
+        // 职场结果库
+        const resultsData = {
+            "ISTJ": { title: "物流师", subtitle: "严谨可靠的基石", impression: "极度靠谱，注重细节，遵守规则。不喜欢画大饼，只看重结果和执行力。", strengths: ["极强的责任心", "逻辑清晰", "能够在大压力下保持专注"], jobs: ["财务审计", "后端开发", "合规专员", "行政管理"] },
+            "ISFJ": { title: "守护者", subtitle: "温暖细致的协作者", impression: "非常有耐心，服务意识强。是团队里的粘合剂，默默承担了很多琐碎工作。", strengths: ["优秀的协作能力", "关注细节", "忠诚且勤奋"], jobs: ["人力资源", "客户服务", "护士/医生", "行政助理"] },
+            "INFJ": { title: "咨询师", subtitle: "洞察人心的参谋", impression: "话不多但很有深度，能一眼看透问题的本质。非常适合做需要深层思考的工作。", strengths: ["深刻的洞察力", "坚定的信念", "能够激励他人"], jobs: ["心理咨询", "用户研究", "企业文化建设", "编辑/作家"] },
+            "INTJ": { title: "战略家", subtitle: "追求完美的策划者", impression: "气场强大，思维缜密。像是在下一盘大棋，对平庸的方案零容忍。", strengths: ["长远战略眼光", "独立思考", "高标准的执行力"], jobs: ["战略咨询", "系统架构师", "投资分析", "产品总监"] },
+            "ISTP": { title: "巧匠", subtitle: "冷静的技术大拿", impression: "人狠话不多，遇到技术难题找他准没错。不喜欢开无意义的会，只想解决问题。", strengths: ["极强的动手能力", "危机处理", "理性客观"], jobs: ["工程师", "数据分析", "特警/飞行员", "技术支持"] },
+            "ISFP": { title: "探险家", subtitle: "灵活敏锐的创作者", impression: "审美在线，随和低调。不喜欢条条框框的束缚，需要自由空间来发挥才华。", strengths: ["敏锐的审美", "适应力强", "打破常规"], jobs: ["UI/UX设计", "插画师", "时尚买手", "自由职业"] },
+            "INFP": { title: "哲学家", subtitle: "理想主义的创意源", impression: "外柔内刚，脑洞很大。对喜欢的事情极度投入，需要工作的意义感。", strengths: ["丰富的想象力", "真诚的同理心", "极具创意"], jobs: ["内容创作", "公益组织", "艺术设计", "人力资源(OD)"] },
+            "INTP": { title: "逻辑学家", subtitle: "好奇的解题专家", impression: "脑子转得飞快，总能提出刁钻的角度。比起落地执行，更喜欢研究理论模型。", strengths: ["抽象思维", "客观分析", "创新解决方案"], jobs: ["算法工程师", "科学研究", "金融分析", "大学教授"] },
+            "ESTP": { title: "企业家", subtitle: "风险与机遇的捕手", impression: "精力旺盛，自来熟。天生的销售奇才，哪里有挑战哪里就有他的身影。", strengths: ["大胆果断", "极强的说服力", "敏锐的观察力"], jobs: ["市场销售", "公关媒介", "创业者", "危机公关"] },
+            "ESFP": { title: "表演者", subtitle: "团队的气氛组", impression: "社牛属性，充满感染力。有他在的团队绝对不会冷场，非常擅长调动资源。", strengths: ["出色的人际交往", "乐观抗压", "表现力强"], jobs: ["活动策划", "培训师", "销售代表", "直播主播"] },
+            "ENFP": { title: "追梦人", subtitle: "充满激情的连接者", impression: "热情洋溢，点子王。虽然有时候显得没长性，但总能带来全新的视角。", strengths: ["极佳的沟通力", "创新思维", "激励团队"], jobs: ["市场营销", "创意总监", "记者", "产品经理"] },
+            "ENTP": { title: "辩论家", subtitle: "打破常规的革新者", impression: "聪明绝顶但有点反骨。喜欢挑战权威，总在寻找更优解（或捷径）。", strengths: ["快速学习", "头脑风暴", "战略分析"], jobs: ["创业合伙人", "律师", "管理咨询", "风险投资"] },
+            "ESTJ": { title: "执行官", subtitle: "高效铁腕的管理者", impression: "雷厉风行，结果导向。如果是老板，会是那种要求严格但能带队打胜仗的人。", strengths: ["卓越的组织力", "直接高效", "意志坚定"], jobs: ["项目经理", "高管/CEO", "军官", "财务总监"] },
+            "ESFJ": { title: "执政官", subtitle: "热心的供给部长", impression: "非常周到，记得每个人的生日。擅长协调各方利益，确保项目平稳落地。", strengths: ["强大的执行力", "团队忠诚度", "乐于助人"], jobs: ["行政总监", "大客户销售", "教务管理", "公关经理"] },
+            "ENFJ": { title: "主人公", subtitle: "魅力十足的导师", impression: "天生的领袖气质，说话很有煽动性。非常关注员工成长，大家愿意追随他。", strengths: ["极强的领导力", "同理心", "出色的演讲"], jobs: ["人力资源总监", "非盈利组织", "政客", "培训教练"] },
+            "ENTJ": { title: "指挥官", subtitle: "天生的统帅", impression: "霸气侧漏，控制欲强。为了达成目标可以排除万难，效率机器。", strengths: ["宏观战略", "果断决策", "极度自信"], jobs: ["CEO/创始人", "管理顾问", "律师", "投资银行家"] }
+        };
+
+        // 逻辑处理
+        let currentQ = 0;
+        let scores = { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 };
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function startQuiz() {
+            currentQ = 0;
+            scores = { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 };
+            renderQuestion();
+            showPage('p-quiz');
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQ];
+            document.getElementById('q-current').innerText = currentQ + 1;
+            document.getElementById('q-tag').innerText = q.tag;
+            document.getElementById('q-text').innerText = q.text;
+            
+            // 更新进度条
+            const pct = ((currentQ) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = pct + '%';
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span>${opt.text}</span>`;
+                btn.onclick = () => handleOptionClick(opt.type);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleOptionClick(type) {
+            scores[type]++;
+            currentQ++;
+            
+            if (currentQ < questions.length) {
+                renderQuestion();
+            } else {
+                document.getElementById('progress-bar').style.width = '100%';
+                showPage('p-loading');
+                setTimeout(calculateAndShowResult, 1500); // 假装分析1.5秒
+            }
+        }
+
+        function calculateAndShowResult() {
+            const mbti = [
+                scores.E >= scores.I ? 'E' : 'I',
+                scores.S >= scores.N ? 'S' : 'N',
+                scores.T >= scores.F ? 'T' : 'F',
+                scores.J >= scores.P ? 'J' : 'P'
+            ].join('');
+
+            const data = resultsData[mbti];
+            
+            document.getElementById('res-code').innerText = mbti;
+            document.getElementById('res-role').innerText = data.title;
+            document.getElementById('res-desc').innerText = data.subtitle;
+            document.getElementById('res-impression').innerText = `“${data.impression}”`;
+
+            // 渲染优势列表
+            const strengthList = document.getElementById('res-strengths');
+            strengthList.innerHTML = '';
+            data.strengths.forEach(s => {
+                const li = document.createElement('li');
+                li.innerText = s;
+                strengthList.appendChild(li);
+            });
+
+            // 渲染职位标签
+            const jobBox = document.getElementById('res-jobs');
+            jobBox.innerHTML = '';
+            data.jobs.forEach(j => {
+                const span = document.createElement('span');
+                span.className = 'tag';
+                span.innerText = j;
+                jobBox.appendChild(span);
+            });
+
+            showPage('p-result');
+        }
+
+    </script>
+</body>
+</html>
