@@ -28,8 +28,9 @@
   <script>
 
     document.addEventListener('touchstart', function () {
-      if (typeof Module !== 'undefined' && Module.audioContext) {
-        Module.audioContext.resume();
+      var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
       }
     }, { once: true });
 
@@ -97,20 +98,27 @@
     // expected to change.
 
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-      // Mobile device style: fill the whole browser client area with the game canvas:
-
+      // 移动设备：全屏显示
       var meta = document.createElement('meta');
       meta.name = 'viewport';
       meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
       document.getElementsByTagName('head')[0].appendChild(meta);
+
+      // 全屏样式
       document.querySelector("#unity-container").className = "unity-mobile";
       canvas.className = "unity-mobile";
 
-      // To lower canvas resolution on mobile devices to gain some
-      // performance, uncomment the following line:
-      // config.devicePixelRatio = 1;
+      // 强制全屏显示
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
+      canvas.style.position = "fixed";
+      canvas.style.top = "0";
+      canvas.style.left = "0";
 
-
+      // 隐藏滚动条
+      document.body.style.margin = "0";
+      document.body.style.padding = "0";
+      document.body.style.overflow = "hidden";
     } else {
       // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
       canvas.style.width = "960px";
