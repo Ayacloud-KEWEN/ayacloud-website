@@ -1,8 +1,40 @@
 {
-    "english_TheMagicPorridgePot": {
+  "english_story-01": {
+    "title": "My Day at the Beach",
+    "language": "en-GB",
+    "content": "My Day at the Beach. Have you ever been to the beach? I've been there many times! I always have a great time with my friends. We throw the ball. We swim in the ocean and look for shells. We jump through huge waves! Do you like to jump through waves, too? Sometimes we have a picnic. We have sandwiches and drinks. I always make a castle in the sand. When we are ready to go home, we put on our sandals."
+  },
+    "english_story-02": {
+    "title": "A Visit to the Zoo",
+    "language": "en-GB",
+    "content": "A Visit to the Zoo. Have you ever been to the Smithsonian's National Zoo? Men, women, and children can visit almost every day of the year. It opens at 8:00 in the morning. It closes at 5:00 al night. It is free to visit. There are many animals to see, such as lions, geese, mice, and sheep. People love it when the lions show their sharp teeth! The zoo even has cheetahs. You can spend many hours looking at all the animals at the zoo. And if you get hungry while you are there, you can go to a restaurant. The restaurants open at 10:00 in the morning. The Smithsonian's National Zoo is fun. You should definitely visit this zoo if you like lions and other animals."
+  },
+      "english_story-03": {
+    "title": "A Day with My Family ",
+    "language": "en-GB",
+    "content": "A Day with My Family. Everyone in my family is different. My older brother is tall and has brown hair. My sister is short and has blond hair. She can't do some of the things I can do because she's little. I help her reach things that are high up. My mom has red hair, and my dad has black hair. My sister doesn't like sports like my brother and I do. They like to help Mom write fun stories. But there's one thing we all like. On Saturdays, you'll find us watching movies together!"
+  },
+        "english_story-04": {
+    "title": "See You at the Park!",
+    "language": "en-GB",
+    "content": "See You at the Park! Dear Ivan, What do you like to do at the park? I play on the ladders and the slides. I like the swings, too. I climb high and slide down all the slides. I am a fast climber. I also run on the soccer field. My dog is fun to play with at the park, too. Maybe you and 1 can go to the park together soon! From, Danica"
+  },
+          "english_story-05": {
+    "title": "All About Astronauts",
+    "language": "en-GB",
+    "content": "All About Astronauts. Sally Ride and Neil Armstrong are astronauts who went into space. They both did important things! Sally was the first woman in space. She was very brave. Neil was the first astronaut to walk on the moon. He wore a special suit. He placed a flag on the moon. It is still there. Part of an astronaut's job is to take pictures in space. There are pictures of Neil's steps on the moon. We learn a lot about space from astronauts' pictures. Astronauts help us learn more about the moon's size. Astronauts work very hard!"
+  },
+            "english_story-06": {
+    "title": "All About ",
+    "language": "en-GB",
+    "content": ""
+  },
+  
+  
+  "english_TheMagicPorridgePot": {
     "title": "The Magic Porridge Pot (English)",
     "language": "en-GB",
-    "content": "The Magic Porridge Pot. One day, a little girl meets an old woman. The old woman gives her a magic porridge pot. Cook, little pot, cook, says the old woman. And the little pot cooks some porridge. Stop, little pot, stop, says the old woman. And the little pot stops cooking. The little girl takes the magic porridge pot to her mother. Cook, little pot, cook, says the little girl's mothe And the little pot cooks some porridge. Now, there is lots of porridge in the kitchen. But the magic porridge pot cooks and cooks. Now, there is lots of porridge in the house. But the magic porridge pot cooks and cooks. Now, there is lots of porridge in the street. But the magic porridge pot cooks and cooks. Now, there is lots of porridge in the town. But the magic porridge pot cooks and cooks. Stop, little pot, stop, says the little girl. And the magic porridge pot stops cooking. But now the people are eating too much porridge!"
+    "content": "The Magic Porridge Pot. One day, a little girl meets an old woman. The old woman gives her a magic porridge pot. Cook, little pot, cook, says the old woman. And the little pot cooks some porridge. Stop, little pot, stop, says the old woman. And the little pot stops cooking. The little girl takes the magic porridge pot to her mother. Cook, little pot, cook, says the little girl's mother And the little pot cooks some porridge. Now, there is lots of porridge in the kitchen. But the magic porridge pot cooks and cooks. Now, there is lots of porridge in the house. But the magic porridge pot cooks and cooks. Now, there is lots of porridge in the street. But the magic porridge pot cooks and cooks. Now, there is lots of porridge in the town. But the magic porridge pot cooks and cooks. Stop, little pot, stop, says the little girl. And the magic porridge pot stops cooking. But now the people are eating too much porridge!"
   },
   "english_goldilocks": {
     "title": "Goldilocks and the Three Bears (English)",
