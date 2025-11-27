@@ -1,4 +1,4 @@
-const cacheName = "DefaultCompany-My Expo-0.1.0";
+const cacheName = "Aya Cloud-Mars Expedition-0.1.0";
 const contentToCache = [
     "Build/webplay.loader.js",
     "Build/webplay.framework.js.unityweb",
