@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Cyberpunk Countdown</title>
+    <style>
+        /* 引入科技感等宽字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+
+        :root {
+            --primary-color: #ffffff;
+            --accent-color: #ff3333; /* 红色点缀 */
+            --glitch-color-1: #00ffff; /* 青色故障 */
+            --glitch-color-2: #ff00ff; /* 洋红色故障 */
+            --bg-color: #020202;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: var(--primary-color);
+        }
+
+        /* --- 背景纹理层 --- */
+        /* 1. 噪点纹理 */
+        .bg-noise {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJnoiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjc1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2cpIiBvcGFjaXR5PSIwLjA4Ii8+PC9zdmc+');
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.4;
+        }
+        /* 2. 扫描线纹理 */
+        .bg-scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 2px,
+                rgba(0, 0, 0, 0.3) 3px,
+                rgba(0, 0, 0, 0.3) 4px
+            );
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* --- 核心容器 --- */
+        .countdown-container {
+            position: relative;
+            padding: 40px 60px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+            z-index: 10;
+            /* 应用微弱的随机故障动画到整个容器 */
+            animation: containerGlitch 5s infinite linear alternate-reverse;
+        }
+
+        /* --- 红色边框角标 --- */
+        /* 使用伪元素制作左上角的红色L型 */
+        .countdown-container::before,
+        .countdown-container::after {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px;
+            background: var(--accent-color);
+            box-shadow: 0 0 15px var(--accent-color);
+            z-index: 11;
+        }
+        .countdown-container::before {
+            width: 2px; height: 60px;
+        }
+        .countdown-container::after {
+            width: 60px; height: 2px;
+        }
+
+        /* --- 文本样式 --- */
+        .title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        /* 核心数字样式 */
+        .timer-display {
+            font-family: 'Share Tech Mono', monospace; /* 使用等宽字体 */
+            font-size: 110px;
+            line-height: 1;
+            letter-spacing: 2px;
+            position: relative;
+            /* 基础发光 */
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            /* 应用强烈的文字故障动画 */
+            animation: textGlitch 3s infinite linear alternate-reverse;
+        }
+        
+        /* 分隔符闪烁 */
+        .separator {
+            animation: blink 1s infinite;
+        }
+
+        .labels {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            margin-top: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: #555;
+            text-transform: uppercase;
+        }
+
+        /* --- 底部呼吸光效 --- */
+        .bottom-glow-atmosphere {
+            position: absolute;
+            bottom: -180px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150vw;
+            height: 500px;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 30%, rgba(0,0,0,0) 70%);
+            z-index: 3;
+            pointer-events: none;
+            mix-blend-mode: screen;
+            /* 添加呼吸动画 */
+            animation: glowPulse 4s ease-in-out infinite alternate;
+        }
+
+        /* ================= 动画 Keyframes 定义 ================= */
+
+        /* 1. 底部光效呼吸 */
+        @keyframes glowPulse {
+            0% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+            100% { opacity: 1.0; transform: translateX(-50%) scale(1.05); }
+        }
+
+        /* 2. 分隔符闪烁 */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* 3. 文字强烈故障 (色散+错位) */
+        /* 这个动画大部分时间什么都不做，只在特定帧突然抽搐 */
+        @keyframes textGlitch {
+            0%, 80%, 100% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+                transform: skewX(0deg);
+            }
+            81% {
+                /* 红青色散，轻微位移 */
+                text-shadow: -3px 0 var(--accent-color), 3px 0 var(--glitch-color-1);
+                transform: skewX(10deg) translateX(-5px);
+            }
+            82% {
+                text-shadow: 3px 0 var(--accent-color), -3px 0 var(--glitch-color-1);
+                transform: skewX(-10deg) translateX(5px);
+            }
+            83% {
+                 text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+                 transform: skewX(0deg);
+            }
+            90% {
+                 text-shadow: -2px 2px var(--glitch-color-2), 2px -2px var(--glitch-color-1);
+            }
+            91% {
+                 text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            }
+        }
+
+        /* 4. 容器轻微故障 (整体震动) */
+        @keyframes containerGlitch {
+            0%, 95%, 100% { transform: translate(0,0); filter: brightness(1); }
+            96% { transform: translate(-2px, 1px); filter: brightness(1.2); }
+            97% { transform: translate(2px, -1px); border-color: var(--accent-color); }
+            98% { transform: translate(0,0); filter: brightness(1); border-color: rgba(255, 255, 255, 0.15);}
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-noise"></div>
+    <div class="bg-scanlines"></div>
+
+    <div class="countdown-container">
+        <div class="title">Livestream Countdown</div>
+        
+        <div class="timer-display">
+            <span id="minutes">04</span><span class="separator">:</span><span id="seconds">13</span>
+        </div>
+        
+        <div class="labels">
+            <span>Minutes</span>
+            <span>Seconds</span>
+        </div>
+    </div>
+
+    <div class="bottom-glow-atmosphere"></div>
+
+    <script>
+        // 目标时间：当前时间加上 4分钟13秒
+        // 在实际项目中，这里应该是一个固定的未来时间戳
+        const targetDate = new Date().getTime() + (4 * 60 * 1000 + 14 * 1000);
+
+        const minutesSpan = document.getElementById('minutes');
+        const secondsSpan = document.getElementById('seconds');
+
+        // 补零函数，保证两位数字 (e.g., 9 -> 09)
+        function padZero(num) {
+            return num < 10 ? '0' + num : num;
+        }
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                clearInterval(interval);
+                minutesSpan.innerText = "00";
+                secondsSpan.innerText = "00";
+                // 倒计时结束可以触发其他事件
+                document.querySelector('.timer-display').style.color = "#ff3333"; // 结束后变红
+                return;
+            }
+
+            // 计算分和秒
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // 更新 DOM
+            minutesSpan.innerText = padZero(minutes);
+            secondsSpan.innerText = padZero(seconds);
+        }
+
+        // 立即执行一次，避免 1秒延迟
+        updateTimer();
+        // 每秒更新一次
+        const interval = setInterval(updateTimer, 1000);
+
+    </script>
+</body>
+</html>
