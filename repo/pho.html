@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pho Bamboo - Commande en ligne</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bamboo-primary: #2d5a27;
+            --bamboo-secondary: #4a7c59;
+            --bamboo-light: #8a9a5b;
+            --bamboo-accent: #c9d4a2;
+        }
+        
+        .bamboo-bg {
+            background-color: var(--bamboo-primary) !important;
+        }
+        
+        .bamboo-gradient {
+            background: linear-gradient(135deg, var(--bamboo-primary) 0%, var(--bamboo-secondary) 100%);
+        }
+        
+        .bamboo-light-bg {
+            background-color: var(--bamboo-accent);
+        }
+        
+        .bamboo-text {
+            color: var(--bamboo-primary);
+        }
+        
+        .bamboo-border {
+            border-color: var(--bamboo-light);
+        }
+        
+        .category-active {
+            background-color: var(--bamboo-primary) !important;
+            color: white !important;
+        }
+        
+        .category-inactive {
+            background-color: #f3f4f6 !important;
+            color: #4b5563 !important;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .category-inactive-mobile {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .menu-item {
+                padding: 1rem;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .cart-sidebar {
+                width: 100% !important;
+            }
+            
+            .btn-mobile {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .text-mobile {
+                font-size: 0.875rem;
+            }
+            
+            .h-mobile {
+                height: 40px;
+            }
+        }
+        
+        /* 触摸优化 */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* 滚动优化 */
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        
+        /* 竹纹背景 */
+        .bamboo-pattern {
+            background-image: 
+                linear-gradient(90deg, transparent 79px, #abcea1 79px, #abcea1 81px, transparent 81px),
+                linear-gradient(#eee .1em, transparent .1em);
+            background-size: 100% 1.2em;
+            background-color: #f9f7f0;
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        /* 隐藏滚动条但保持滚动 */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800" style="touch-action: manipulation;">
+    <!-- 顶部导航栏 - 移动端优化 -->
+    <nav class="bamboo-gradient text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo和店名 -->
+                <div class="flex items-center space-x-2">
+                    <div class="flex flex-col items-center">
+                        <i class="fas fa-leaf text-xl"></i>
+                        <div class="w-6 h-1 bg-white rounded-full mt-1"></div>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">Pho Bamboo</h1>
+                        <p class="text-xs opacity-80">PUTEAUX-LA DÉFENSE</p>
+                    </div>
+                </div>
+                
+                <!-- 移动端操作按钮 -->
+                <div class="flex items-center space-x-3">
+                    <!-- 桌号显示 -->
+                    <div class="hidden sm:flex items-center space-x-1 bg-white/20 px-2 py-1 rounded-lg text-sm">
+                        <i class="fas fa-table text-xs"></i>
+                        <span id="table-number" class="font-medium">12</span>
+                    </div>
+                    
+                    <!-- 购物车按钮 -->
+                    <button onclick="toggleCart()" class="relative touch-target">
+                        <div class="flex items-center bg-white/20 px-3 py-2 rounded-lg">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span id="cart-count" class="ml-2 font-bold">0</span>
+                        </div>
+                        <div id="cart-indicator" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
+                            <span id="cart-indicator-count">!</span>
+                        </div>
+                    </button>
+                    
+                    <!-- 菜单按钮 (移动端) -->
+                    <button onclick="toggleMenuCategories()" class="sm:hidden touch-target w-10 h-10 flex items-center justify-center">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 移动端分类菜单 -->
+            <div id="mobile-categories" class="sm:hidden py-3 border-t border-white/20 hidden">
+                <div class="flex overflow-x-auto scrollbar-hide space-x-2 pb-2">
+                    <button onclick="filterCategory('all')" 
+                            data-category="all" 
+                            class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">
+                        Tout
+                    </button>
+                    <button onclick="filterCategory('pho')" 
+                            data-category="pho" 
+                            class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">
+                        Pho
+                    </button>
+                    <button onclick="filterCategory('entrees')" 
+                            data-category="entrees" 
+                            class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">
+                        Entrées
+                    </button>
+                    <button onclick="filterCategory('boissons')" 
+                            data-category="boissons" 
+                            class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">
+                        Boissons
+                    </button>
+                    <button onclick="filterCategory('desserts')" 
+                            data-category="desserts" 
+                            class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">
+                        Desserts
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-4 pb-24">
+        <!-- 欢迎区域 -->
+        <div class="mb-6">
+            <div class="bg-white rounded-2xl shadow-sm p-5 bamboo-pattern">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold bamboo-text mb-1">Bienvenue chez Pho Bamboo</h2>
+                        <p class="text-gray-600 text-mobile">Commande en ligne • Livraison gratuite à partir de 25€</p>
+                    </div>
+                    <!-- 积分显示 -->
+                    <div class="bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2 shadow">
+                        <div class="flex items-center">
+                            <i class="fas fa-coins text-yellow-500 mr-2"></i>
+                            <div>
+                                <p class="text-xs text-gray-500">Vos points</p>
+                                <p class="font-bold bamboo-text" id="user-points">250</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 桌面端分类导航 -->
+                <div class="hidden sm:flex space-x-2 mt-6">
+                    <button onclick="filterCategory('all')" 
+                            data-category="all" 
+                            class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">
+                        Tout voir
+                    </button>
+                    <button onclick="filterCategory('pho')" 
+                            data-category="pho" 
+                            class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">
+                        Pho Spécialités
+                    </button>
+                    <button onclick="filterCategory('entrees')" 
+                            data-category="entrees" 
+                            class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">
+                        Entrées
+                    </button>
+                    <button onclick="filterCategory('boissons')" 
+                            data-category="boissons" 
+                            class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">
+                        Boissons
+                    </button>
+                    <button onclick="filterCategory('desserts')" 
+                            data-category="desserts" 
+                            class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">
+                        Desserts
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 菜单网格 -->
+        <div id="menu-grid" class="menu-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- 菜品将通过JavaScript动态加载 -->
+        </div>
+
+        <!-- 快速导航浮窗 -->
+        <div class="fixed bottom-20 right-4 z-30">
+            <div class="flex flex-col space-y-2">
+                <button onclick="scrollToTop()" class="touch-target w-12 h-12 rounded-full bamboo-gradient text-white shadow-lg flex items-center justify-center">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+                <button onclick="showQRInfo()" class="touch-target w-12 h-12 rounded-full bg-white bamboo-border border text-gray-700 shadow-lg flex items-center justify-center">
+                    <i class="fas fa-qrcode"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部导航栏 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40">
+        <div class="container mx-auto">
+            <div class="flex justify-around items-center h-16">
+                <button onclick="filterCategory('all')" class="flex flex-col items-center justify-center touch-target px-2">
+                    <i class="fas fa-home text-lg bamboo-text"></i>
+                    <span class="text-xs mt-1">Accueil</span>
+                </button>
+                
+                <button onclick="filterCategory('pho')" class="flex flex-col items-center justify-center touch-target px-2">
+                    <i class="fas fa-bowl-food text-lg text-gray-500"></i>
+                    <span class="text-xs mt-1">Pho</span>
+                </button>
+                
+                <button onclick="toggleCart()" class="relative touch-target">
+                    <div class="flex flex-col items-center justify-center">
+                        <i class="fas fa-shopping-cart text-xl bamboo-text"></i>
+                        <span class="text-xs mt-1">Panier</span>
+                    </div>
+                    <div id="bottom-cart-indicator" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
+                        <span id="bottom-cart-count">0</span>
+                    </div>
+                </button>
+                
+                <button onclick="showUserProfile()" class="flex flex-col items-center justify-center touch-target px-2">
+                    <i class="fas fa-user text-lg text-gray-500"></i>
+                    <span class="text-xs mt-1">Compte</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 购物车侧边栏 -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 w-full sm:w-96 h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
+        <div class="h-full flex flex-col">
+            <!-- 购物车头部 -->
+            <div class="bamboo-gradient text-white p-6">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <button onclick="toggleCart()" class="touch-target w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h3 class="text-xl font-bold">Votre Commande</h3>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm opacity-90">Table <span id="cart-table-number">12</span></p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-white/10 rounded-lg p-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p id="cart-item-count" class="text-sm">0 articles</p>
+                            <p id="cart-points-earned" class="text-xs opacity-90">+0 points</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-2xl font-bold" id="cart-sidebar-total">0€</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 购物车商品列表 -->
+            <div id="cart-items" class="flex-1 overflow-y-auto p-4">
+                <div id="empty-cart-message" class="text-center py-12">
+                    <div class="w-24 h-24 mx-auto mb-6 rounded-full bamboo-light-bg flex items-center justify-center">
+                        <i class="fas fa-shopping-basket text-3xl bamboo-text"></i>
+                    </div>
+                    <p class="bamboo-text font-bold text-lg mb-2">Panier vide</p>
+                    <p class="text-gray-500 text-sm">Ajoutez des plats depuis le menu</p>
+                    <button onclick="toggleCart()" class="mt-6 px-6 py-3 bamboo-gradient text-white rounded-lg font-bold">
+                        Parcourir le menu
+                    </button>
+                </div>
+            </div>
+
+            <!-- 购物车底部 -->
+            <div class="border-t p-4">
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-gray-700 font-medium">Instructions spéciales</label>
+                        <button onclick="showCommonInstructions()" class="text-xs bamboo-text">Suggestions</button>
+                    </div>
+                    <textarea id="order-notes" class="w-full border rounded-lg p-3 text-sm" rows="2" placeholder="Ex: Sans coriandre, extra piment, allergies..."></textarea>
+                </div>
+                
+                <div class="space-y-3">
+                    <button onclick="checkout()" class="w-full bamboo-gradient text-white py-4 rounded-xl font-bold text-lg shadow-lg touch-target flex items-center justify-center">
+                        <i class="fas fa-lock mr-3"></i>
+                        Commander • <span id="checkout-total" class="ml-2">0€</span>
+                    </button>
+                    
+                    <div class="text-center text-xs text-gray-500">
+                        <p><i class="fas fa-coins mr-1"></i> Vous gagnerez <span id="checkout-points" class="font-bold">0</span> points</p>
+                        <p class="mt-1">Paiement sécurisé avec Stripe</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 购物车遮罩层 -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="toggleCart()"></div>
+
+    <!-- QR Code信息模态框 -->
+    <div id="qr-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full">
+            <div class="bamboo-gradient text-white p-6 rounded-t-2xl">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold">Scanner pour commander</h3>
+                    <button onclick="closeQRModal()" class="touch-target w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <div class="text-center mb-6">
+                    <div class="inline-block p-4 bg-gray-100 rounded-lg mb-4">
+                        <!-- QR Code占位符 -->
+                        <div class="w-48 h-48 mx-auto relative">
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-100 to-green-300 rounded-lg"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="grid grid-cols-8 gap-1 mb-3 mx-auto w-32">
+                                        <!-- QR图案 -->
+                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
+                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
+                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
+                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
+                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
+                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
+                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
+                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-600 font-bold">PHO BAMBOO</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-3">Pointez votre caméra vers le QR code</p>
+                    </div>
+                    
+                    <div class="space-y-3 text-left">
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bamboo-gradient text-white flex items-center justify-center text-xs mr-3 flex-shrink-0">1</div>
+                            <div>
+                                <p class="font-medium">Scannez le code QR sur votre table</p>
+                                <p class="text-sm text-gray-500">Ou à l'entrée du restaurant</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bamboo-gradient text-white flex items-center justify-center text-xs mr-3 flex-shrink-0">2</div>
+                            <div>
+                                <p class="font-medium">Commandez directement depuis votre téléphone</p>
+                                <p class="text-sm text-gray-500">Pas d'application à télécharger</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bamboo-gradient text-white flex items-center justify-center text-xs mr-3 flex-shrink-0">3</div>
+                            <div>
+                                <p class="font-medium">Recevez vos points fidélité</p>
+                                <p class="text-sm text-gray-500">10 points par euro dépensé</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="closeQRModal()" class="w-full bamboo-border border text-gray-700 py-3 rounded-lg font-medium">
+                    Compris
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知消息 -->
+    <div id="notification" class="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50 max-w-sm">
+        <div class="flex items-start">
+            <i class="fas fa-check-circle text-xl mr-3 flex-shrink-0"></i>
+            <div>
+                <p class="font-bold" id="notification-title">Succès</p>
+                <p id="notification-message" class="text-sm mt-1"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 菜单数据
+        const menuData = [
+            {
+                id: 1,
+                name_fr: "Pho Bœuf Traditionnel",
+                name_vn: "Phở Bò Truyền Thống",
+                description: "Bouillon de bœuf mijoté 24h, nouilles de riz, bœuf tendre",
+                price: 14.90,
+                category: "pho",
+                image: "https://www.lestresorsduvietnam.fr/wp-content/uploads/2023/07/Le-Pho-Bo-pho-vietnamien-et-ses-epices.jpg",
+                popular: true,
+                spicy: false,
+                vegan: false
+            },
+            {
+                id: 2,
+                name_fr: "Pho au Poulet",
+                name_vn: "Phở Gà",
+                description: "Bouillon de poulet, blanc de poulet, herbes fraîches",
+                price: 13.90,
+                category: "pho",
+                image: "https://images.getrecipekit.com/20250122163352-pho-20vietnamien-20au-20poulet-20et-20herbes-20fra-c3-aeches.jpg?aspect_ratio=16:9&quality=90&",
+                popular: true,
+                spicy: false,
+                vegan: false
+            },
+            {
+                id: 3,
+                name_fr: "Pho Végétarien",
+                name_vn: "Phở Chay",
+                description: "Bouillon de légumes, tofu, champignons, légumes de saison",
+                price: 12.90,
+                category: "pho",
+                image: "https://www.cuisineactuelle.fr/imgre/fit/~1~cac~2022~01~06~4126da1e-96cf-4258-b9f1-b1888eda4fae.jpeg/750x562/quality/80/crop-from/center/cr/wqkgVmVsc2JlcmcgLyBQaG90b2N1aXNpbmUJIC8gQ3Vpc2luZSBBY3R1ZWxsZQ%3D%3D/focus-point/2231%2C3302/pho-vegetarien-soupe-vietnamienne.jpeg",
+                popular: false,
+                spicy: false,
+                vegan: true
+            },
+            {
+                id: 4,
+                name_fr: "Nems au Porc (4 pièces)",
+                name_vn: "Chả Giò",
+                description: "Nems croustillants, porc et légumes, sauce nuoc mam",
+                price: 7.90,
+                category: "entrees",
+                image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&h=300&fit=crop&crop=center",
+                popular: true,
+                spicy: false,
+                vegan: false
+            },
+            {
+                id: 5,
+                name_fr: "Salade de Papaye Verte",
+                name_vn: "Gỏi Đu Đủ",
+                description: "Papaye verte, crevettes séchées, cacahuètes, vinaigrette",
+                price: 8.50,
+                category: "entrees",
+                image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop&crop=center",
+                popular: false,
+                spicy: true,
+                vegan: false
+            },
+            {
+                id: 6,
+                name_fr: "Café Vietnamien Glacé",
+                name_vn: "Cà Phê Sữa Đá",
+                description: "Café fort avec lait concentré sucré, servi glacé",
+                price: 4.50,
+                category: "boissons",
+                image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop&crop=center",
+                popular: true,
+                spicy: false,
+                vegan: false
+            },
+            {
+                id: 7,
+                name_fr: "Thé Vert Jasmin",
+                name_vn: "Trà Lài",
+                description: "Thé vert parfumé au jasmin, servi chaud",
+                price: 3.50,
+                category: "boissons",
+                image: "https://images.unsplash.com/photo-1561047029-3000c68339ca?w=400&h=300&fit=crop&crop=center",
+                popular: false,
+                spicy: false,
+                vegan: true
+            },
+            {
+                id: 8,
+                name_fr: "Che Trois Couleurs",
+                name_vn: "Chè Ba Màu",
+                description: "Dessert aux haricots, gelée, lait de coco",
+                price: 6.50,
+                category: "desserts",
+                image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop&crop=center",
+                popular: false,
+                spicy: false,
+                vegan: true
+            }
+        ];
+
+        // 应用状态
+        let cart = JSON.parse(localStorage.getItem('phoBambooCart')) || [];
+        let currentCategory = 'all';
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartDisplay();
+            renderMenu();
+            updatePointsDisplay();
+            
+            // 初始化分类按钮状态
+            updateCategoryButtons();
+            
+            // 如果是第一次访问，添加演示商品
+            if (cart.length === 0 && !localStorage.getItem('phoBambooFirstVisit')) {
+                addToCart(1, 1);
+                addToCart(4, 1);
+                localStorage.setItem('phoBambooFirstVisit', 'true');
+            }
+        });
+
+        // 更新分类按钮状态
+        function updateCategoryButtons() {
+            // 桌面端按钮
+            const desktopButtons = document.querySelectorAll('.hidden.sm\\:flex .category-btn');
+            desktopButtons.forEach(btn => {
+                const category = btn.getAttribute('data-category');
+                if (category === currentCategory) {
+                    btn.classList.remove('category-inactive');
+                    btn.classList.add('category-active');
+                } else {
+                    btn.classList.remove('category-active');
+                    btn.classList.add('category-inactive');
+                }
+            });
+            
+            // 移动端按钮
+            const mobileButtons = document.querySelectorAll('#mobile-categories .category-btn');
+            mobileButtons.forEach(btn => {
+                const category = btn.getAttribute('data-category');
+                if (category === currentCategory) {
+                    btn.classList.remove('category-inactive-mobile');
+                    btn.classList.add('category-active');
+                } else {
+                    btn.classList.remove('category-active');
+                    btn.classList.add('category-inactive-mobile');
+                }
+            });
+        }
+
+        // 渲染菜单
+        function renderMenu() {
+            const menuGrid = document.getElementById('menu-grid');
+            menuGrid.innerHTML = '';
+            
+            const filteredDishes = currentCategory === 'all' 
+                ? menuData 
+                : menuData.filter(dish => dish.category === currentCategory);
+            
+            if (filteredDishes.length === 0) {
+                menuGrid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-utensils text-4xl bamboo-text opacity-50 mb-4"></i>
+                        <p class="bamboo-text font-bold text-lg">Aucun plat disponible</p>
+                        <p class="text-gray-500 mt-2">Cette catégorie est temporairement vide</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredDishes.forEach(dish => {
+                const dishElement = document.createElement('div');
+                dishElement.className = 'bg-white rounded-xl shadow-sm overflow-hidden fade-in border bamboo-border';
+                
+                // 标签生成
+                let tags = '';
+                if (dish.popular) tags += '<span class="bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-bold mr-2">POPULAIRE</span>';
+                if (dish.spicy) tags += '<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold mr-2">ÉPICÉ</span>';
+                if (dish.vegan) tags += '<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold mr-2">VÉGÉTALIEN</span>';
+                
+                dishElement.innerHTML = `
+                    <div class="relative">
+                        <img src="${dish.image}" alt="${dish.name_fr}" 
+                             class="w-full h-48 object-cover"
+                             loading="lazy">
+                        <div class="absolute top-3 left-3 flex flex-wrap gap-1">
+                            ${tags}
+                        </div>
+                        <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1 shadow">
+                            <span class="text-xl font-bold bamboo-text">${dish.price.toFixed(2)}€</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="mb-2">
+                            <h3 class="text-lg font-bold bamboo-text">${dish.name_fr}</h3>
+                            <p class="text-sm text-gray-600 italic">${dish.name_vn}</p>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">${dish.description}</p>
+                        <div class="flex items-center justify-between">
+                            <div class="text-xs text-gray-500 flex items-center">
+                                <i class="fas fa-coins text-amber-500 mr-1"></i>
+                                ${getPointsFromPrice(dish.price)} pts
+                            </div>
+                            <button onclick="addToCart(${dish.id}, 1)" 
+                                    class="touch-target bamboo-gradient text-white px-4 py-3 rounded-lg font-bold text-sm flex items-center">
+                                <i class="fas fa-plus mr-2"></i>
+                                Ajouter
+                            </button>
+                        </div>
+                    </div>
+                `;
+                menuGrid.appendChild(dishElement);
+            });
+        }
+
+        // 过滤分类
+        function filterCategory(category) {
+            currentCategory = category;
+            updateCategoryButtons();
+            renderMenu();
+            scrollToTop();
+            
+            // 在移动端关闭分类菜单
+            if (window.innerWidth < 640) {
+                document.getElementById('mobile-categories').classList.add('hidden');
+            }
+        }
+
+        // 切换移动端分类菜单显示
+        function toggleMenuCategories() {
+            const categories = document.getElementById('mobile-categories');
+            categories.classList.toggle('hidden');
+        }
+
+        // 购物车功能
+        function addToCart(dishId, quantity) {
+            const dish = menuData.find(d => d.id === dishId);
+            if (!dish) return;
+            
+            const existingItem = cart.find(item => item.id === dishId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: dish.id,
+                    name_fr: dish.name_fr,
+                    price: dish.price,
+                    quantity: quantity,
+                    image: dish.image
+                });
+            }
+            
+            saveCart();
+            updateCartDisplay();
+            showNotification('Ajouté au panier', `${dish.name_fr} a été ajouté`);
+            
+            // 在移动端自动打开购物车
+            if (window.innerWidth < 768 && cart.length === 1) {
+                setTimeout(() => toggleCart(), 300);
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // 更新计数
+            document.getElementById('cart-count').textContent = cartCount;
+            document.getElementById('bottom-cart-count').textContent = cartCount;
+            document.getElementById('cart-indicator-count').textContent = cartCount > 9 ? '9+' : cartCount;
+            
+            // 更新金额
+            document.getElementById('cart-sidebar-total').textContent = `${cartTotal.toFixed(2)}€`;
+            document.getElementById('checkout-total').textContent = `${cartTotal.toFixed(2)}€`;
+            document.getElementById('cart-item-count').textContent = `${cartCount} article${cartCount !== 1 ? 's' : ''}`;
+            document.getElementById('checkout-points').textContent = getPointsFromPrice(cartTotal);
+            document.getElementById('cart-points-earned').textContent = `+${getPointsFromPrice(cartTotal)} points`;
+            
+            // 更新购物车指示器
+            const indicator = document.getElementById('cart-indicator');
+            const bottomIndicator = document.getElementById('bottom-cart-indicator');
+            
+            if (cartCount > 0) {
+                indicator.classList.remove('hidden');
+                bottomIndicator.classList.remove('hidden');
+            } else {
+                indicator.classList.add('hidden');
+                bottomIndicator.classList.add('hidden');
+            }
+            
+            // 更新购物车商品列表
+            const cartItemsContainer = document.getElementById('cart-items');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+            
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                cartItemsContainer.innerHTML = '';
+                cartItemsContainer.appendChild(emptyCartMessage);
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                cartItemsContainer.innerHTML = '';
+                
+                cart.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'bg-gray-50 rounded-lg p-4 mb-3 fade-in';
+                    itemElement.innerHTML = `
+                        <div class="flex items-center">
+                            <img src="${item.image}" alt="${item.name_fr}" 
+                                 class="w-16 h-16 object-cover rounded-lg">
+                            <div class="ml-4 flex-1">
+                                <h4 class="font-bold text-sm bamboo-text">${item.name_fr}</h4>
+                                <p class="text-gray-500 text-xs">${item.price.toFixed(2)}€ l'unité</p>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <button onclick="updateCartItem(${item.id}, -1)" 
+                                            class="touch-target w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-200">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <span class="font-bold min-w-8 text-center">${item.quantity}</span>
+                                    <button onclick="updateCartItem(${item.id}, 1)" 
+                                            class="touch-target w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-200">
+                                        <i class="fas fa-plus text-xs"></i>
+                                    </button>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="font-bold bamboo-text">${(item.price * item.quantity).toFixed(2)}€</span>
+                                    <button onclick="removeFromCart(${item.id})" 
+                                            class="touch-target text-red-500 hover:text-red-700 ml-3">
+                                        <i class="fas fa-trash text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(itemElement);
+                });
+            }
+        }
+
+        function updateCartItem(dishId, change) {
+            const item = cart.find(item => item.id === dishId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(item => item.id !== dishId);
+                }
+                saveCart();
+                updateCartDisplay();
+            }
+        }
+
+        function removeFromCart(dishId) {
+            const item = cart.find(item => item.id === dishId);
+            if (item) {
+                cart = cart.filter(item => item.id !== dishId);
+                saveCart();
+                updateCartDisplay();
+                showNotification('Retiré du panier', `${item.name_fr} a été retiré`);
+            }
+        }
+
+        function saveCart() {
+            localStorage.setItem('phoBambooCart', JSON.stringify(cart));
+        }
+
+        // 订单功能
+        function checkout() {
+            const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const notes = document.getElementById('order-notes').value;
+            
+            if (cart.length === 0) {
+                showNotification('Panier vide', 'Ajoutez des plats avant de commander');
+                return;
+            }
+            
+            // 模拟订单提交
+            const orderDetails = {
+                table: document.getElementById('table-number').textContent,
+                items: cart,
+                total: cartTotal,
+                notes: notes,
+                pointsEarned: getPointsFromPrice(cartTotal),
+                timestamp: new Date().toISOString()
+            };
+            
+            // 在实际应用中，这里会发送到后端
+            console.log('Order submitted:', orderDetails);
+            
+            // 显示确认信息
+            showNotification('Commande confirmée !', 
+                `Merci pour votre commande de ${cartTotal.toFixed(2)}€. Vous gagnez ${getPointsFromPrice(cartTotal)} points.`);
+            
+            // 更新用户积分
+            updateUserPoints(getPointsFromPrice(cartTotal));
+            
+            // 清空购物车
+            cart = [];
+            saveCart();
+            updateCartDisplay();
+            toggleCart();
+            
+            // 清空备注
+            document.getElementById('order-notes').value = '';
+        }
+
+        // 积分系统
+        function getPointsFromPrice(price) {
+            return Math.floor(price * 10);
+        }
+
+        function updateUserPoints(pointsToAdd) {
+            let currentPoints = parseInt(document.getElementById('user-points').textContent);
+            currentPoints += pointsToAdd;
+            document.getElementById('user-points').textContent = currentPoints;
+            localStorage.setItem('phoBambooPoints', currentPoints);
+        }
+
+        function updatePointsDisplay() {
+            const points = localStorage.getItem('phoBambooPoints') || 250;
+            document.getElementById('user-points').textContent = points;
+        }
+
+        // UI功能
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const overlay = document.getElementById('cart-overlay');
+            
+            if (sidebar.classList.contains('translate-x-full')) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function showQRInfo() {
+            document.getElementById('qr-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeQRModal() {
+            document.getElementById('qr-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function showCommonInstructions() {
+            const notes = document.getElementById('order-notes');
+            const suggestions = [
+                "Sans coriandre",
+                "Extra piment",
+                "Allergie aux arachides",
+                "Sans gluten si possible",
+                "Viande bien cuite"
+            ];
+            
+            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            notes.value = notes.value ? notes.value + ', ' + randomSuggestion : randomSuggestion;
+            
+            showNotification('Suggestion ajoutée', 'Instruction ajoutée aux notes');
+        }
+
+        function showUserProfile() {
+            const points = document.getElementById('user-points').textContent;
+            showNotification('Votre compte', `Vous avez ${points} points fidélité`);
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 通知系统
+        function showNotification(title, message) {
+            const notification = document.getElementById('notification');
+            const titleElement = document.getElementById('notification-title');
+            const messageElement = document.getElementById('notification-message');
+            
+            titleElement.textContent = title;
+            messageElement.textContent = message;
+            
+            notification.classList.remove('translate-x-full');
+            
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+            }, 3000);
+        }
+
+        // 模拟扫描QR码
+        function simulateQRScan(tableNumber) {
+            document.getElementById('table-number').textContent = tableNumber;
+            document.getElementById('cart-table-number').textContent = tableNumber;
+            showNotification(`Table ${tableNumber}`, 'QR code scanné avec succès');
+        }
+    </script>
+</body>
+</html>
