@@ -15,41 +15,151 @@
             --bamboo-accent: #c9d4a2;
         }
 
-        .bamboo-bg { background-color: var(--bamboo-primary) !important; }
-        .bamboo-gradient { background: linear-gradient(135deg, var(--bamboo-primary) 0%, var(--bamboo-secondary) 100%); }
-        .bamboo-light-bg { background-color: var(--bamboo-accent); }
-        .bamboo-text { color: var(--bamboo-primary); }
-        .bamboo-border { border-color: var(--bamboo-light); }
+        .bamboo-bg {
+            background-color: var(--bamboo-primary) !important;
+        }
 
-        .category-active { background-color: var(--bamboo-primary) !important; color: white !important; }
-        .category-inactive { background-color: #f3f4f6 !important; color: #4b5563 !important; border: 1px solid #e5e7eb; }
-        .category-inactive-mobile { background-color: rgba(255, 255, 255, 0.1) !important; color: white !important; }
+        .bamboo-gradient {
+            background: linear-gradient(135deg, var(--bamboo-primary) 0%, var(--bamboo-secondary) 100%);
+        }
+
+        .bamboo-light-bg {
+            background-color: var(--bamboo-accent);
+        }
+
+        .bamboo-text {
+            color: var(--bamboo-primary);
+        }
+
+        .bamboo-border {
+            border-color: var(--bamboo-light);
+        }
+
+        .category-active {
+            background-color: var(--bamboo-primary) !important;
+            color: white !important;
+        }
+
+        .category-inactive {
+            background-color: #f3f4f6 !important;
+            color: #4b5563 !important;
+            border: 1px solid #e5e7eb;
+        }
+
+        .category-inactive-mobile {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+        }
 
         /* 动画效果 */
-        .add-btn { transition: all 0.2s ease; position: relative; overflow: hidden; }
-        .add-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 90, 39, 0.3); }
-        .add-btn:active { transform: translateY(0); }
-        .add-btn-success { background-color: #10b981 !important; color: white !important; }
-        .add-btn-pulse { animation: pulse 0.5s ease; }
-        
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        .cart-btn-pulse { animation: cartPulse 0.3s ease; }
-        @keyframes cartPulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        .quantity-btn { transition: all 0.1s ease; }
-        .quantity-btn:active { background-color: #e5e7eb; transform: scale(0.95); }
-        .quantity-update { animation: quantityUpdate 0.3s ease; }
-        @keyframes quantityUpdate { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .add-btn {
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 90, 39, 0.3);
+        }
+
+        .add-btn:active {
+            transform: translateY(0);
+        }
+
+        .add-btn-success {
+            background-color: #10b981 !important;
+            color: white !important;
+        }
+
+        .add-btn-pulse {
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .cart-btn-pulse {
+            animation: cartPulse 0.3s ease;
+        }
+
+        @keyframes cartPulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .quantity-btn {
+            transition: all 0.1s ease;
+        }
+
+        .quantity-btn:active {
+            background-color: #e5e7eb;
+            transform: scale(0.95);
+        }
+
+        .quantity-update {
+            animation: quantityUpdate 0.3s ease;
+        }
+
+        @keyframes quantityUpdate {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
 
         /* 移动端优化 */
         @media (max-width: 768px) {
-            .menu-grid { grid-template-columns: 1fr; gap: 1rem; }
-            .cart-sidebar { width: 100% !important; }
-            #mobile-categories { display: block !important; }
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .cart-sidebar {
+                width: 100% !important;
+            }
+
+            #mobile-categories {
+                display: block !important;
+            }
         }
 
-        .touch-target { min-height: 44px; min-width: 44px; }
-        .scroll-smooth { scroll-behavior: smooth; }
-        
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+
         /* 竹纹背景 */
         .bamboo-pattern {
             background-image: linear-gradient(90deg, transparent 79px, #abcea1 79px, #abcea1 81px, transparent 81px), linear-gradient(#eee .1em, transparent .1em);
@@ -57,15 +167,35 @@
             background-color: #f9f7f0;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.3s ease-out; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
 
 <body class="bg-gray-50 text-gray-800" style="touch-action: manipulation;">
-    
+
     <nav class="bamboo-gradient text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center h-16">
@@ -81,7 +211,8 @@
                 </div>
 
                 <div class="flex items-center space-x-3">
-                    <div class="hidden sm:flex items-center space-x-1 bg-white/20 px-2 py-1 rounded-lg text-sm cursor-pointer hover:bg-white/30 transition" onclick="manualEditTable()">
+                    <div class="flex items-center space-x-1 bg-white/20 px-2 py-1 rounded-lg text-sm cursor-pointer hover:bg-white/30 transition"
+                        onclick="manualEditTable()">
                         <i class="fas fa-table text-xs"></i>
                         <span id="table-number" class="font-medium">---</span>
                         <i class="fas fa-pen text-[10px] ml-1 opacity-70"></i>
@@ -92,7 +223,8 @@
                             <i class="fas fa-shopping-cart"></i>
                             <span id="cart-count" class="ml-2 font-bold">0</span>
                         </div>
-                        <div id="cart-indicator" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
+                        <div id="cart-indicator"
+                            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
                             <span id="cart-indicator-count">!</span>
                         </div>
                     </button>
@@ -101,11 +233,16 @@
 
             <div id="mobile-categories" class="sm:hidden py-3 border-t border-white/20 hidden">
                 <div class="flex overflow-x-auto scrollbar-hide space-x-2 pb-2">
-                    <button onclick="filterCategory('all')" data-category="all" class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">Tout</button>
-                    <button onclick="filterCategory('pho')" data-category="pho" class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Pho</button>
-                    <button onclick="filterCategory('entrees')" data-category="entrees" class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Entrées</button>
-                    <button onclick="filterCategory('boissons')" data-category="boissons" class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Boissons</button>
-                    <button onclick="filterCategory('desserts')" data-category="desserts" class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Desserts</button>
+                    <button onclick="filterCategory('all')" data-category="all"
+                        class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">Tout</button>
+                    <button onclick="filterCategory('pho')" data-category="pho"
+                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Pho</button>
+                    <button onclick="filterCategory('entrees')" data-category="entrees"
+                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Entrées</button>
+                    <button onclick="filterCategory('boissons')" data-category="boissons"
+                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Boissons</button>
+                    <button onclick="filterCategory('desserts')" data-category="desserts"
+                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Desserts</button>
                 </div>
             </div>
         </div>
@@ -119,7 +256,8 @@
                         <h2 class="text-2xl font-bold bamboo-text mb-1">Bienvenue</h2>
                         <p class="text-gray-600 text-mobile">Spécialités VIET & THAÏ</p>
                     </div>
-                    <div class="bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2 shadow cursor-pointer active:scale-95 transition" onclick="openLoyaltyModal()">
+                    <div class="bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2 shadow cursor-pointer active:scale-95 transition"
+                        onclick="openLoyaltyModal()">
                         <div class="flex items-center">
                             <i class="fas fa-crown text-yellow-500 mr-2"></i>
                             <div>
@@ -131,11 +269,17 @@
                 </div>
 
                 <div class="hidden sm:flex space-x-2 mt-6">
-                    <button onclick="filterCategory('all')" data-category="all" class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">Tout voir</button>
-                    <button onclick="filterCategory('pho')" data-category="pho" class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Pho Spécialités</button>
-                    <button onclick="filterCategory('entrees')" data-category="entrees" class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Entrées</button>
-                    <button onclick="filterCategory('boissons')" data-category="boissons" class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Boissons</button>
-                    <button onclick="filterCategory('desserts')" data-category="desserts" class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Desserts</button>
+                    <button onclick="filterCategory('all')" data-category="all"
+                        class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">Tout voir</button>
+                    <button onclick="filterCategory('pho')" data-category="pho"
+                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Pho
+                        Spécialités</button>
+                    <button onclick="filterCategory('entrees')" data-category="entrees"
+                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Entrées</button>
+                    <button onclick="filterCategory('boissons')" data-category="boissons"
+                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Boissons</button>
+                    <button onclick="filterCategory('desserts')" data-category="desserts"
+                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Desserts</button>
                 </div>
             </div>
         </div>
@@ -144,10 +288,12 @@
 
         <div class="fixed bottom-20 right-4 z-30">
             <div class="flex flex-col space-y-2">
-                <button onclick="scrollToTop()" class="touch-target w-12 h-12 rounded-full bamboo-gradient text-white shadow-lg flex items-center justify-center">
+                <button onclick="scrollToTop()"
+                    class="touch-target w-12 h-12 rounded-full bamboo-gradient text-white shadow-lg flex items-center justify-center">
                     <i class="fas fa-arrow-up"></i>
                 </button>
-                <button onclick="showQRInfo()" class="touch-target w-12 h-12 rounded-full bg-white bamboo-border border text-gray-700 shadow-lg flex items-center justify-center">
+                <button onclick="showQRInfo()"
+                    class="touch-target w-12 h-12 rounded-full bg-white bamboo-border border text-gray-700 shadow-lg flex items-center justify-center">
                     <i class="fas fa-qrcode"></i>
                 </button>
             </div>
@@ -157,12 +303,14 @@
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40">
         <div class="container mx-auto">
             <div class="flex justify-around items-center h-16">
-                <button onclick="filterCategory('all')" class="flex flex-col items-center justify-center touch-target px-2">
+                <button onclick="filterCategory('all')"
+                    class="flex flex-col items-center justify-center touch-target px-2">
                     <i class="fas fa-home text-lg bamboo-text"></i>
                     <span class="text-xs mt-1">Accueil</span>
                 </button>
 
-                <button onclick="filterCategory('pho')" class="flex flex-col items-center justify-center touch-target px-2">
+                <button onclick="filterCategory('pho')"
+                    class="flex flex-col items-center justify-center touch-target px-2">
                     <i class="fas fa-bowl-food text-lg text-gray-500"></i>
                     <span class="text-xs mt-1">Pho</span>
                 </button>
@@ -172,12 +320,14 @@
                         <i class="fas fa-shopping-cart text-xl bamboo-text"></i>
                         <span class="text-xs mt-1">Panier</span>
                     </div>
-                    <div id="bottom-cart-indicator" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
+                    <div id="bottom-cart-indicator"
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
                         <span id="bottom-cart-count">0</span>
                     </div>
                 </button>
 
-                <button onclick="openLoyaltyModal()" class="flex flex-col items-center justify-center touch-target px-2">
+                <button onclick="openLoyaltyModal()"
+                    class="flex flex-col items-center justify-center touch-target px-2">
                     <i class="fas fa-crown text-lg text-yellow-500"></i>
                     <span class="text-xs mt-1">Fidélité</span>
                 </button>
@@ -185,12 +335,14 @@
         </div>
     </div>
 
-    <div id="cart-sidebar" class="fixed top-0 right-0 w-full sm:w-96 h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
+    <div id="cart-sidebar"
+        class="fixed top-0 right-0 w-full sm:w-96 h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
         <div class="h-full flex flex-col">
             <div class="bamboo-gradient text-white p-6">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <button onclick="toggleCart()" class="touch-target w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">
+                        <button onclick="toggleCart()"
+                            class="touch-target w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">
                             <i class="fas fa-arrow-left"></i>
                         </button>
                         <h3 class="text-xl font-bold">Votre Commande</h3>
@@ -214,7 +366,7 @@
             </div>
 
             <div id="cart-items" class="flex-1 overflow-y-auto p-4">
-                </div>
+            </div>
 
             <div class="border-t p-4 bg-gray-50">
                 <div class="mb-4">
@@ -222,15 +374,19 @@
                         <label class="text-gray-700 font-medium">Instructions spéciales</label>
                         <button onclick="showCommonInstructions()" class="text-xs bamboo-text">Suggestions</button>
                     </div>
-                    <textarea id="order-notes" class="w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-green-500 outline-none" rows="2" placeholder="Ex: Sans coriandre, extra piment, allergies..."></textarea>
+                    <textarea id="order-notes"
+                        class="w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                        rows="2" placeholder="Ex: Sans coriandre, extra piment, allergies..."></textarea>
                 </div>
 
                 <div class="space-y-3">
-                    <button onclick="checkout()" class="w-full bamboo-gradient text-white py-3 px-5 rounded-xl font-bold shadow-xl touch-target flex items-center justify-between transition-transform active:scale-95">
+                    <button onclick="checkout()"
+                        class="w-full bamboo-gradient text-white py-3 px-5 rounded-xl font-bold shadow-xl touch-target flex items-center justify-between transition-transform active:scale-95">
                         <div class="flex items-center space-x-3">
                             <i class="fa-brands fa-whatsapp text-3xl"></i>
                             <div class="flex flex-col items-start text-left">
-                                <span class="text-xs opacity-80 font-normal uppercase tracking-wide">Commander via</span>
+                                <span class="text-xs opacity-80 font-normal uppercase tracking-wide">Commander
+                                    via</span>
                                 <span class="text-lg leading-none">WhatsApp</span>
                             </div>
                         </div>
@@ -240,7 +396,8 @@
                     </button>
 
                     <p class="text-[10px] text-gray-400 text-center leading-tight px-2">
-                        En cliquant sur Commander, vous acceptez l'envoi de votre commande via <span class="font-bold">WhatsApp</span>.
+                        En cliquant sur Commander, vous acceptez l'envoi de votre commande via <span
+                            class="font-bold">WhatsApp</span>.
                         <br>
                         Vos points de fidélité sont stockés localement sur votre appareil.
                     </p>
@@ -259,19 +416,24 @@
             </div>
             <div class="p-6 text-center">
                 <p>Scannez le QR code sur votre table pour définir automatiquement votre numéro de table.</p>
-                <button onclick="closeQRModal()" class="mt-4 w-full bamboo-border border text-gray-700 py-2 rounded-lg">Fermer</button>
+                <button onclick="closeQRModal()"
+                    class="mt-4 w-full bamboo-border border text-gray-700 py-2 rounded-lg">Fermer</button>
             </div>
         </div>
     </div>
 
-    <div id="loyalty-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-end sm:items-center justify-center hidden transition-opacity duration-300">
-        <div class="bg-white w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl overflow-hidden shadow-2xl transform transition-transform duration-300">
+    <div id="loyalty-modal"
+        class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-end sm:items-center justify-center hidden transition-opacity duration-300">
+        <div
+            class="bg-white w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl overflow-hidden shadow-2xl transform transition-transform duration-300">
             <div class="bamboo-gradient p-6 text-white relative">
-                <button onclick="closeLoyaltyModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm">
+                <button onclick="closeLoyaltyModal()"
+                    class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm">
                     <i class="fas fa-times"></i>
                 </button>
                 <div class="flex items-center space-x-4">
-                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-inner text-yellow-500">
+                    <div
+                        class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-inner text-yellow-500">
                         <i class="fas fa-crown text-3xl"></i>
                     </div>
                     <div>
@@ -279,34 +441,36 @@
                         <p class="opacity-90 text-sm">Mangez, cumulez, profitez !</p>
                     </div>
                 </div>
-                
+
                 <div class="mt-6 flex items-baseline">
                     <span class="text-4xl font-bold" id="modal-points-display">0</span>
                     <span class="ml-2 text-sm opacity-80">points disponibles</span>
                 </div>
-    
+
                 <div class="mt-4">
                     <div class="flex justify-between text-xs mb-1 opacity-90">
                         <span>Prochaine récompense</span>
                         <span id="next-reward-points">200 pts</span>
                     </div>
                     <div class="w-full bg-black/20 rounded-full h-2">
-                        <div id="points-progress-bar" class="bg-yellow-400 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        <div id="points-progress-bar" class="bg-yellow-400 h-2 rounded-full transition-all duration-500"
+                            style="width: 0%"></div>
                     </div>
                 </div>
             </div>
-    
+
             <div class="p-6 bg-gray-50 max-h-[50vh] overflow-y-auto">
                 <h4 class="font-bold text-gray-700 mb-4 flex items-center text-sm uppercase tracking-wide">
                     <i class="fas fa-gift text-red-500 mr-2"></i> Récompenses
                 </h4>
                 <div id="rewards-list" class="space-y-3">
-                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="notification" class="fixed top-4 right-4 bg-white border-l-4 border-green-500 text-gray-800 p-4 rounded-lg shadow-xl transform translate-x-full transition-transform duration-300 z-[60] max-w-sm flex items-start">
+    <div id="notification"
+        class="fixed top-4 right-4 bg-white border-l-4 border-green-500 text-gray-800 p-4 rounded-lg shadow-xl transform translate-x-full transition-transform duration-300 z-[60] max-w-sm flex items-start">
         <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
         <div>
             <p class="font-bold text-sm" id="notification-title">Succès</p>
@@ -319,8 +483,8 @@
         // CONFIGURATION
         // ==========================================
         // ⚠️ 请在此处输入老板的 WhatsApp 电话号码 (格式: 33612345678)
-        const RESTAURANT_PHONE = "33764575572"; 
-        
+        const RESTAURANT_PHONE = "33764575572";
+
         // 菜单数据
         const menuData = [
             { id: 1, name_fr: "Pho Bœuf Traditionnel", name_vn: "Phở Bò Truyền Thống", description: "Bouillon de bœuf mijoté 24h, nouilles de riz, bœuf tendre", price: 14.90, category: "pho", image: "https://www.lestresorsduvietnam.fr/wp-content/uploads/2023/07/Le-Pho-Bo-pho-vietnamien-et-ses-epices.jpg", popular: true, spicy: false, vegan: false },
@@ -384,7 +548,7 @@
         function manualEditTable() {
             const currentTable = document.getElementById('table-number').textContent.replace('T', '');
             const newTable = prompt("Veuillez entrer votre numéro de table :", currentTable === "---" ? "" : currentTable);
-            
+
             if (newTable && newTable.trim() !== "") {
                 document.getElementById('table-number').textContent = "T" + newTable;
                 document.getElementById('cart-table-number').textContent = newTable;
@@ -456,11 +620,11 @@
             } else {
                 cart.push({ id: dish.id, name_fr: dish.name_fr, price: dish.price, quantity: quantity, image: dish.image, isReward: false });
             }
-            
+
             saveCart();
             updateCartDisplay();
             updateMenuQuantityBadge(dish.id, existingItem ? existingItem.quantity : quantity);
-            if(!buttonElement) showNotification('Ajouté', dish.name_fr); 
+            if (!buttonElement) showNotification('Ajouté', dish.name_fr);
         }
 
         function updateCartDisplay() {
@@ -565,7 +729,7 @@
         function updateLoyaltyUI() {
             const currentPoints = parseInt(localStorage.getItem('phoBambooPoints') || 0);
             document.getElementById('modal-points-display').textContent = currentPoints;
-            
+
             // 进度条逻辑 (最高以1000分为基准)
             const maxPoints = 1000;
             const percentage = Math.min((currentPoints / maxPoints) * 100, 100);
@@ -576,10 +740,10 @@
             container.innerHTML = '';
             rewardsData.forEach(reward => {
                 const canAfford = currentPoints >= reward.cost;
-                const btnClass = canAfford 
-                    ? 'bg-green-500 text-white shadow-lg hover:bg-green-600 active:scale-95' 
+                const btnClass = canAfford
+                    ? 'bg-green-500 text-white shadow-lg hover:bg-green-600 active:scale-95'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed';
-                
+
                 container.innerHTML += `
                     <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
                         <div class="flex items-center space-x-3">
@@ -604,7 +768,7 @@
 
             if (currentPoints < reward.cost) return;
 
-            if(confirm(`Utiliser ${reward.cost} points pour : ${reward.name} ?`)) {
+            if (confirm(`Utiliser ${reward.cost} points pour : ${reward.name} ?`)) {
                 // 扣分
                 currentPoints -= reward.cost;
                 updateUserPoints(-reward.cost); // 负数即扣分
@@ -643,11 +807,11 @@
 
             // 1. 构建消息
             let message = `🔔 *NOUVELLE COMMANDE - ${tableNumber}*\n`;
-            message += `🗓️ ${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}\n`;
+            message += `🗓️ ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}\n`;
             message += `------------------------------\n`;
 
             cart.forEach(item => {
-                if(item.isReward) {
+                if (item.isReward) {
                     message += `🎁 1x ${item.name_fr.replace('🎁 ', '')} (OFFERT)\n`;
                 } else {
                     const subtotal = (item.price * item.quantity).toFixed(2);
@@ -668,10 +832,10 @@
 
             // 3. 后续处理
             showNotification('Commande envoyée', 'En attente de confirmation sur WhatsApp');
-            
+
             // 只有现金支付部分产生积分
             const pointsEarned = getPointsFromPrice(cartTotal);
-            if(pointsEarned > 0) updateUserPoints(pointsEarned);
+            if (pointsEarned > 0) updateUserPoints(pointsEarned);
 
             // 清理
             cart = [];
@@ -686,11 +850,11 @@
         // 工具函数
         // ==========================================
         function getPointsFromPrice(price) { return Math.floor(price * 10); }
-        
+
         function updateUserPoints(change) {
             let pts = parseInt(localStorage.getItem('phoBambooPoints') || 0);
             pts += change;
-            if(pts < 0) pts = 0;
+            if (pts < 0) pts = 0;
             localStorage.setItem('phoBambooPoints', pts);
             updatePointsDisplay();
         }
@@ -716,7 +880,7 @@
         function updateMenuQuantityBadge(dishId, quantity) {
             const badge = document.querySelector(`[data-menu-badge="${dishId}"]`);
             const btn = document.getElementById(`add-btn-${dishId}`);
-            
+
             // 简单处理：如果状态改变，直接刷新整个菜单可能是最稳妥的，
             // 但为了性能，这里我们只在添加时简单更新文字
             if (btn) btn.innerHTML = `<i class="fas fa-plus mr-2"></i> ${quantity > 0 ? 'Ajouter +' : 'Ajouter'}`;
@@ -728,7 +892,7 @@
             const sidebar = document.getElementById('cart-sidebar');
             const overlay = document.getElementById('cart-overlay');
             const isOpen = !sidebar.classList.contains('translate-x-full');
-            
+
             if (isOpen) {
                 sidebar.classList.add('translate-x-full');
                 overlay.classList.add('hidden');
@@ -751,7 +915,7 @@
             document.querySelectorAll('.category-btn').forEach(btn => {
                 const isActive = btn.dataset.category === currentCategory;
                 const isMobile = btn.closest('#mobile-categories');
-                
+
                 btn.classList.remove('category-active', 'category-inactive', 'category-inactive-mobile');
                 if (isActive) btn.classList.add('category-active');
                 else btn.classList.add(isMobile ? 'category-inactive-mobile' : 'category-inactive');
@@ -766,11 +930,11 @@
         }
 
         function saveCart() { localStorage.setItem('phoBambooCart', JSON.stringify(cart)); }
-        
+
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
         function showQRInfo() { document.getElementById('qr-modal').classList.remove('hidden'); }
         function closeQRModal() { document.getElementById('qr-modal').classList.add('hidden'); }
-        
+
         function showNotification(title, msg) {
             const el = document.getElementById('notification');
             document.getElementById('notification-title').textContent = title;
@@ -780,4 +944,5 @@
         }
     </script>
 </body>
+
 </html>
