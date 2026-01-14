@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pho Bamboo - Commande en ligne</title>
+    <title>Pho Bamboo - Commande & Fidélité</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -15,211 +15,57 @@
             --bamboo-accent: #c9d4a2;
         }
 
-        .bamboo-bg {
-            background-color: var(--bamboo-primary) !important;
-        }
+        .bamboo-bg { background-color: var(--bamboo-primary) !important; }
+        .bamboo-gradient { background: linear-gradient(135deg, var(--bamboo-primary) 0%, var(--bamboo-secondary) 100%); }
+        .bamboo-light-bg { background-color: var(--bamboo-accent); }
+        .bamboo-text { color: var(--bamboo-primary); }
+        .bamboo-border { border-color: var(--bamboo-light); }
 
-        .bamboo-gradient {
-            background: linear-gradient(135deg, var(--bamboo-primary) 0%, var(--bamboo-secondary) 100%);
-        }
+        .category-active { background-color: var(--bamboo-primary) !important; color: white !important; }
+        .category-inactive { background-color: #f3f4f6 !important; color: #4b5563 !important; border: 1px solid #e5e7eb; }
+        .category-inactive-mobile { background-color: rgba(255, 255, 255, 0.1) !important; color: white !important; }
 
-        .bamboo-light-bg {
-            background-color: var(--bamboo-accent);
-        }
-
-        .bamboo-text {
-            color: var(--bamboo-primary);
-        }
-
-        .bamboo-border {
-            border-color: var(--bamboo-light);
-        }
-
-        .category-active {
-            background-color: var(--bamboo-primary) !important;
-            color: white !important;
-        }
-
-        .category-inactive {
-            background-color: #f3f4f6 !important;
-            color: #4b5563 !important;
-            border: 1px solid #e5e7eb;
-        }
-
-        .category-inactive-mobile {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            color: white !important;
-        }
-
-        /* 添加按钮动画效果 */
-        .add-btn {
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .add-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(45, 90, 39, 0.3);
-        }
-
-        .add-btn:active {
-            transform: translateY(0);
-        }
-
-        .add-btn-success {
-            background-color: #10b981 !important;
-            color: white !important;
-        }
-
-        .add-btn-pulse {
-            animation: pulse 0.5s ease;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        .cart-btn-pulse {
-            animation: cartPulse 0.3s ease;
-        }
-
-        @keyframes cartPulse {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        .quantity-btn {
-            transition: all 0.1s ease;
-        }
-
-        .quantity-btn:active {
-            background-color: #e5e7eb;
-            transform: scale(0.95);
-        }
-
-        /* 数量更新动画 */
-        .quantity-update {
-            animation: quantityUpdate 0.3s ease;
-        }
-
-        @keyframes quantityUpdate {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.2);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
+        /* 动画效果 */
+        .add-btn { transition: all 0.2s ease; position: relative; overflow: hidden; }
+        .add-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 90, 39, 0.3); }
+        .add-btn:active { transform: translateY(0); }
+        .add-btn-success { background-color: #10b981 !important; color: white !important; }
+        .add-btn-pulse { animation: pulse 0.5s ease; }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .cart-btn-pulse { animation: cartPulse 0.3s ease; }
+        @keyframes cartPulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .quantity-btn { transition: all 0.1s ease; }
+        .quantity-btn:active { background-color: #e5e7eb; transform: scale(0.95); }
+        .quantity-update { animation: quantityUpdate 0.3s ease; }
+        @keyframes quantityUpdate { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
         /* 移动端优化 */
         @media (max-width: 768px) {
-            .menu-item {
-                padding: 1rem;
-            }
-
-            .menu-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .cart-sidebar {
-                width: 100% !important;
-            }
-
-            .btn-mobile {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .text-mobile {
-                font-size: 0.875rem;
-            }
-
-            .h-mobile {
-                height: 40px;
-            }
-
-            /* 移动端分类菜单始终显示 */
-            #mobile-categories {
-                display: block !important;
-            }
+            .menu-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .cart-sidebar { width: 100% !important; }
+            #mobile-categories { display: block !important; }
         }
 
-        /* 触摸优化 */
-        .touch-target {
-            min-height: 44px;
-            min-width: 44px;
-        }
-
-        /* 滚动优化 */
-        .scroll-smooth {
-            scroll-behavior: smooth;
-        }
-
+        .touch-target { min-height: 44px; min-width: 44px; }
+        .scroll-smooth { scroll-behavior: smooth; }
+        
         /* 竹纹背景 */
         .bamboo-pattern {
-            background-image:
-                linear-gradient(90deg, transparent 79px, #abcea1 79px, #abcea1 81px, transparent 81px),
-                linear-gradient(#eee .1em, transparent .1em);
+            background-image: linear-gradient(90deg, transparent 79px, #abcea1 79px, #abcea1 81px, transparent 81px), linear-gradient(#eee .1em, transparent .1em);
             background-size: 100% 1.2em;
             background-color: #f9f7f0;
         }
 
-        /* 动画 */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        /* 隐藏滚动条但保持滚动 */
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
 
 <body class="bg-gray-50 text-gray-800" style="touch-action: manipulation;">
+    
     <nav class="bamboo-gradient text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center h-16">
@@ -235,9 +81,10 @@
                 </div>
 
                 <div class="flex items-center space-x-3">
-                    <div class="hidden sm:flex items-center space-x-1 bg-white/20 px-2 py-1 rounded-lg text-sm">
+                    <div class="hidden sm:flex items-center space-x-1 bg-white/20 px-2 py-1 rounded-lg text-sm cursor-pointer hover:bg-white/30 transition" onclick="manualEditTable()">
                         <i class="fas fa-table text-xs"></i>
-                        <span id="table-number" class="font-medium">T12</span>
+                        <span id="table-number" class="font-medium">---</span>
+                        <i class="fas fa-pen text-[10px] ml-1 opacity-70"></i>
                     </div>
 
                     <button onclick="toggleCart()" id="cart-button" class="relative touch-target">
@@ -245,41 +92,20 @@
                             <i class="fas fa-shopping-cart"></i>
                             <span id="cart-count" class="ml-2 font-bold">0</span>
                         </div>
-                        <div id="cart-indicator"
-                            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
+                        <div id="cart-indicator" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
                             <span id="cart-indicator-count">!</span>
                         </div>
                     </button>
-
-                    <!--<button onclick="toggleMenuCategories()"
-                        class="sm:hidden touch-target w-10 h-10 flex items-center justify-center">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>*/ -->
                 </div>
             </div>
 
             <div id="mobile-categories" class="sm:hidden py-3 border-t border-white/20 hidden">
                 <div class="flex overflow-x-auto scrollbar-hide space-x-2 pb-2">
-                    <button onclick="filterCategory('all')" data-category="all"
-                        class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">
-                        Tout
-                    </button>
-                    <button onclick="filterCategory('pho')" data-category="pho"
-                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">
-                        Pho
-                    </button>
-                    <button onclick="filterCategory('entrees')" data-category="entrees"
-                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">
-                        Entrées
-                    </button>
-                    <button onclick="filterCategory('boissons')" data-category="boissons"
-                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">
-                        Boissons
-                    </button>
-                    <button onclick="filterCategory('desserts')" data-category="desserts"
-                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">
-                        Desserts
-                    </button>
+                    <button onclick="filterCategory('all')" data-category="all" class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">Tout</button>
+                    <button onclick="filterCategory('pho')" data-category="pho" class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Pho</button>
+                    <button onclick="filterCategory('entrees')" data-category="entrees" class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Entrées</button>
+                    <button onclick="filterCategory('boissons')" data-category="boissons" class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Boissons</button>
+                    <button onclick="filterCategory('desserts')" data-category="desserts" class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Desserts</button>
                 </div>
             </div>
         </div>
@@ -290,56 +116,38 @@
             <div class="bg-white rounded-2xl shadow-sm p-5 bamboo-pattern">
                 <div class="flex items-start justify-between">
                     <div>
-                        <h2 class="text-2xl font-bold bamboo-text mb-1">Bienvenue chez Pho Bamboo</h2>
+                        <h2 class="text-2xl font-bold bamboo-text mb-1">Bienvenue</h2>
                         <p class="text-gray-600 text-mobile">Spécialités VIET & THAÏ</p>
                     </div>
-                    <div class="bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2 shadow">
+                    <div class="bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2 shadow cursor-pointer active:scale-95 transition" onclick="openLoyaltyModal()">
                         <div class="flex items-center">
-                            <i class="fas fa-coins text-yellow-500 mr-2"></i>
+                            <i class="fas fa-crown text-yellow-500 mr-2"></i>
                             <div>
-                                <p class="text-xs text-gray-500">Vos points</p>
-                                <p class="font-bold bamboo-text" id="user-points">250</p>
+                                <p class="text-xs text-gray-500">Mes Points</p>
+                                <p class="font-bold bamboo-text" id="user-points">0</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="hidden sm:flex space-x-2 mt-6">
-                    <button onclick="filterCategory('all')" data-category="all"
-                        class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">
-                        Tout voir
-                    </button>
-                    <button onclick="filterCategory('pho')" data-category="pho"
-                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">
-                        Pho Spécialités
-                    </button>
-                    <button onclick="filterCategory('entrees')" data-category="entrees"
-                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">
-                        Entrées
-                    </button>
-                    <button onclick="filterCategory('boissons')" data-category="boissons"
-                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">
-                        Boissons
-                    </button>
-                    <button onclick="filterCategory('desserts')" data-category="desserts"
-                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">
-                        Desserts
-                    </button>
+                    <button onclick="filterCategory('all')" data-category="all" class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">Tout voir</button>
+                    <button onclick="filterCategory('pho')" data-category="pho" class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Pho Spécialités</button>
+                    <button onclick="filterCategory('entrees')" data-category="entrees" class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Entrées</button>
+                    <button onclick="filterCategory('boissons')" data-category="boissons" class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Boissons</button>
+                    <button onclick="filterCategory('desserts')" data-category="desserts" class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Desserts</button>
                 </div>
             </div>
         </div>
 
-        <div id="menu-grid" class="menu-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            </div>
+        <div id="menu-grid" class="menu-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
         <div class="fixed bottom-20 right-4 z-30">
             <div class="flex flex-col space-y-2">
-                <button onclick="scrollToTop()"
-                    class="touch-target w-12 h-12 rounded-full bamboo-gradient text-white shadow-lg flex items-center justify-center">
+                <button onclick="scrollToTop()" class="touch-target w-12 h-12 rounded-full bamboo-gradient text-white shadow-lg flex items-center justify-center">
                     <i class="fas fa-arrow-up"></i>
                 </button>
-                <button onclick="showQRInfo()"
-                    class="touch-target w-12 h-12 rounded-full bg-white bamboo-border border text-gray-700 shadow-lg flex items-center justify-center">
+                <button onclick="showQRInfo()" class="touch-target w-12 h-12 rounded-full bg-white bamboo-border border text-gray-700 shadow-lg flex items-center justify-center">
                     <i class="fas fa-qrcode"></i>
                 </button>
             </div>
@@ -349,14 +157,12 @@
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40">
         <div class="container mx-auto">
             <div class="flex justify-around items-center h-16">
-                <button onclick="filterCategory('all')"
-                    class="flex flex-col items-center justify-center touch-target px-2">
+                <button onclick="filterCategory('all')" class="flex flex-col items-center justify-center touch-target px-2">
                     <i class="fas fa-home text-lg bamboo-text"></i>
                     <span class="text-xs mt-1">Accueil</span>
                 </button>
 
-                <button onclick="filterCategory('pho')"
-                    class="flex flex-col items-center justify-center touch-target px-2">
+                <button onclick="filterCategory('pho')" class="flex flex-col items-center justify-center touch-target px-2">
                     <i class="fas fa-bowl-food text-lg text-gray-500"></i>
                     <span class="text-xs mt-1">Pho</span>
                 </button>
@@ -366,34 +172,31 @@
                         <i class="fas fa-shopping-cart text-xl bamboo-text"></i>
                         <span class="text-xs mt-1">Panier</span>
                     </div>
-                    <div id="bottom-cart-indicator"
-                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
+                    <div id="bottom-cart-indicator" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
                         <span id="bottom-cart-count">0</span>
                     </div>
                 </button>
 
-                <button onclick="showUserProfile()" class="flex flex-col items-center justify-center touch-target px-2">
-                    <i class="fas fa-user text-lg text-gray-500"></i>
-                    <span class="text-xs mt-1">Compte</span>
+                <button onclick="openLoyaltyModal()" class="flex flex-col items-center justify-center touch-target px-2">
+                    <i class="fas fa-crown text-lg text-yellow-500"></i>
+                    <span class="text-xs mt-1">Fidélité</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="cart-sidebar"
-        class="fixed top-0 right-0 w-full sm:w-96 h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
+    <div id="cart-sidebar" class="fixed top-0 right-0 w-full sm:w-96 h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
         <div class="h-full flex flex-col">
             <div class="bamboo-gradient text-white p-6">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <button onclick="toggleCart()"
-                            class="touch-target w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">
+                        <button onclick="toggleCart()" class="touch-target w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">
                             <i class="fas fa-arrow-left"></i>
                         </button>
                         <h3 class="text-xl font-bold">Votre Commande</h3>
                     </div>
                     <div class="text-right">
-                        <p class="text-sm opacity-90">Table <span id="cart-table-number">12</span></p>
+                        <p class="text-sm opacity-90">Table <span id="cart-table-number">---</span></p>
                     </div>
                 </div>
 
@@ -411,52 +214,36 @@
             </div>
 
             <div id="cart-items" class="flex-1 overflow-y-auto p-4">
-                <div id="empty-cart-message" class="text-center py-12">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-full bamboo-light-bg flex items-center justify-center">
-                        <i class="fas fa-shopping-basket text-3xl bamboo-text"></i>
-                    </div>
-                    <p class="bamboo-text font-bold text-lg mb-2">Panier vide</p>
-                    <p class="text-gray-500 text-sm">Ajoutez des plats depuis le menu</p>
-                    <button onclick="toggleCart()"
-                        class="mt-6 px-6 py-3 bamboo-gradient text-white rounded-lg font-bold">
-                        Parcourir le menu
-                    </button>
                 </div>
-            </div>
 
-            <div class="border-t p-4">
+            <div class="border-t p-4 bg-gray-50">
                 <div class="mb-4">
                     <div class="flex items-center justify-between mb-2">
                         <label class="text-gray-700 font-medium">Instructions spéciales</label>
                         <button onclick="showCommonInstructions()" class="text-xs bamboo-text">Suggestions</button>
                     </div>
-                    <textarea id="order-notes" class="w-full border rounded-lg p-3 text-sm" rows="2"
-                        placeholder="Ex: Sans coriandre, extra piment, allergies..."></textarea>
+                    <textarea id="order-notes" class="w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-green-500 outline-none" rows="2" placeholder="Ex: Sans coriandre, extra piment, allergies..."></textarea>
                 </div>
 
                 <div class="space-y-3">
-                    <button onclick="checkout()"
-    class="w-full bamboo-gradient text-white py-3 px-5 rounded-xl font-bold shadow-xl touch-target flex items-center justify-between transition-transform active:scale-95">
-    
-    <div class="flex items-center space-x-3">
-        <i class="fa-brands fa-whatsapp text-3xl"></i>
-        
-        <div class="flex flex-col items-start text-left">
-            <span class="text-xs opacity-80 font-normal uppercase tracking-wide">Commander via</span>
-            <span class="text-lg leading-none">WhatsApp</span>
-        </div>
-    </div>
+                    <button onclick="checkout()" class="w-full bamboo-gradient text-white py-3 px-5 rounded-xl font-bold shadow-xl touch-target flex items-center justify-between transition-transform active:scale-95">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-brands fa-whatsapp text-3xl"></i>
+                            <div class="flex flex-col items-start text-left">
+                                <span class="text-xs opacity-80 font-normal uppercase tracking-wide">Commander via</span>
+                                <span class="text-lg leading-none">WhatsApp</span>
+                            </div>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-lg border border-white/10">
+                            <span id="checkout-total">0€</span>
+                        </div>
+                    </button>
 
-    <div class="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-lg border border-white/10">
-        <span id="checkout-total">0€</span>
-    </div>
-</button>
-
-                    <div class="text-center text-xs text-gray-500">
-                        <p><i class="fas fa-coins mr-1"></i> Vous gagnerez <span id="checkout-points"
-                                class="font-bold">0</span> points</p>
-                        <p class="mt-1">Paiement sécurisé avec Stripe</p>
-                    </div>
+                    <p class="text-[10px] text-gray-400 text-center leading-tight px-2">
+                        En cliquant sur Commander, vous acceptez l'envoi de votre commande via <span class="font-bold">WhatsApp</span>.
+                        <br>
+                        Vos points de fidélité sont stockés localement sur votre appareil.
+                    </p>
                 </div>
             </div>
         </div>
@@ -466,781 +253,531 @@
 
     <div id="qr-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-2xl max-w-md w-full">
-            <div class="bamboo-gradient text-white p-6 rounded-t-2xl">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold">Scanner pour commander</h3>
-                    <button onclick="closeQRModal()"
-                        class="touch-target w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+            <div class="bamboo-gradient text-white p-6 rounded-t-2xl flex justify-between">
+                <h3 class="text-xl font-bold">Info QR Code</h3>
+                <button onclick="closeQRModal()" class="text-white"><i class="fas fa-times"></i></button>
             </div>
-
-            <div class="p-6">
-                <div class="text-center mb-6">
-                    <div class="inline-block p-4 bg-gray-100 rounded-lg mb-4">
-                        <div class="w-48 h-48 mx-auto relative">
-                            <div class="absolute inset-0 bg-gradient-to-br from-green-100 to-green-300 rounded-lg">
-                            </div>
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="text-center">
-                                    <div class="grid grid-cols-8 gap-1 mb-3 mx-auto w-32">
-                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
-                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
-                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
-                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
-                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
-                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
-                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
-                                        <div class="w-3 h-3 bg-green-800 rounded-sm"></div>
-                                    </div>
-                                    <span class="text-xs text-gray-600 font-bold">PHO BAMBOO</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-sm text-gray-500 mt-3">Pointez votre caméra vers le QR code</p>
-                    </div>
-
-                    <div class="space-y-3 text-left">
-                        <div class="flex items-start">
-                            <div
-                                class="w-6 h-6 rounded-full bamboo-gradient text-white flex items-center justify-center text-xs mr-3 flex-shrink-0">
-                                1</div>
-                            <div>
-                                <p class="font-medium">Scannez le code QR sur votre table</p>
-                                <p class="text-sm text-gray-500">Ou à l'entrée du restaurant</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div
-                                class="w-6 h-6 rounded-full bamboo-gradient text-white flex items-center justify-center text-xs mr-3 flex-shrink-0">
-                                2</div>
-                            <div>
-                                <p class="font-medium">Commandez directement depuis votre téléphone</p>
-                                <p class="text-sm text-gray-500">Pas d'application à télécharger</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <div
-                                class="w-6 h-6 rounded-full bamboo-gradient text-white flex items-center justify-center text-xs mr-3 flex-shrink-0">
-                                3</div>
-                            <div>
-                                <p class="font-medium">Recevez vos points fidélité</p>
-                                <p class="text-sm text-gray-500">10 points par euro dépensé</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="closeQRModal()"
-                    class="w-full bamboo-border border text-gray-700 py-3 rounded-lg font-medium">
-                    Compris
-                </button>
+            <div class="p-6 text-center">
+                <p>Scannez le QR code sur votre table pour définir automatiquement votre numéro de table.</p>
+                <button onclick="closeQRModal()" class="mt-4 w-full bamboo-border border text-gray-700 py-2 rounded-lg">Fermer</button>
             </div>
         </div>
     </div>
 
-    <div id="notification"
-        class="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50 max-w-sm">
-        <div class="flex items-start">
-            <i class="fas fa-check-circle text-xl mr-3 flex-shrink-0"></i>
-            <div>
-                <p class="font-bold" id="notification-title">Succès</p>
-                <p id="notification-message" class="text-sm mt-1"></p>
+    <div id="loyalty-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-end sm:items-center justify-center hidden transition-opacity duration-300">
+        <div class="bg-white w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl overflow-hidden shadow-2xl transform transition-transform duration-300">
+            <div class="bamboo-gradient p-6 text-white relative">
+                <button onclick="closeLoyaltyModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-inner text-yellow-500">
+                        <i class="fas fa-crown text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold">Fidélité Pho Bamboo</h3>
+                        <p class="opacity-90 text-sm">Mangez, cumulez, profitez !</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex items-baseline">
+                    <span class="text-4xl font-bold" id="modal-points-display">0</span>
+                    <span class="ml-2 text-sm opacity-80">points disponibles</span>
+                </div>
+    
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs mb-1 opacity-90">
+                        <span>Prochaine récompense</span>
+                        <span id="next-reward-points">200 pts</span>
+                    </div>
+                    <div class="w-full bg-black/20 rounded-full h-2">
+                        <div id="points-progress-bar" class="bg-yellow-400 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
             </div>
+    
+            <div class="p-6 bg-gray-50 max-h-[50vh] overflow-y-auto">
+                <h4 class="font-bold text-gray-700 mb-4 flex items-center text-sm uppercase tracking-wide">
+                    <i class="fas fa-gift text-red-500 mr-2"></i> Récompenses
+                </h4>
+                <div id="rewards-list" class="space-y-3">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="fixed top-4 right-4 bg-white border-l-4 border-green-500 text-gray-800 p-4 rounded-lg shadow-xl transform translate-x-full transition-transform duration-300 z-[60] max-w-sm flex items-start">
+        <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+        <div>
+            <p class="font-bold text-sm" id="notification-title">Succès</p>
+            <p id="notification-message" class="text-xs mt-1 text-gray-500"></p>
         </div>
     </div>
 
     <script>
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+        // ⚠️ 请在此处输入老板的 WhatsApp 电话号码 (格式: 33612345678)
+        const RESTAURANT_PHONE = "33764575572"; 
+        
         // 菜单数据
         const menuData = [
-            {
-                id: 1,
-                name_fr: "Pho Bœuf Traditionnel",
-                name_vn: "Phở Bò Truyền Thống",
-                description: "Bouillon de bœuf mijoté 24h, nouilles de riz, bœuf tendre",
-                price: 14.90,
-                category: "pho",
-                image: "https://www.lestresorsduvietnam.fr/wp-content/uploads/2023/07/Le-Pho-Bo-pho-vietnamien-et-ses-epices.jpg",
-                popular: true,
-                spicy: false,
-                vegan: false
-            },
-            {
-                id: 2,
-                name_fr: "Pho au Poulet",
-                name_vn: "Phở Gà",
-                description: "Bouillon de poulet, blanc de poulet, herbes fraîches",
-                price: 13.90,
-                category: "pho",
-                image: "https://images.getrecipekit.com/20250122163352-pho-20vietnamien-20au-20poulet-20et-20herbes-20fra-c3-aeches.jpg?aspect_ratio=16:9&quality=90&",
-                popular: true,
-                spicy: false,
-                vegan: false
-            },
-            {
-                id: 3,
-                name_fr: "Pho Végétarien",
-                name_vn: "Phở Chay",
-                description: "Bouillon de légumes, tofu, champignons, légumes de saison",
-                price: 12.90,
-                category: "pho",
-                image: "https://www.cuisineactuelle.fr/imgre/fit/~1~cac~2022~01~06~4126da1e-96cf-4258-b9f1-b1888eda4fae.jpeg/750x562/quality/80/crop-from/center/cr/wqkgVmVsc2JlcmcgLyBQaG90b2N1aXNpbmUJIC8gQ3Vpc2luZSBBY3R1ZWxsZQ%3D%3D/focus-point/2231%2C3302/pho-vegetarien-soupe-vietnamienne.jpeg",
-                popular: false,
-                spicy: false,
-                vegan: true
-            },
-            {
-                id: 4,
-                name_fr: "Nems au Porc (4 pièces)",
-                name_vn: "Chả Giò",
-                description: "Nems croustillants, porc et légumes, sauce nuoc mam",
-                price: 7.90,
-                category: "entrees",
-                image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&h=300&fit=crop&crop=center",
-                popular: true,
-                spicy: false,
-                vegan: false
-            },
-            {
-                id: 5,
-                name_fr: "Salade de Papaye Verte",
-                name_vn: "Gỏi Đu Đủ",
-                description: "Papaye verte, crevettes séchées, cacahuètes, vinaigrette",
-                price: 8.50,
-                category: "entrees",
-                image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop&crop=center",
-                popular: false,
-                spicy: true,
-                vegan: false
-            },
-            {
-                id: 6,
-                name_fr: "Café Vietnamien Glacé",
-                name_vn: "Cà Phê Sữa Đá",
-                description: "Café fort avec lait concentré sucré, servi glacé",
-                price: 4.50,
-                category: "boissons",
-                image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop&crop=center",
-                popular: true,
-                spicy: false,
-                vegan: false
-            },
-            {
-                id: 7,
-                name_fr: "Thé Vert Jasmin",
-                name_vn: "Trà Lài",
-                description: "Thé vert parfumé au jasmin, servi chaud",
-                price: 3.50,
-                category: "boissons",
-                image: "https://images.unsplash.com/photo-1561047029-3000c68339ca?w=400&h=300&fit=crop&crop=center",
-                popular: false,
-                spicy: false,
-                vegan: true
-            },
-            {
-                id: 8,
-                name_fr: "Che Trois Couleurs",
-                name_vn: "Chè Ba Màu",
-                description: "Dessert aux haricots, gelée, lait de coco",
-                price: 6.50,
-                category: "desserts",
-                image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop&crop=center",
-                popular: false,
-                spicy: false,
-                vegan: true
-            }
+            { id: 1, name_fr: "Pho Bœuf Traditionnel", name_vn: "Phở Bò Truyền Thống", description: "Bouillon de bœuf mijoté 24h, nouilles de riz, bœuf tendre", price: 14.90, category: "pho", image: "https://www.lestresorsduvietnam.fr/wp-content/uploads/2023/07/Le-Pho-Bo-pho-vietnamien-et-ses-epices.jpg", popular: true, spicy: false, vegan: false },
+            { id: 2, name_fr: "Pho au Poulet", name_vn: "Phở Gà", description: "Bouillon de poulet, blanc de poulet, herbes fraîches", price: 13.90, category: "pho", image: "https://images.getrecipekit.com/20250122163352-pho-20vietnamien-20au-20poulet-20et-20herbes-20fra-c3-aeches.jpg?aspect_ratio=16:9&quality=90&", popular: true, spicy: false, vegan: false },
+            { id: 3, name_fr: "Pho Végétarien", name_vn: "Phở Chay", description: "Bouillon de légumes, tofu, champignons", price: 12.90, category: "pho", image: "https://www.cuisineactuelle.fr/imgre/fit/~1~cac~2022~01~06~4126da1e-96cf-4258-b9f1-b1888eda4fae.jpeg/750x562/quality/80/crop-from/center/cr/wqkgVmVsc2JlcmcgLyBQaG90b2N1aXNpbmUJIC8gQ3Vpc2luZSBBY3R1ZWxsZQ%3D%3D/focus-point/2231%2C3302/pho-vegetarien-soupe-vietnamienne.jpeg", popular: false, spicy: false, vegan: true },
+            { id: 4, name_fr: "Nems au Porc (4 pièces)", name_vn: "Chả Giò", description: "Nems croustillants, porc et légumes", price: 7.90, category: "entrees", image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&h=300&fit=crop&crop=center", popular: true, spicy: false, vegan: false },
+            { id: 5, name_fr: "Salade de Papaye Verte", name_vn: "Gỏi Đu Đủ", description: "Papaye verte, crevettes séchées, cacahuètes", price: 8.50, category: "entrees", image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop&crop=center", popular: false, spicy: true, vegan: false },
+            { id: 6, name_fr: "Café Vietnamien Glacé", name_vn: "Cà Phê Sữa Đá", description: "Café fort avec lait concentré sucré, servi glacé", price: 4.50, category: "boissons", image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop&crop=center", popular: true, spicy: false, vegan: false },
+            { id: 7, name_fr: "Thé Vert Jasmin", name_vn: "Trà Lài", description: "Thé vert parfumé au jasmin, servi chaud", price: 3.50, category: "boissons", image: "https://images.unsplash.com/photo-1561047029-3000c68339ca?w=400&h=300&fit=crop&crop=center", popular: false, spicy: false, vegan: true },
+            { id: 8, name_fr: "Che Trois Couleurs", name_vn: "Chè Ba Màu", description: "Dessert aux haricots, gelée, lait de coco", price: 6.50, category: "desserts", image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop&crop=center", popular: false, spicy: false, vegan: true }
         ];
 
-        // 应用状态
+        // 积分奖励数据
+        const rewardsData = [
+            { id: 901, name: "Boisson Offerte", cost: 200, icon: "fa-glass-water", color: "text-blue-500", bg: "bg-blue-100" },
+            { id: 902, name: "Nems (2 pcs)", cost: 400, icon: "fa-scroll", color: "text-orange-500", bg: "bg-orange-100" },
+            { id: 903, name: "Dessert du jour", cost: 600, icon: "fa-ice-cream", color: "text-pink-500", bg: "bg-pink-100" },
+            { id: 904, name: "-10€ sur l'addition", cost: 1000, icon: "fa-money-bill-wave", color: "text-green-600", bg: "bg-green-100" }
+        ];
+
         let cart = JSON.parse(localStorage.getItem('phoBambooCart')) || [];
         let currentCategory = 'all';
-        let activeAddButtons = new Set(); // 跟踪正在动画的按钮
+        let activeAddButtons = new Set();
 
-        // 初始化应用
+        // ==========================================
+        // 初始化
+        // ==========================================
         document.addEventListener('DOMContentLoaded', function () {
+            initTableNumber(); // 优先识别桌号
             updateCartDisplay();
             renderMenu();
             updatePointsDisplay();
             updateCategoryButtons();
-
-            /* 如果是第一次访问，添加演示商品
-            if (cart.length === 0 && !localStorage.getItem('phoBambooFirstVisit')) {
-                addToCart(1, 1);
-                addToCart(4, 1);
-                localStorage.setItem('phoBambooFirstVisit', 'true');
-            } */
         });
 
-        // 更新分类按钮状态
-        function updateCategoryButtons() {
-            // 桌面端按钮
-            const desktopButtons = document.querySelectorAll('.hidden.sm\\:flex .category-btn');
-            desktopButtons.forEach(btn => {
-                const category = btn.getAttribute('data-category');
-                if (category === currentCategory) {
-                    btn.classList.remove('category-inactive');
-                    btn.classList.add('category-active');
-                } else {
-                    btn.classList.remove('category-active');
-                    btn.classList.add('category-inactive');
-                }
-            });
+        // 识别桌号 (URL参数 ?table=12)
+        function initTableNumber() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tableParam = urlParams.get('table');
+            const tableDisplay = document.getElementById('table-number');
+            const cartTableDisplay = document.getElementById('cart-table-number');
 
-            // 移动端按钮
-            const mobileButtons = document.querySelectorAll('#mobile-categories .category-btn');
-            mobileButtons.forEach(btn => {
-                const category = btn.getAttribute('data-category');
-                if (category === currentCategory) {
-                    btn.classList.remove('category-inactive-mobile');
-                    btn.classList.add('category-active');
+            if (tableParam) {
+                const formattedTable = "T" + tableParam;
+                tableDisplay.textContent = formattedTable;
+                cartTableDisplay.textContent = tableParam;
+                sessionStorage.setItem('phoBambooTable', tableParam);
+            } else {
+                const savedTable = sessionStorage.getItem('phoBambooTable');
+                if (savedTable) {
+                    tableDisplay.textContent = "T" + savedTable;
+                    cartTableDisplay.textContent = savedTable;
                 } else {
-                    btn.classList.remove('category-active');
-                    btn.classList.add('category-inactive-mobile');
+                    tableDisplay.textContent = "---";
+                    cartTableDisplay.textContent = "---";
                 }
-            });
+            }
         }
 
-        // 渲染菜单
+        // 手动修改桌号
+        function manualEditTable() {
+            const currentTable = document.getElementById('table-number').textContent.replace('T', '');
+            const newTable = prompt("Veuillez entrer votre numéro de table :", currentTable === "---" ? "" : currentTable);
+            
+            if (newTable && newTable.trim() !== "") {
+                document.getElementById('table-number').textContent = "T" + newTable;
+                document.getElementById('cart-table-number').textContent = newTable;
+                sessionStorage.setItem('phoBambooTable', newTable);
+                showNotification("Table mise à jour", `Vous êtes à la table ${newTable}`);
+            }
+        }
+
+        // ==========================================
+        // 核心逻辑 (渲染/购物车)
+        // ==========================================
         function renderMenu() {
             const menuGrid = document.getElementById('menu-grid');
             menuGrid.innerHTML = '';
-
-            const filteredDishes = currentCategory === 'all'
-                ? menuData
-                : menuData.filter(dish => dish.category === currentCategory);
+            const filteredDishes = currentCategory === 'all' ? menuData : menuData.filter(dish => dish.category === currentCategory);
 
             if (filteredDishes.length === 0) {
-                menuGrid.innerHTML = `
-                    <div class="col-span-full text-center py-12">
-                        <i class="fas fa-utensils text-4xl bamboo-text opacity-50 mb-4"></i>
-                        <p class="bamboo-text font-bold text-lg">Aucun plat disponible</p>
-                        <p class="text-gray-500 mt-2">Cette catégorie est temporairement vide</p>
-                    </div>
-                `;
+                menuGrid.innerHTML = `<div class="col-span-full text-center py-12 opacity-50"><i class="fas fa-utensils text-4xl mb-4"></i><p>Aucun plat disponible</p></div>`;
                 return;
             }
 
             filteredDishes.forEach(dish => {
-                const dishElement = document.createElement('div');
-                dishElement.className = 'bg-white rounded-xl shadow-sm overflow-hidden fade-in border bamboo-border';
-
-                // 获取当前菜品在购物车中的数量
                 const cartItem = cart.find(item => item.id === dish.id);
                 const quantityInCart = cartItem ? cartItem.quantity : 0;
-
-                // 标签生成
                 let tags = '';
                 if (dish.popular) tags += '<span class="bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-bold mr-2">POPULAIRE</span>';
                 if (dish.spicy) tags += '<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold mr-2">ÉPICÉ</span>';
                 if (dish.vegan) tags += '<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold mr-2">VÉGÉTALIEN</span>';
 
-                dishElement.innerHTML = `
-                    <div class="relative">
-                        <img src="${dish.image}" alt="${dish.name_fr}" 
-                             class="w-full h-48 object-cover"
-                             loading="lazy">
-                        <div class="absolute top-3 left-3 flex flex-wrap gap-1">
-                            ${tags}
-                        </div>
-                        <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1 shadow">
-                            <span class="text-xl font-bold bamboo-text">${dish.price.toFixed(2)}€</span>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <div class="mb-2">
-                            <h3 class="text-lg font-bold bamboo-text">${dish.name_fr}</h3>
-                            <p class="text-sm text-gray-600 italic">${dish.name_vn}</p>
-                        </div>
-                        <p class="text-gray-600 text-sm mb-4">${dish.description}</p>
-                        <div class="flex items-center justify-between">
-                            <div class="text-xs text-gray-500 flex items-center">
-                                <i class="fas fa-coins text-amber-500 mr-1"></i>
-                                ${getPointsFromPrice(dish.price)} pts
-                                ${quantityInCart > 0 ?
-                        `<span 
-        data-menu-badge="${dish.id}"
-        class="ml-2 bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">
-        ${quantityInCart} dans le panier
-    </span>` : ''
-                    }
-
+                const dishHTML = `
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden fade-in border bamboo-border relative">
+                        <div class="relative">
+                            <img src="${dish.image}" alt="${dish.name_fr}" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 left-3 flex flex-wrap gap-1">${tags}</div>
+                            <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1 shadow">
+                                <span class="text-xl font-bold bamboo-text">${dish.price.toFixed(2)}€</span>
                             </div>
-                            <button id="add-btn-${dish.id}" 
-                                    onclick="addToCart(${dish.id}, 1, this)" 
-                                    class="add-btn touch-target bamboo-gradient text-white px-4 py-3 rounded-lg font-bold text-sm flex items-center">
-                                <i class="fas fa-plus mr-2"></i>
-                                ${quantityInCart > 0 ? 'Ajouter +' : 'Ajouter'}
-                            </button>
                         </div>
-                    </div>
-                `;
-                menuGrid.appendChild(dishElement);
+                        <div class="p-4">
+                            <div class="mb-2">
+                                <h3 class="text-lg font-bold bamboo-text">${dish.name_fr}</h3>
+                                <p class="text-sm text-gray-600 italic">${dish.name_vn}</p>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">${dish.description}</p>
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs text-gray-500 flex items-center">
+                                    <i class="fas fa-coins text-amber-500 mr-1"></i> ${getPointsFromPrice(dish.price)} pts
+                                    ${quantityInCart > 0 ? `<span data-menu-badge="${dish.id}" class="ml-2 bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">${quantityInCart} pan.</span>` : ''}
+                                </div>
+                                <button id="add-btn-${dish.id}" onclick="addToCart(${dish.id}, 1, this)" class="add-btn touch-target bamboo-gradient text-white px-4 py-3 rounded-lg font-bold text-sm flex items-center">
+                                    <i class="fas fa-plus mr-2"></i> ${quantityInCart > 0 ? 'Ajouter +' : 'Ajouter'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+                menuGrid.innerHTML += dishHTML;
             });
         }
 
-        // 过滤分类
-        function filterCategory(category) {
-            currentCategory = category;
-            updateCategoryButtons();
-            renderMenu();
-            scrollToTop();
-        }
-
-        // 切换移动端分类菜单显示
-        function toggleMenuCategories() {
-            const categories = document.getElementById('mobile-categories');
-            categories.classList.toggle('hidden');
-        }
-
-        // 购物车功能
         function addToCart(dishId, quantity, buttonElement = null) {
             const dish = menuData.find(d => d.id === dishId);
             if (!dish) return;
 
-            // 添加按钮反馈效果
-            if (buttonElement) {
-                provideButtonFeedback(buttonElement);
-            }
+            if (buttonElement) provideButtonFeedback(buttonElement);
 
-            const existingItem = cart.find(item => item.id === dishId);
-
+            const existingItem = cart.find(item => item.id === dishId && !item.isReward);
             if (existingItem) {
                 existingItem.quantity += quantity;
             } else {
-                cart.push({
-                    id: dish.id,
-                    name_fr: dish.name_fr,
-                    price: dish.price,
-                    quantity: quantity,
-                    image: dish.image
-                });
+                cart.push({ id: dish.id, name_fr: dish.name_fr, price: dish.price, quantity: quantity, image: dish.image, isReward: false });
             }
-
+            
             saveCart();
             updateCartDisplay();
-            showNotification('Ajouté au panier', `${dish.name_fr} a été ajouté`);
-
-            // 更新菜单上的角标（而不是重绘整个菜单）
-            const currentQty = existingItem ? existingItem.quantity : quantity;
-            updateMenuQuantityBadge(dish.id, currentQty);
-
-            /* 在移动端自动打开购物车
-            if (window.innerWidth < 768 && cart.length === 1) {
-                setTimeout(() => toggleCart(), 300);
-            } */
-        }
-
-        // 提供按钮反馈效果
-        function provideButtonFeedback(buttonElement) {
-            if (!buttonElement || activeAddButtons.has(buttonElement.id)) return;
-
-            activeAddButtons.add(buttonElement.id);
-
-            // 添加动画类
-            buttonElement.classList.add('add-btn-pulse');
-            buttonElement.classList.add('add-btn-success');
-
-            // 临时改变按钮文本
-            const originalText = buttonElement.innerHTML;
-            buttonElement.innerHTML = '<i class="fas fa-check mr-2"></i>Ajouté !';
-
-            // 移除动画效果
-            setTimeout(() => {
-                buttonElement.classList.remove('add-btn-pulse');
-            }, 500);
-
-            // 恢复原始状态
-            setTimeout(() => {
-                buttonElement.classList.remove('add-btn-success');
-                buttonElement.innerHTML = originalText;
-                activeAddButtons.delete(buttonElement.id);
-            }, 1000);
+            updateMenuQuantityBadge(dish.id, existingItem ? existingItem.quantity : quantity);
+            if(!buttonElement) showNotification('Ajouté', dish.name_fr); 
         }
 
         function updateCartDisplay() {
             const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
             const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-            // 更新计数
             document.getElementById('cart-count').textContent = cartCount;
             document.getElementById('bottom-cart-count').textContent = cartCount;
             document.getElementById('cart-indicator-count').textContent = cartCount > 9 ? '9+' : cartCount;
-
-            // 更新金额
             document.getElementById('cart-sidebar-total').textContent = `${cartTotal.toFixed(2)}€`;
             document.getElementById('checkout-total').textContent = `${cartTotal.toFixed(2)}€`;
-            document.getElementById('cart-item-count').textContent = `${cartCount} article${cartCount !== 1 ? 's' : ''}`;
-            document.getElementById('checkout-points').textContent = getPointsFromPrice(cartTotal);
+            document.getElementById('cart-item-count').textContent = `${cartCount} article${cartCount > 1 ? 's' : ''}`;
             document.getElementById('cart-points-earned').textContent = `+${getPointsFromPrice(cartTotal)} points`;
 
-            // 更新购物车指示器
-            const indicator = document.getElementById('cart-indicator');
-            const bottomIndicator = document.getElementById('bottom-cart-indicator');
+            const indicators = [document.getElementById('cart-indicator'), document.getElementById('bottom-cart-indicator')];
+            indicators.forEach(el => cartCount > 0 ? el.classList.remove('hidden') : el.classList.add('hidden'));
 
-            if (cartCount > 0) {
-                indicator.classList.remove('hidden');
-                bottomIndicator.classList.remove('hidden');
-                // 购物车按钮动画
-                const cartButton = document.getElementById('cart-button');
-                cartButton.classList.add('cart-btn-pulse');
-                setTimeout(() => cartButton.classList.remove('cart-btn-pulse'), 300);
-            } else {
-                indicator.classList.add('hidden');
-                bottomIndicator.classList.add('hidden');
-            }
-
-            // 更新购物车商品列表
-            updateCartItemsList();
+            renderCartItems();
         }
 
-        function updateCartItemsList() {
-            const cartItemsContainer = document.getElementById('cart-items');
-            
-            // 定义空购物车的 HTML 模板（解决DOM元素被销毁的问题）
-            const emptyCartHTML = `
-                <div id="empty-cart-message" class="text-center py-12 fade-in">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-full bamboo-light-bg flex items-center justify-center">
-                        <i class="fas fa-shopping-basket text-3xl bamboo-text"></i>
-                    </div>
-                    <p class="bamboo-text font-bold text-lg mb-2">Panier vide</p>
-                    <p class="text-gray-500 text-sm">Ajoutez des plats depuis le menu</p>
-                    <button onclick="toggleCart()"
-                        class="mt-6 px-6 py-3 bamboo-gradient text-white rounded-lg font-bold">
-                        Parcourir le menu
-                    </button>
-                </div>
-            `;
-
+        function renderCartItems() {
+            const container = document.getElementById('cart-items');
             if (cart.length === 0) {
-                cartItemsContainer.innerHTML = emptyCartHTML;
-            } else {
-                let itemsHTML = '';
-                cart.forEach(item => {
-                    itemsHTML += `
-                        <div class="bg-gray-50 rounded-lg p-4 mb-3 fade-in">
-                            <div class="flex items-center">
-                                <img src="${item.image}" alt="${item.name_fr}" 
-                                     class="w-16 h-16 object-cover rounded-lg">
-                                <div class="ml-4 flex-1">
-                                    <h4 class="font-bold text-sm bamboo-text">${item.name_fr}</h4>
-                                    <p class="text-gray-500 text-xs">${item.price.toFixed(2)}€ l'unité</p>
-                                </div>
-                                <div class="flex flex-col items-end">
-                                    <div class="flex items-center space-x-2 mb-2">
-                                        <button onclick="updateCartItemQuantity(${item.id}, -1)" 
-                                                class="quantity-btn touch-target w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-200">
-                                            <i class="fas fa-minus text-xs"></i>
-                                        </button>
-                                        <span id="cart-item-quantity-${item.id}" class="font-bold min-w-8 text-center quantity-display">${item.quantity}</span>
-                                        <button onclick="updateCartItemQuantity(${item.id}, 1)" 
-                                                class="quantity-btn touch-target w-8 h-8 rounded-full border flex items-center justify-center hover:bg-gray-200">
-                                            <i class="fas fa-plus text-xs"></i>
-                                        </button>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <span id="cart-item-total-${item.id}" class="font-bold bamboo-text">${(item.price * item.quantity).toFixed(2)}€</span>
-                                        <button onclick="removeFromCart(${item.id})" 
-                                                class="touch-target text-red-500 hover:text-red-700 ml-3">
-                                            <i class="fas fa-trash text-sm"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                container.innerHTML = `
+                    <div class="text-center py-12 fade-in">
+                        <div class="w-24 h-24 mx-auto mb-6 rounded-full bamboo-light-bg flex items-center justify-center">
+                            <i class="fas fa-shopping-basket text-3xl bamboo-text"></i>
                         </div>
-                    `;
-                });
-                cartItemsContainer.innerHTML = itemsHTML;
-            }
-        }
-
-        // 更新购物车商品数量
-        function updateCartItemQuantity(dishId, change) {
-            const itemIndex = cart.findIndex(item => item.id === dishId);
-            if (itemIndex === -1) return;
-
-            const item = cart[itemIndex];
-            item.quantity += change;
-
-            // 数量 <= 0，删除
-            if (item.quantity <= 0) {
-                removeFromCart(dishId);
+                        <p class="bamboo-text font-bold text-lg">Panier vide</p>
+                        <button onclick="toggleCart()" class="mt-4 px-6 py-2 border bamboo-border rounded-lg text-sm">Retour au menu</button>
+                    </div>`;
                 return;
             }
 
-            saveCart();
-
-            // ===== 局部更新 UI =====
-            const quantityEl = document.getElementById(`cart-item-quantity-${dishId}`);
-            const totalEl = document.getElementById(`cart-item-total-${dishId}`);
-
-            if (quantityEl) {
-                quantityEl.textContent = item.quantity;
-                quantityEl.classList.add('quantity-update');
-                setTimeout(() => quantityEl.classList.remove('quantity-update'), 300);
-            }
-
-            if (totalEl) {
-                totalEl.textContent = `${(item.price * item.quantity).toFixed(2)}€`;
-                totalEl.classList.add('quantity-update');
-                setTimeout(() => totalEl.classList.remove('quantity-update'), 300);
-            }
-
-            updateCartTotals();
-            updateMenuQuantityBadge(dishId, item.quantity);
+            let html = '';
+            cart.forEach(item => {
+                const isReward = item.isReward;
+                html += `
+                    <div class="bg-gray-50 rounded-lg p-3 mb-3 fade-in flex items-center ${isReward ? 'border border-yellow-200 bg-yellow-50' : ''}">
+                        <img src="${item.image}" class="w-14 h-14 object-cover rounded-lg flex-shrink-0">
+                        <div class="ml-3 flex-1 min-w-0">
+                            <h4 class="font-bold text-sm bamboo-text truncate">${item.name_fr}</h4>
+                            <p class="text-xs ${isReward ? 'text-green-600 font-bold' : 'text-gray-500'}">
+                                ${isReward ? 'OFFERT (Points)' : item.price.toFixed(2) + '€'}
+                            </p>
+                        </div>
+                        <div class="flex flex-col items-end pl-2">
+                            ${!isReward ? `
+                            <div class="flex items-center space-x-2 mb-1">
+                                <button onclick="updateCartItemQuantity(${item.id}, -1)" class="w-6 h-6 rounded-full border bg-white flex items-center justify-center"><i class="fas fa-minus text-[10px]"></i></button>
+                                <span class="font-bold text-sm w-4 text-center">${item.quantity}</span>
+                                <button onclick="updateCartItemQuantity(${item.id}, 1)" class="w-6 h-6 rounded-full border bg-white flex items-center justify-center"><i class="fas fa-plus text-[10px]"></i></button>
+                            </div>
+                            ` : '<span class="text-xs bg-yellow-200 px-2 py-1 rounded text-yellow-800 font-bold mb-1">CADEAU</span>'}
+                            
+                            <div class="flex items-center">
+                                <span class="font-bold text-sm mr-3">${(item.price * item.quantity).toFixed(2)}€</span>
+                                <button onclick="removeFromCart('${item.id}')" class="text-red-400 hover:text-red-600"><i class="fas fa-trash text-xs"></i></button>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            container.innerHTML = html;
         }
 
-        function updateMenuQuantityBadge(dishId, quantity) {
-            const badge = document.querySelector(`[data-menu-badge="${dishId}"]`);
-            const btn = document.getElementById(`add-btn-${dishId}`);
-
-            // 如果已经存在角标，更新它
-            if (badge) {
-                if (quantity > 0) {
-                    badge.textContent = `${quantity} dans le panier`;
-                } else {
-                    badge.remove();
-                }
-            } 
-            // 如果不存在角标但数量>0，我们需要插入它（这种情况下，只有重新渲染或者复杂的DOM插入才能解决，
-            // 但为了简单和性能，如果用户在购物车页面改数量，回到主页通常能接受不即时显示新角标，
-            // 除非我们完全实现DOM插入逻辑。为了稳健，这里我们只更新已存在的，
-            // 或者重新获取父元素插入 - 简单的做法是重新渲染，但为了性能我们前面去掉了。
-            // 妥协方案：如果找不到badge但需要显示，这里我们可以不做操作，用户下次刷新或切换分类时会看到。）
-            
-            // 更新按钮文字
-            if (btn) {
-                btn.innerHTML = `<i class="fas fa-plus mr-2"></i>${quantity > 0 ? 'Ajouter +' : 'Ajouter'}`;
-            }
-        }
-
-
-        // 更新购物车总额和计数
-        function updateCartTotals() {
-            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-            // 更新计数
-            document.getElementById('cart-count').textContent = cartCount;
-            document.getElementById('bottom-cart-count').textContent = cartCount;
-            document.getElementById('cart-indicator-count').textContent = cartCount > 9 ? '9+' : cartCount;
-
-            // 更新金额
-            document.getElementById('cart-sidebar-total').textContent = `${cartTotal.toFixed(2)}€`;
-            document.getElementById('checkout-total').textContent = `${cartTotal.toFixed(2)}€`;
-            document.getElementById('cart-item-count').textContent = `${cartCount} article${cartCount !== 1 ? 's' : ''}`;
-            document.getElementById('checkout-points').textContent = getPointsFromPrice(cartTotal);
-            document.getElementById('cart-points-earned').textContent = `+${getPointsFromPrice(cartTotal)} points`;
-
-            // 更新购物车指示器
-            const indicator = document.getElementById('cart-indicator');
-            const bottomIndicator = document.getElementById('bottom-cart-indicator');
-
-            if (cartCount > 0) {
-                indicator.classList.remove('hidden');
-                bottomIndicator.classList.remove('hidden');
-            } else {
-                indicator.classList.add('hidden');
-                bottomIndicator.classList.add('hidden');
-            }
-        }
-
-        // 兼容性函数
-        function updateCartItem(dishId, change, buttonElement = null) {
-            updateCartItemQuantity(dishId, change);
-
-            // 为按钮提供反馈效果
-            if (buttonElement) {
-                buttonElement.classList.add('quantity-btn');
-                setTimeout(() => buttonElement.classList.remove('quantity-btn'), 150);
-            }
-        }
-
-        function removeFromCart(dishId) {
-            const itemIndex = cart.findIndex(item => item.id === dishId);
-            if (itemIndex !== -1) {
-                const removedItem = cart[itemIndex];
-                
-                // 从数组中移除
-                cart.splice(itemIndex, 1);
+        function updateCartItemQuantity(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.quantity += change;
+            if (item.quantity <= 0) removeFromCart(id);
+            else {
                 saveCart();
-                
-                // 刷新显示
                 updateCartDisplay();
-                
-                // 同步更新菜单上的角标
-                updateMenuQuantityBadge(dishId, 0);
-                
-                showNotification('Retiré du panier', `${removedItem.name_fr} a été retiré`);
+                if (!item.isReward) updateMenuQuantityBadge(id, item.quantity);
             }
         }
 
-        function saveCart() {
-            localStorage.setItem('phoBambooCart', JSON.stringify(cart));
+        function removeFromCart(id) {
+            // ID 可以是数字(普通菜)或字符串(奖励)
+            const index = cart.findIndex(i => i.id == id);
+            if (index > -1) {
+                const item = cart[index];
+                cart.splice(index, 1);
+                saveCart();
+                updateCartDisplay();
+                if (!item.isReward) updateMenuQuantityBadge(item.id, 0);
+            }
         }
 
-// ==========================================
-        // WHATSAPP 配置
-        // 请将此处的号码替换为老板的手机号 (国际格式，不要加 + 号)
-        // 例如法国号码 (06 12 34 56 78) -> "33612345678"
-        const RESTAURANT_PHONE = "33764575572"; 
         // ==========================================
+        // 会员积分系统
+        // ==========================================
+        function openLoyaltyModal() {
+            document.getElementById('loyalty-modal').classList.remove('hidden');
+            updateLoyaltyUI();
+        }
 
+        function closeLoyaltyModal() {
+            document.getElementById('loyalty-modal').classList.add('hidden');
+        }
+
+        function updateLoyaltyUI() {
+            const currentPoints = parseInt(localStorage.getItem('phoBambooPoints') || 0);
+            document.getElementById('modal-points-display').textContent = currentPoints;
+            
+            // 进度条逻辑 (最高以1000分为基准)
+            const maxPoints = 1000;
+            const percentage = Math.min((currentPoints / maxPoints) * 100, 100);
+            document.getElementById('points-progress-bar').style.width = `${percentage}%`;
+
+            // 渲染奖励列表
+            const container = document.getElementById('rewards-list');
+            container.innerHTML = '';
+            rewardsData.forEach(reward => {
+                const canAfford = currentPoints >= reward.cost;
+                const btnClass = canAfford 
+                    ? 'bg-green-500 text-white shadow-lg hover:bg-green-600 active:scale-95' 
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed';
+                
+                container.innerHTML += `
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full ${reward.bg} ${reward.color} flex items-center justify-center flex-shrink-0">
+                                <i class="fas ${reward.icon}"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-800 text-sm">${reward.name}</p>
+                                <p class="text-xs font-bold ${canAfford ? 'text-green-600' : 'text-gray-400'}">${reward.cost} points</p>
+                            </div>
+                        </div>
+                        <button onclick="redeemReward(${reward.id})" ${!canAfford ? 'disabled' : ''} class="px-3 py-2 rounded-lg font-bold text-xs transition-transform ${btnClass}">
+                            ${canAfford ? 'Obtenir' : 'Bloqué'}
+                        </button>
+                    </div>`;
+            });
+        }
+
+        function redeemReward(rewardId) {
+            const reward = rewardsData.find(r => r.id === rewardId);
+            let currentPoints = parseInt(localStorage.getItem('phoBambooPoints') || 0);
+
+            if (currentPoints < reward.cost) return;
+
+            if(confirm(`Utiliser ${reward.cost} points pour : ${reward.name} ?`)) {
+                // 扣分
+                currentPoints -= reward.cost;
+                updateUserPoints(-reward.cost); // 负数即扣分
+                updateLoyaltyUI();
+
+                // 加入购物车 (作为特殊商品)
+                cart.push({
+                    id: `reward-${Date.now()}`, // 唯一ID
+                    name_fr: `🎁 ${reward.name}`,
+                    price: 0,
+                    quantity: 1,
+                    image: "https://cdn-icons-png.flaticon.com/512/3209/3209955.png",
+                    isReward: true
+                });
+
+                saveCart();
+                updateCartDisplay();
+                closeLoyaltyModal();
+                toggleCart();
+                showNotification('Récompense ajoutée !', 'Points débités.');
+            }
+        }
+
+        // ==========================================
+        // WhatsApp 结账逻辑
+        // ==========================================
         function checkout() {
-            // 计算总价
             const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            // 获取备注
             const notes = document.getElementById('order-notes').value;
-            // 获取桌号
             const tableNumber = document.getElementById('table-number').textContent;
 
-            // 检查购物车是否为空
             if (cart.length === 0) {
                 showNotification('Panier vide', 'Ajoutez des plats avant de commander');
                 return;
             }
 
-            // 1. 构建 WhatsApp 消息内容 (法语格式，适合法国餐馆)
-            let message = `🔔 *NOUVELLE COMMANDE - ${tableNumber}*\n`; // 标题：新订单 - 桌号
-            message += `🗓️ ${new Date().toLocaleTimeString()}\n`;       // 时间
+            // 1. 构建消息
+            let message = `🔔 *NOUVELLE COMMANDE - ${tableNumber}*\n`;
+            message += `🗓️ ${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}\n`;
             message += `------------------------------\n`;
 
-            // 循环添加菜品
             cart.forEach(item => {
-                const subtotal = (item.price * item.quantity).toFixed(2);
-                message += `▪️ ${item.quantity}x ${item.name_fr} (${subtotal}€)\n`;
+                if(item.isReward) {
+                    message += `🎁 1x ${item.name_fr.replace('🎁 ', '')} (OFFERT)\n`;
+                } else {
+                    const subtotal = (item.price * item.quantity).toFixed(2);
+                    message += `▪️ ${item.quantity}x ${item.name_fr} (${subtotal}€)\n`;
+                }
             });
 
             message += `------------------------------\n`;
-            message += `💰 *TOTAL: ${cartTotal.toFixed(2)}€*\n`; // 总金额
+            message += `💰 *TOTAL: ${cartTotal.toFixed(2)}€*\n`;
 
-            // 如果有特殊备注，加在最后
             if (notes && notes.trim() !== "") {
                 message += `\n📝 *Note:* ${notes}\n`;
             }
 
-            // 2. 编码消息 URL 并打开 WhatsApp
-            // encodeURIComponent 用于确保特殊字符（如空格、换行）能被正确传输
+            // 2. 跳转 WhatsApp
             const whatsappUrl = `https://wa.me/${RESTAURANT_PHONE}?text=${encodeURIComponent(message)}`;
-            
-            // 在新标签页打开 (电脑版) 或 直接跳转 (手机版)
             window.open(whatsappUrl, '_blank');
 
-            // 3. 后续清理工作 (积分、清空购物车等)
+            // 3. 后续处理
+            showNotification('Commande envoyée', 'En attente de confirmation sur WhatsApp');
             
-            // 提示用户
-            showNotification('Commande préparée !',
-                `Veuillez confirmer l'envoi sur WhatsApp.`); // "请在 WhatsApp 上确认发送"
+            // 只有现金支付部分产生积分
+            const pointsEarned = getPointsFromPrice(cartTotal);
+            if(pointsEarned > 0) updateUserPoints(pointsEarned);
 
-            // 更新用户积分
-            updateUserPoints(getPointsFromPrice(cartTotal));
-
-            // 发送后清空购物车
+            // 清理
             cart = [];
             saveCart();
             updateCartDisplay();
             toggleCart();
-
-            // 清空备注栏
             document.getElementById('order-notes').value = '';
-
-            // 重新渲染菜单 (为了移除菜品上的数量角标)
-            setTimeout(() => {
-                renderMenu();
-            }, 300);
+            renderMenu(); // 重置按钮状态
         }
 
-        // 积分系统
-        function getPointsFromPrice(price) {
-            return Math.floor(price * 10);
-        }
-
-        function updateUserPoints(pointsToAdd) {
-            let currentPoints = parseInt(document.getElementById('user-points').textContent);
-            currentPoints += pointsToAdd;
-            document.getElementById('user-points').textContent = currentPoints;
-            localStorage.setItem('phoBambooPoints', currentPoints);
+        // ==========================================
+        // 工具函数
+        // ==========================================
+        function getPointsFromPrice(price) { return Math.floor(price * 10); }
+        
+        function updateUserPoints(change) {
+            let pts = parseInt(localStorage.getItem('phoBambooPoints') || 0);
+            pts += change;
+            if(pts < 0) pts = 0;
+            localStorage.setItem('phoBambooPoints', pts);
+            updatePointsDisplay();
         }
 
         function updatePointsDisplay() {
-            const points = localStorage.getItem('phoBambooPoints') || 250;
-            document.getElementById('user-points').textContent = points;
+            const pts = localStorage.getItem('phoBambooPoints') || 0;
+            document.getElementById('user-points').textContent = pts;
         }
 
-        // UI功能
+        function provideButtonFeedback(btn) {
+            if (!btn || activeAddButtons.has(btn.id)) return;
+            activeAddButtons.add(btn.id);
+            btn.classList.add('add-btn-pulse', 'add-btn-success');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                btn.classList.remove('add-btn-success', 'add-btn-pulse');
+                btn.innerHTML = originalHTML;
+                activeAddButtons.delete(btn.id);
+            }, 800);
+        }
+
+        function updateMenuQuantityBadge(dishId, quantity) {
+            const badge = document.querySelector(`[data-menu-badge="${dishId}"]`);
+            const btn = document.getElementById(`add-btn-${dishId}`);
+            
+            // 简单处理：如果状态改变，直接刷新整个菜单可能是最稳妥的，
+            // 但为了性能，这里我们只在添加时简单更新文字
+            if (btn) btn.innerHTML = `<i class="fas fa-plus mr-2"></i> ${quantity > 0 ? 'Ajouter +' : 'Ajouter'}`;
+            // 真正要更新角标最好重新渲染 renderMenu()，或者进行复杂的DOM操作。
+            // 鉴于目前逻辑，重新渲染当前可见区域是可以接受的
+        }
+
         function toggleCart() {
             const sidebar = document.getElementById('cart-sidebar');
             const overlay = document.getElementById('cart-overlay');
-
-            if (sidebar.classList.contains('translate-x-full')) {
-                sidebar.classList.remove('translate-x-full');
-                overlay.classList.remove('hidden');
-                document.body.style.overflow = 'hidden'; // 防止背景滚动
-            } else {
+            const isOpen = !sidebar.classList.contains('translate-x-full');
+            
+            if (isOpen) {
                 sidebar.classList.add('translate-x-full');
                 overlay.classList.add('hidden');
                 document.body.style.overflow = '';
+            } else {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
             }
         }
 
-        function showQRInfo() {
-            document.getElementById('qr-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+        function filterCategory(cat) {
+            currentCategory = cat;
+            updateCategoryButtons();
+            renderMenu();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function closeQRModal() {
-            document.getElementById('qr-modal').classList.add('hidden');
-            document.body.style.overflow = '';
+        function updateCategoryButtons() {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                const isActive = btn.dataset.category === currentCategory;
+                const isMobile = btn.closest('#mobile-categories');
+                
+                btn.classList.remove('category-active', 'category-inactive', 'category-inactive-mobile');
+                if (isActive) btn.classList.add('category-active');
+                else btn.classList.add(isMobile ? 'category-inactive-mobile' : 'category-inactive');
+            });
         }
 
         function showCommonInstructions() {
             const notes = document.getElementById('order-notes');
-            const suggestions = [
-                "Sans coriandre",
-                "Extra piment",
-                "Allergie aux arachides",
-                "Sans gluten si possible",
-                "Viande bien cuite"
-            ];
-
-            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
-            notes.value = notes.value ? notes.value + ', ' + randomSuggestion : randomSuggestion;
-
-            showNotification('Suggestion ajoutée', 'Instruction ajoutée aux notes');
+            const suggestions = ["Sans coriandre", "Extra piment", "Sauce à part", "Bien cuit"];
+            const random = suggestions[Math.floor(Math.random() * suggestions.length)];
+            notes.value = notes.value ? notes.value + ', ' + random : random;
         }
 
-        function showUserProfile() {
-            const points = document.getElementById('user-points').textContent;
-            showNotification('Votre compte', `Vous avez ${points} points fidélité`);
-        }
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // 通知系统
-        function showNotification(title, message) {
-            const notification = document.getElementById('notification');
-            const titleElement = document.getElementById('notification-title');
-            const messageElement = document.getElementById('notification-message');
-
-            titleElement.textContent = title;
-            messageElement.textContent = message;
-
-            notification.classList.remove('translate-x-full');
-
-            setTimeout(() => {
-                notification.classList.add('translate-x-full');
-            }, 3000);
-        }
-
-        // 模拟扫描QR码
-        function simulateQRScan(tableNumber) {
-            document.getElementById('table-number').textContent = tableNumber;
-            document.getElementById('cart-table-number').textContent = tableNumber;
-            showNotification(`Table ${tableNumber}`, 'QR code scanné avec succès');
+        function saveCart() { localStorage.setItem('phoBambooCart', JSON.stringify(cart)); }
+        
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        function showQRInfo() { document.getElementById('qr-modal').classList.remove('hidden'); }
+        function closeQRModal() { document.getElementById('qr-modal').classList.add('hidden'); }
+        
+        function showNotification(title, msg) {
+            const el = document.getElementById('notification');
+            document.getElementById('notification-title').textContent = title;
+            document.getElementById('notification-message').textContent = msg;
+            el.classList.remove('translate-x-full');
+            setTimeout(() => el.classList.add('translate-x-full'), 3000);
         }
     </script>
 </body>
-
 </html>
