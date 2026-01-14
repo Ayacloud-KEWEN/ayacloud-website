@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pho Bamboo - Cuisine • Tableau de commandes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bamboo-primary: #2d5a27;
+            --bamboo-secondary: #4a7c59;
+            --bamboo-light: #8a9a5b;
+            --bamboo-accent: #c9d4a2;
+        }
+        
+        .bamboo-bg {
+            background-color: var(--bamboo-primary);
+        }
+        
+        .bamboo-gradient {
+            background: linear-gradient(135deg, var(--bamboo-primary) 0%, var(--bamboo-secondary) 100%);
+        }
+        
+        .bamboo-text {
+            color: var(--bamboo-primary);
+        }
+        
+        .status-new { background-color: #3b82f6; color: white; }
+        .status-preparing { background-color: #f59e0b; color: white; }
+        .status-ready { background-color: #10b981; color: white; }
+        .status-completed { background-color: #6b7280; color: white; }
+        
+        .order-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+        
+        .order-card.new { border-left-color: #3b82f6; }
+        .order-card.preparing { border-left-color: #f59e0b; }
+        .order-card.ready { border-left-color: #10b981; }
+        .order-card.completed { border-left-color: #6b7280; }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .time-warning { background-color: #fef3c7; }
+        .time-critical { background-color: #fee2e2; }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <nav class="bamboo-gradient text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                    <div class="flex flex-col items-center">
+                        <i class="fas fa-leaf text-3xl"></i>
+                        <div class="w-8 h-1 bg-white rounded-full mt-1"></div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">Pho Bamboo • Cuisine</h1>
+                        <p class="text-sm opacity-90">Tableau de commandes en temps réel</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold" id="current-time">--:--</div>
+                        <div class="text-xs">Heure actuelle</div>
+                    </div>
+                    
+                    <div class="hidden md:block h-10 w-px bg-white/30"></div>
+                    
+                    <div class="flex space-x-2">
+                        <button onclick="toggleSound()" id="sound-btn" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg flex items-center space-x-2">
+                            <i class="fas fa-volume-up"></i>
+                            <span>Son: ON</span>
+                        </button>
+                        <button onclick="refreshOrders()" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg flex items-center space-x-2">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Rafraîchir</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 统计数据栏 -->
+    <div class="container mx-auto px-6 py-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="stat-card rounded-xl p-4 shadow-sm">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="text-2xl font-bold bamboo-text" id="new-orders-count">0</div>
+                        <div class="text-gray-600">Nouvelles commandes</div>
+                    </div>
+                    <div class="status-new px-3 py-1 rounded-full text-sm">NEW</div>
+                </div>
+            </div>
+            
+            <div class="stat-card rounded-xl p-4 shadow-sm">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="text-2xl font-bold bamboo-text" id="preparing-orders-count">0</div>
+                        <div class="text-gray-600">En préparation</div>
+                    </div>
+                    <div class="status-preparing px-3 py-1 rounded-full text-sm">PREP</div>
+                </div>
+            </div>
+            
+            <div class="stat-card rounded-xl p-4 shadow-sm">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="text-2xl font-bold bamboo-text" id="ready-orders-count">0</div>
+                        <div class="text-gray-600">Prêtes à servir</div>
+                    </div>
+                    <div class="status-ready px-3 py-1 rounded-full text-sm">READY</div>
+                </div>
+            </div>
+            
+            <div class="stat-card rounded-xl p-4 shadow-sm">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="text-2xl font-bold bamboo-text" id="avg-prep-time">0 min</div>
+                        <div class="text-gray-600">Temps moyen</div>
+                    </div>
+                    <i class="fas fa-clock text-xl bamboo-text"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-6 pb-12">
+        <!-- 订单筛选 -->
+        <div class="mb-6 bg-white rounded-xl shadow-sm p-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterOrders('all')" id="filter-all" class="px-4 py-2 bamboo-gradient text-white rounded-lg font-bold">Toutes</button>
+                    <button onclick="filterOrders('new')" id="filter-new" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-bold">Nouvelles</button>
+                    <button onclick="filterOrders('preparing')" id="filter-preparing" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-bold">En préparation</button>
+                    <button onclick="filterOrders('ready')" id="filter-ready" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-bold">Prêtes</button>
+                    <button onclick="filterOrders('completed')" id="filter-completed" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-bold">Terminées</button>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-filter text-gray-500"></i>
+                        <select id="table-filter" onchange="filterByTable()" class="border rounded-lg px-3 py-2">
+                            <option value="all">Toutes les tables</option>
+                            <option value="1-10">Tables 1-10</option>
+                            <option value="11-20">Tables 11-20</option>
+                            <option value="takeaway">À emporter</option>
+                            <option value="delivery">Livraison</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="printKitchenOrders()" class="px-4 py-2 bg-gray-800 text-white rounded-lg flex items-center space-x-2">
+                        <i class="fas fa-print"></i>
+                        <span>Imprimer</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 订单网格 -->
+        <div id="orders-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            <!-- 订单将通过JavaScript动态加载 -->
+        </div>
+
+        <!-- 空状态 -->
+        <div id="no-orders-message" class="text-center py-16 hidden">
+            <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-utensils text-3xl text-gray-400"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-700 mb-2">Aucune commande</h3>
+            <p class="text-gray-500">Aucune commande n'est actuellement en attente</p>
+            <button onclick="loadSampleOrders()" class="mt-6 px-6 py-3 bamboo-gradient text-white rounded-lg font-bold">
+                Charger des exemples
+            </button>
+        </div>
+    </main>
+
+    <!-- 新订单通知 -->
+    <div id="new-order-notification" class="fixed top-4 right-4 bg-blue-500 text-white p-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50 max-w-sm hidden">
+        <div class="flex items-start">
+            <i class="fas fa-bell text-xl mr-3"></i>
+            <div>
+                <p class="font-bold">Nouvelle commande !</p>
+                <p id="notification-details" class="text-sm mt-1">Table 12 • 2 articles</p>
+                <button onclick="playSound('ding')" class="text-xs mt-2 underline">Test son</button>
+            </div>
+            <button onclick="closeNotification()" class="ml-4">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 厨房时间线 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 hidden md:block">
+        <div class="container mx-auto">
+            <h3 class="font-bold mb-3 bamboo-text">Temps de préparation en cours</h3>
+            <div class="flex overflow-x-auto space-x-4 pb-2">
+                <div class="flex-shrink-0 w-48 bg-orange-50 border border-orange-200 rounded-lg p-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold">#ORD-1024</span>
+                        <span class="text-sm bg-orange-100 text-orange-800 px-2 py-1 rounded">15 min</span>
+                    </div>
+                    <div class="text-sm text-gray-600">Table 08 • Pho Bœuf x2</div>
+                    <div class="mt-2 text-xs text-gray-500">Commencé: 14:32</div>
+                </div>
+                <div class="flex-shrink-0 w-48 bg-green-50 border border-green-200 rounded-lg p-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold">#ORD-1023</span>
+                        <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">8 min</span>
+                    </div>
+                    <div class="text-sm text-gray-600">À emporter • Nems x4</div>
+                    <div class="mt-2 text-xs text-gray-500">Commencé: 14:39</div>
+                </div>
+                <div class="flex-shrink-0 w-48 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold">#ORD-1025</span>
+                        <span class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">3 min</span>
+                    </div>
+                    <div class="text-sm text-gray-600">Table 15 • Pho Poulet</div>
+                    <div class="mt-2 text-xs text-gray-500">Commencé: 14:44</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 音频元素 -->
+    <audio id="new-order-sound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-fast-kitchen-timer-1050.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="order-ready-sound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // 订单数据
+        let orders = [];
+        let currentFilter = 'all';
+        let soundEnabled = true;
+        let orderCounter = 1025;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            loadSampleOrders();
+            
+            // 模拟新订单定时器
+            setInterval(() => {
+                if (Math.random() > 0.7 && orders.length < 15) {
+                    addRandomOrder();
+                }
+            }, 30000); // 每30秒可能添加新订单
+            
+            // 更新准备时间
+            setInterval(updatePreparationTimes, 60000);
+        });
+
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                             now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('current-time').textContent = timeString;
+        }
+
+        // 加载示例订单
+        function loadSampleOrders() {
+            orders = [
+                {
+                    id: 1020,
+                    table: "08",
+                    type: "table",
+                    status: "new",
+                    items: [
+                        { name: "Pho Bœuf Traditionnel", quantity: 2, notes: "Sans coriandre" },
+                        { name: "Nems au Porc (4 pièces)", quantity: 1 },
+                        { name: "Café Vietnamien Glacé", quantity: 2 }
+                    ],
+                    total: 42.30,
+                    timestamp: new Date(Date.now() - 5 * 60000).toISOString(),
+                    notes: "Extra piment pour un pho"
+                },
+                {
+                    id: 1021,
+                    table: "À emporter",
+                    type: "takeaway",
+                    status: "preparing",
+                    items: [
+                        { name: "Pho au Poulet", quantity: 1 },
+                        { name: "Salade de Papaye Verte", quantity: 1, notes: "Très épicé" }
+                    ],
+                    total: 22.40,
+                    timestamp: new Date(Date.now() - 15 * 60000).toISOString(),
+                    startTime: new Date(Date.now() - 12 * 60000).toISOString(),
+                    notes: "Nom: Martin • Tel: 06 12 34 56 78"
+                },
+                {
+                    id: 1022,
+                    table: "15",
+                    type: "table",
+                    status: "ready",
+                    items: [
+                        { name: "Pho Végétarien", quantity: 1 },
+                        { name: "Thé Vert Jasmin", quantity: 1 }
+                    ],
+                    total: 16.40,
+                    timestamp: new Date(Date.now() - 25 * 60000).toISOString(),
+                    startTime: new Date(Date.now() - 20 * 60000).toISOString(),
+                    readyTime: new Date(Date.now() - 5 * 60000).toISOString(),
+                    notes: "Allergie aux arachides"
+                },
+                {
+                    id: 1023,
+                    table: "Livraison",
+                    type: "delivery",
+                    status: "preparing",
+                    items: [
+                        { name: "Nems au Porc (4 pièces)", quantity: 3 },
+                        { name: "Che Trois Couleurs", quantity: 2 }
+                    ],
+                    total: 35.70,
+                    timestamp: new Date(Date.now() - 20 * 60000).toISOString(),
+                    startTime: new Date(Date.now() - 18 * 60000).toISOString(),
+                    notes: "Adresse: 12 Rue de Rivoli, 75004"
+                },
+                {
+                    id: 1024,
+                    table: "12",
+                    type: "table",
+                    status: "preparing",
+                    items: [
+                        { name: "Pho Bœuf Traditionnel", quantity: 1 },
+                        { name: "Pho au Poulet", quantity: 1 },
+                        { name: "Nems au Porc (4 pièces)", quantity: 1 }
+                    ],
+                    total: 36.70,
+                    timestamp: new Date(Date.now() - 18 * 60000).toISOString(),
+                    startTime: new Date(Date.now() - 15 * 60000).toISOString(),
+                    notes: "Viande bien cuite"
+                },
+                {
+                    id: 1025,
+                    table: "05",
+                    type: "table",
+                    status: "completed",
+                    items: [
+                        { name: "Pho Végétarien", quantity: 1 },
+                        { name: "Café Vietnamien Glacé", quantity: 1 }
+                    ],
+                    total: 17.40,
+                    timestamp: new Date(Date.now() - 45 * 60000).toISOString(),
+                    startTime: new Date(Date.now() - 40 * 60000).toISOString(),
+                    readyTime: new Date(Date.now() - 30 * 60000).toISOString(),
+                    completedTime: new Date(Date.now() - 25 * 60000).toISOString()
+                }
+            ];
+            
+            renderOrders();
+            updateStatistics();
+        }
+
+        // 添加随机订单
+        function addRandomOrder() {
+            orderCounter++;
+            
+            const orderTypes = ['table', 'takeaway', 'delivery'];
+            const tables = ['03', '07', '09', '11', '14', '16', 'À emporter', 'Livraison'];
+            const menuItems = [
+                { name: "Pho Bœuf Traditionnel", price: 14.90 },
+                { name: "Pho au Poulet", price: 13.90 },
+                { name: "Pho Végétarien", price: 12.90 },
+                { name: "Nems au Porc (4 pièces)", price: 7.90 },
+                { name: "Salade de Papaye Verte", price: 8.50 },
+                { name: "Café Vietnamien Glacé", price: 4.50 },
+                { name: "Thé Vert Jasmin", price: 3.50 },
+                { name: "Che Trois Couleurs", price: 6.50 }
+            ];
+            
+            const table = tables[Math.floor(Math.random() * tables.length)];
+            const type = table === 'À emporter' ? 'takeaway' : 
+                         table === 'Livraison' ? 'delivery' : 'table';
+            
+            // 随机选择1-3个菜品
+            const itemCount = Math.floor(Math.random() * 3) + 1;
+            const selectedItems = [];
+            let total = 0;
+            
+            for (let i = 0; i < itemCount; i++) {
+                const item = menuItems[Math.floor(Math.random() * menuItems.length)];
+                const quantity = Math.floor(Math.random() * 2) + 1;
+                selectedItems.push({
+                    name: item.name,
+                    quantity: quantity,
+                    notes: Math.random() > 0.7 ? "Sans coriandre" : null
+                });
+                total += item.price * quantity;
+            }
+            
+            const newOrder = {
+                id: orderCounter,
+                table: table,
+                type: type,
+                status: "new",
+                items: selectedItems,
+                total: total,
+                timestamp: new Date().toISOString(),
+                notes: Math.random() > 0.5 ? "Notes spéciales..." : null
+            };
+            
+            orders.unshift(newOrder); // 添加到开头
+            renderOrders();
+            updateStatistics();
+            
+            // 显示通知
+            showNewOrderNotification(newOrder);
+            
+            // 播放声音
+            if (soundEnabled) {
+                playSound('new');
+            }
+        }
+
+        // 渲染订单
+        function renderOrders() {
+            const container = document.getElementById('orders-container');
+            const noOrdersMessage = document.getElementById('no-orders-message');
+            
+            // 过滤订单
+            let filteredOrders = orders;
+            if (currentFilter !== 'all') {
+                filteredOrders = orders.filter(order => order.status === currentFilter);
+            }
+            
+            // 表格过滤
+            const tableFilter = document.getElementById('table-filter').value;
+            if (tableFilter !== 'all') {
+                filteredOrders = filteredOrders.filter(order => {
+                    if (tableFilter === '1-10') {
+                        return order.type === 'table' && parseInt(order.table) <= 10;
+                    } else if (tableFilter === '11-20') {
+                        return order.type === 'table' && parseInt(order.table) > 10;
+                    } else if (tableFilter === 'takeaway') {
+                        return order.type === 'takeaway';
+                    } else if (tableFilter === 'delivery') {
+                        return order.type === 'delivery';
+                    }
+                    return true;
+                });
+            }
+            
+            if (filteredOrders.length === 0) {
+                container.innerHTML = '';
+                noOrdersMessage.classList.remove('hidden');
+                return;
+            }
+            
+            noOrdersMessage.classList.add('hidden');
+            container.innerHTML = '';
+            
+            // 按状态排序：new → preparing → ready → completed
+            const statusOrder = { 'new': 0, 'preparing': 1, 'ready': 2, 'completed': 3 };
+            filteredOrders.sort((a, b) => {
+                if (statusOrder[a.status] !== statusOrder[b.status]) {
+                    return statusOrder[a.status] - statusOrder[b.status];
+                }
+                return new Date(a.timestamp) - new Date(b.timestamp);
+            });
+            
+            filteredOrders.forEach(order => {
+                const orderElement = createOrderCard(order);
+                container.appendChild(orderElement);
+            });
+        }
+
+        // 创建订单卡片
+        function createOrderCard(order) {
+            const orderElement = document.createElement('div');
+            orderElement.className = `order-card ${order.status} bg-white rounded-xl shadow-lg overflow-hidden`;
+            
+            // 计算准备时间
+            const orderTime = new Date(order.timestamp);
+            const now = new Date();
+            const minutesSinceOrder = Math.floor((now - orderTime) / 60000);
+            
+            let timeClass = '';
+            let timeText = `${minutesSinceOrder} min`;
+            
+            if (order.status === 'new' && minutesSinceOrder > 10) {
+                timeClass = 'time-critical';
+            } else if (order.status === 'new' && minutesSinceOrder > 5) {
+                timeClass = 'time-warning';
+            }
+            
+            // 计算准备时长
+            let preparationTime = '--';
+            if (order.startTime) {
+                const startTime = new Date(order.startTime);
+                const prepMinutes = Math.floor((now - startTime) / 60000);
+                preparationTime = `${prepMinutes} min`;
+            }
+            
+            orderElement.innerHTML = `
+                <div class="p-5">
+                    <!-- 订单头部 -->
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="text-xl font-bold bamboo-text">#ORD-${order.id}</span>
+                                <span class="px-2 py-1 rounded text-xs font-bold ${order.type === 'table' ? 'bg-blue-100 text-blue-800' : 
+                                                                             order.type === 'takeaway' ? 'bg-purple-100 text-purple-800' : 
+                                                                             'bg-orange-100 text-orange-800'}">
+                                    ${order.type === 'table' ? 'Table ' + order.table : 
+                                      order.type === 'takeaway' ? 'À emporter' : 'Livraison'}
+                                </span>
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                ${formatTime(order.timestamp)} • ${timeText} 
+                                ${order.status === 'preparing' ? `• ${preparationTime}` : ''}
+                            </div>
+                        </div>
+                        <div class="px-3 py-1 rounded-full text-sm font-bold status-${order.status}">
+                            ${order.status === 'new' ? 'NOUVELLE' : 
+                              order.status === 'preparing' ? 'EN PRÉP' : 
+                              order.status === 'ready' ? 'PRÊTE' : 'TERMINÉE'}
+                        </div>
+                    </div>
+                    
+                    <!-- 订单项目 -->
+                    <div class="mb-4 ${timeClass} p-3 rounded-lg">
+                        ${order.items.map(item => `
+                            <div class="flex justify-between items-center py-1">
+                                <div>
+                                    <span class="font-medium">${item.name}</span>
+                                    <span class="text-sm text-gray-600 ml-2">x${item.quantity}</span>
+                                    ${item.notes ? `<div class="text-xs text-red-600 mt-1"><i class="fas fa-exclamation-circle mr-1"></i>${item.notes}</div>` : ''}
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    ${getItemTimeEstimate(item.name)} min
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <!-- 订单备注 -->
+                    ${order.notes ? `
+                        <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                            <div class="flex items-start">
+                                <i class="fas fa-sticky-note text-yellow-600 mt-1 mr-2"></i>
+                                <div class="text-sm text-gray-700">${order.notes}</div>
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <!-- 总金额 -->
+                    <div class="flex justify-between items-center mb-5">
+                        <div class="text-lg font-bold bamboo-text">Total: ${order.total.toFixed(2)}€</div>
+                        <div class="text-sm text-gray-500">
+                            ${getTotalItems(order)} articles
+                        </div>
+                    </div>
+                    
+                    <!-- 操作按钮 -->
+                    <div class="flex space-x-2">
+                        ${order.status === 'new' ? `
+                            <button onclick="startOrder(${order.id})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold flex items-center justify-center">
+                                <i class="fas fa-play mr-2"></i>Démarrer
+                            </button>
+                            <button onclick="completeOrder(${order.id})" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-lg font-bold flex items-center justify-center">
+                                <i class="fas fa-check mr-2"></i>Compléter
+                            </button>
+                        ` : ''}
+                        
+                        ${order.status === 'preparing' ? `
+                            <button onclick="markReady(${order.id})" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold flex items-center justify-center">
+                                <i class="fas fa-check-double mr-2"></i>Prête
+                            </button>
+                            <button onclick="cancelOrder(${order.id})" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-bold flex items-center justify-center">
+                                <i class="fas fa-times mr-2"></i>Annuler
+                            </button>
+                        ` : ''}
+                        
+                        ${order.status === 'ready' ? `
+                            <button onclick="completeOrder(${order.id})" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold flex items-center justify-center">
+                                <i class="fas fa-check-circle mr-2"></i>Servie
+                            </button>
+                            <button onclick="reopenOrder(${order.id})" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-lg font-bold flex items-center justify-center">
+                                <i class="fas fa-redo mr-2"></i>Réouvrir
+                            </button>
+                        ` : ''}
+                        
+                        ${order.status === 'completed' ? `
+                            <button onclick="reopenOrder(${order.id})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold flex items-center justify-center">
+                                <i class="fas fa-redo mr-2"></i>Réouvrir
+                            </button>
+                            <button onclick="archiveOrder(${order.id})" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-lg font-bold flex items-center justify-center">
+                                <i class="fas fa-trash mr-2"></i>Archiver
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            return orderElement;
+        }
+
+        // 订单操作函数
+        function startOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (order && order.status === 'new') {
+                order.status = 'preparing';
+                order.startTime = new Date().toISOString();
+                renderOrders();
+                updateStatistics();
+                showNotification('Commande démarrée', `#ORD-${orderId} en préparation`);
+            }
+        }
+
+        function markReady(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (order && order.status === 'preparing') {
+                order.status = 'ready';
+                order.readyTime = new Date().toISOString();
+                renderOrders();
+                updateStatistics();
+                
+                if (soundEnabled) {
+                    playSound('ready');
+                }
+                
+                showNotification('Commande prête', `#ORD-${orderId} prête à être servie`);
+            }
+        }
+
+        function completeOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (order && (order.status === 'new' || order.status === 'ready')) {
+                order.status = 'completed';
+                order.completedTime = new Date().toISOString();
+                if (!order.startTime) order.startTime = new Date().toISOString();
+                if (!order.readyTime) order.readyTime = new Date().toISOString();
+                renderOrders();
+                updateStatistics();
+                showNotification('Commande terminée', `#ORD-${orderId} marquée comme servie`);
+            }
+        }
+
+        function cancelOrder(orderId) {
+            if (confirm('Êtes-vous sûr de vouloir annuler cette commande ?')) {
+                orders = orders.filter(o => o.id !== orderId);
+                renderOrders();
+                updateStatistics();
+                showNotification('Commande annulée', `#ORD-${orderId} a été annulée`);
+            }
+        }
+
+        function reopenOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = 'preparing';
+                if (!order.startTime) order.startTime = new Date().toISOString();
+                renderOrders();
+                updateStatistics();
+                showNotification('Commande réouverte', `#ORD-${orderId} remise en préparation`);
+            }
+        }
+
+        function archiveOrder(orderId) {
+            if (confirm('Archiver cette commande ? Elle sera supprimée de la vue.')) {
+                orders = orders.filter(o => o.id !== orderId);
+                renderOrders();
+                updateStatistics();
+                showNotification('Commande archivée', `#ORD-${orderId} archivée`);
+            }
+        }
+
+        // 更新统计
+        function updateStatistics() {
+            const newOrders = orders.filter(o => o.status === 'new').length;
+            const preparingOrders = orders.filter(o => o.status === 'preparing').length;
+            const readyOrders = orders.filter(o => o.status === 'ready').length;
+            
+            document.getElementById('new-orders-count').textContent = newOrders;
+            document.getElementById('preparing-orders-count').textContent = preparingOrders;
+            document.getElementById('ready-orders-count').textContent = readyOrders;
+            
+            // 计算平均准备时间
+            const completedOrders = orders.filter(o => o.status === 'completed' && o.startTime && o.readyTime);
+            if (completedOrders.length > 0) {
+                const totalMinutes = completedOrders.reduce((sum, order) => {
+                    const start = new Date(order.startTime);
+                    const ready = new Date(order.readyTime);
+                    return sum + Math.floor((ready - start) / 60000);
+                }, 0);
+                const avgTime = Math.round(totalMinutes / completedOrders.length);
+                document.getElementById('avg-prep-time').textContent = `${avgTime} min`;
+            } else {
+                document.getElementById('avg-prep-time').textContent = '-- min';
+            }
+        }
+
+        // 更新准备时间
+        function updatePreparationTimes() {
+            orders.forEach(order => {
+                if (order.status === 'preparing' && order.startTime) {
+                    // 这里可以更新UI显示的准备时间
+                }
+            });
+            renderOrders();
+        }
+
+        // 辅助函数
+        function formatTime(isoString) {
+            const date = new Date(isoString);
+            return date.getHours().toString().padStart(2, '0') + ':' + 
+                   date.getMinutes().toString().padStart(2, '0');
+        }
+
+        function getItemTimeEstimate(itemName) {
+            const estimates = {
+                'Pho Bœuf Traditionnel': 12,
+                'Pho au Poulet': 10,
+                'Pho Végétarien': 8,
+                'Nems au Porc (4 pièces)': 6,
+                'Salade de Papaye Verte': 5,
+                'Café Vietnamien Glacé': 2,
+                'Thé Vert Jasmin': 2,
+                'Che Trois Couleurs': 4
+            };
+            return estimates[itemName] || 5;
+        }
+
+        function getTotalItems(order) {
+            return order.items.reduce((sum, item) => sum + item.quantity, 0);
+        }
+
+        // 筛选功能
+        function filterOrders(status) {
+            currentFilter = status;
+            
+            // 更新按钮状态
+            ['all', 'new', 'preparing', 'ready', 'completed'].forEach(s => {
+                const btn = document.getElementById(`filter-${s}`);
+                if (btn) {
+                    if (s === status) {
+                        btn.className = 'px-4 py-2 bamboo-gradient text-white rounded-lg font-bold';
+                    } else {
+                        btn.className = 'px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-bold';
+                    }
+                }
+            });
+            
+            renderOrders();
+        }
+
+        function filterByTable() {
+            renderOrders();
+        }
+
+        // 声音控制
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('sound-btn');
+            const icon = btn.querySelector('i');
+            const text = btn.querySelector('span');
+            
+            if (soundEnabled) {
+                icon.className = 'fas fa-volume-up';
+                text.textContent = 'Son: ON';
+                btn.classList.remove('bg-red-100', 'text-red-800');
+                btn.classList.add('bg-white/20', 'text-white');
+            } else {
+                icon.className = 'fas fa-volume-mute';
+                text.textContent = 'Son: OFF';
+                btn.classList.remove('bg-white/20', 'text-white');
+                btn.classList.add('bg-red-100', 'text-red-800');
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            
+            const audio = type === 'new' ? 
+                document.getElementById('new-order-sound') : 
+                document.getElementById('order-ready-sound');
+            
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log('Audio play failed:', e));
+        }
+
+        // 通知功能
+        function showNewOrderNotification(order) {
+            const notification = document.getElementById('new-order-notification');
+            const details = document.getElementById('notification-details');
+            
+            details.textContent = `${order.type === 'table' ? 'Table ' + order.table : order.table} • ${getTotalItems(order)} articles`;
+            
+            notification.classList.remove('hidden');
+            notification.classList.remove('translate-x-full');
+            
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => notification.classList.add('hidden'), 300);
+            }, 5000);
+        }
+
+        function closeNotification() {
+            const notification = document.getElementById('new-order-notification');
+            notification.classList.add('translate-x-full');
+            setTimeout(() => notification.classList.add('hidden'), 300);
+        }
+
+        function showNotification(title, message) {
+            // 简单控制台通知
+            console.log(`[${new Date().toLocaleTimeString()}] ${title}: ${message}`);
+        }
+
+        // 其他功能
+        function refreshOrders() {
+            renderOrders();
+            updateStatistics();
+            showNotification('Rafraîchissement', 'Commandes rafraîchies');
+        }
+
+        function printKitchenOrders() {
+            const pendingOrders = orders.filter(o => o.status !== 'completed');
+            const printContent = `
+                <html>
+                <head><title>Commandes en cours - Pho Bamboo</title></head>
+                <body>
+                    <h1>Commandes en cours • ${new Date().toLocaleString('fr-FR')}</h1>
+                    ${pendingOrders.map(order => `
+                        <div style="margin: 20px 0; padding: 10px; border: 1px solid #ccc;">
+                            <h2>#ORD-${order.id} • ${order.type === 'table' ? 'Table ' + order.table : order.table} • ${order.status.toUpperCase()}</h2>
+                            <ul>
+                                ${order.items.map(item => `<li>${item.name} x${item.quantity}</li>`).join('')}
+                            </ul>
+                            ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ''}
+                        </div>
+                    `).join('')}
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // 演示功能：添加快捷操作按钮
+        setTimeout(() => {
+            if (document.body) {
+                const demoDiv = document.createElement('div');
+                demoDiv.className = 'fixed bottom-20 right-4 flex flex-col space-y-2 z-50';
+                demoDiv.innerHTML = `
+                    <button onclick="addRandomOrder()" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center">
+                        <i class="fas fa-plus mr-2"></i>Nouvelle commande test
+                    </button>
+                    <button onclick="simulateRushHour()" class="bg-orange-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center">
+                        <i class="fas fa-bolt mr-2"></i>Simuler l'heure de pointe
+                    </button>
+                `;
+                document.body.appendChild(demoDiv);
+            }
+        }, 1000);
+
+        // 模拟高峰时段
+        function simulateRushHour() {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => addRandomOrder(), i * 2000);
+            }
+            showNotification('Heure de pointe', '5 nouvelles commandes simulées');
+        }
+    </script>
+</body>
+</html>
