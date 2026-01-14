@@ -653,12 +653,12 @@
             updatePointsDisplay();
             updateCategoryButtons();
 
-            // 如果是第一次访问，添加演示商品
+            /* 如果是第一次访问，添加演示商品
             if (cart.length === 0 && !localStorage.getItem('phoBambooFirstVisit')) {
                 addToCart(1, 1);
                 addToCart(4, 1);
                 localStorage.setItem('phoBambooFirstVisit', 'true');
-            }
+            } */
         });
 
         // 更新分类按钮状态
@@ -814,10 +814,10 @@
             const currentQty = existingItem ? existingItem.quantity : quantity;
             updateMenuQuantityBadge(dish.id, currentQty);
 
-            // 在移动端自动打开购物车
+            /* 在移动端自动打开购物车
             if (window.innerWidth < 768 && cart.length === 1) {
                 setTimeout(() => toggleCart(), 300);
-            }
+            } */
         }
 
         // 提供按钮反馈效果
