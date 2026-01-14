@@ -1068,46 +1068,72 @@
             localStorage.setItem('phoBambooCart', JSON.stringify(cart));
         }
 
-        // 订单功能
-        function checkout() {
-            const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const notes = document.getElementById('order-notes').value;
+// ==========================================
+        // WHATSAPP 配置
+        // 请将此处的号码替换为老板的手机号 (国际格式，不要加 + 号)
+        // 例如法国号码 (06 12 34 56 78) -> "33612345678"
+        const RESTAURANT_PHONE = "33764575572"; 
+        // ==========================================
 
+        function checkout() {
+            // 计算总价
+            const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            // 获取备注
+            const notes = document.getElementById('order-notes').value;
+            // 获取桌号
+            const tableNumber = document.getElementById('table-number').textContent;
+
+            // 检查购物车是否为空
             if (cart.length === 0) {
                 showNotification('Panier vide', 'Ajoutez des plats avant de commander');
                 return;
             }
 
-            // 模拟订单提交
-            const orderDetails = {
-                table: document.getElementById('table-number').textContent,
-                items: cart,
-                total: cartTotal,
-                notes: notes,
-                pointsEarned: getPointsFromPrice(cartTotal),
-                timestamp: new Date().toISOString()
-            };
+            // 1. 构建 WhatsApp 消息内容 (法语格式，适合法国餐馆)
+            let message = `🔔 *NOUVELLE COMMANDE - ${tableNumber}*\n`; // 标题：新订单 - 桌号
+            message += `🗓️ ${new Date().toLocaleTimeString()}\n`;       // 时间
+            message += `------------------------------\n`;
 
-            // 在实际应用中，这里会发送到后端
-            console.log('Order submitted:', orderDetails);
+            // 循环添加菜品
+            cart.forEach(item => {
+                const subtotal = (item.price * item.quantity).toFixed(2);
+                message += `▪️ ${item.quantity}x ${item.name_fr} (${subtotal}€)\n`;
+            });
 
-            // 显示确认信息
-            showNotification('Commande confirmée !',
-                `Merci pour votre commande de ${cartTotal.toFixed(2)}€. Vous gagnez ${getPointsFromPrice(cartTotal)} points.`);
+            message += `------------------------------\n`;
+            message += `💰 *TOTAL: ${cartTotal.toFixed(2)}€*\n`; // 总金额
+
+            // 如果有特殊备注，加在最后
+            if (notes && notes.trim() !== "") {
+                message += `\n📝 *Note:* ${notes}\n`;
+            }
+
+            // 2. 编码消息 URL 并打开 WhatsApp
+            // encodeURIComponent 用于确保特殊字符（如空格、换行）能被正确传输
+            const whatsappUrl = `https://wa.me/${RESTAURANT_PHONE}?text=${encodeURIComponent(message)}`;
+            
+            // 在新标签页打开 (电脑版) 或 直接跳转 (手机版)
+            window.open(whatsappUrl, '_blank');
+
+            // 3. 后续清理工作 (积分、清空购物车等)
+            
+            // 提示用户
+            showNotification('Commande préparée !',
+                `Veuillez confirmer l'envoi sur WhatsApp.`); // "请在 WhatsApp 上确认发送"
 
             // 更新用户积分
             updateUserPoints(getPointsFromPrice(cartTotal));
 
-            // 清空购物车
+            // 发送后清空购物车
             cart = [];
             saveCart();
             updateCartDisplay();
             toggleCart();
 
-            // 清空备注
+            // 清空备注栏
             document.getElementById('order-notes').value = '';
 
-            // 重新渲染菜单
+            // 重新渲染菜单 (为了移除菜品上的数量角标)
             setTimeout(() => {
                 renderMenu();
             }, 300);
