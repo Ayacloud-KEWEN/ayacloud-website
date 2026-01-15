@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pho Bamboo - Commande & Fidélité</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bamboo-primary: #2d5a27;
+            --bamboo-secondary: #4a7c59;
+            --bamboo-light: #8a9a5b;
+            --bamboo-accent: #c9d4a2;
+        }
+
+        .bamboo-bg {
+            background-color: var(--bamboo-primary) !important;
+        }
+
+        .bamboo-gradient {
+            background: linear-gradient(135deg, var(--bamboo-primary) 0%, var(--bamboo-secondary) 100%);
+        }
+
+        .bamboo-light-bg {
+            background-color: var(--bamboo-accent);
+        }
+
+        .bamboo-text {
+            color: var(--bamboo-primary);
+        }
+
+        .bamboo-border {
+            border-color: var(--bamboo-light);
+        }
+
+        .category-active {
+            background-color: var(--bamboo-primary) !important;
+            color: white !important;
+        }
+
+        .category-inactive {
+            background-color: #f3f4f6 !important;
+            color: #4b5563 !important;
+            border: 1px solid #e5e7eb;
+        }
+
+        .category-inactive-mobile {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+        }
+
+        .add-btn {
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 90, 39, 0.3);
+        }
+
+        .add-btn:active {
+            transform: translateY(0);
+        }
+
+        .add-btn-success {
+            background-color: #10b981 !important;
+            color: white !important;
+        }
+
+        .add-btn-pulse {
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .cart-btn-pulse {
+            animation: cartPulse 0.3s ease;
+        }
+
+        @keyframes cartPulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .quantity-btn:active {
+            background-color: #e5e7eb;
+            transform: scale(0.95);
+        }
+
+        .quantity-update {
+            animation: quantityUpdate 0.3s ease;
+        }
+
+        @keyframes quantityUpdate {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .cart-sidebar {
+                width: 100% !important;
+            }
+
+            #mobile-categories {
+                display: block !important;
+            }
+        }
+
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+
+        .bamboo-pattern {
+            background-image: linear-gradient(90deg, transparent 79px, #abcea1 79px, #abcea1 81px, transparent 81px), linear-gradient(#eee .1em, transparent .1em);
+            background-size: 100% 1.2em;
+            background-color: #f9f7f0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800" style="touch-action: manipulation;">
+    <nav class="bamboo-gradient text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="flex flex-col items-center"><i class="fa-solid fa-bowl-food"></i>
+                        <div class="w-6 h-1 bg-white rounded-full mt-1"></div>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">Pho Bamboo</h1>
+                        <p class="text-xs opacity-80 hidden sm:block">PUTEAUX-LA DÉFENSE</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-1 bg-white/20 px-2 py-1 rounded-lg text-sm cursor-pointer hover:bg-white/30 transition"
+                        onclick="manualEditTable()">
+                        <i class="fas fa-table text-xs"></i><span id="table-number" class="font-medium">---</span><i
+                            class="fas fa-pen text-[10px] ml-1 opacity-70"></i>
+                    </div>
+                    <button onclick="toggleCart()" id="cart-button" class="relative touch-target">
+                        <div class="flex items-center bg-white/20 px-3 py-2 rounded-lg"><i
+                                class="fas fa-shopping-cart"></i><span id="cart-count" class="ml-2 font-bold">0</span>
+                        </div>
+                        <div id="cart-indicator"
+                            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
+                            <span id="cart-indicator-count">!</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-categories" class="sm:hidden py-3 border-t border-white/20 hidden">
+                <div class="flex overflow-x-auto scrollbar-hide space-x-2 pb-2">
+                    <button onclick="filterCategory('all')" data-category="all"
+                        class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">Tout</button>
+                    <button onclick="filterCategory('pho')" data-category="pho"
+                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Pho</button>
+                    <button onclick="filterCategory('entrees')" data-category="entrees"
+                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Entrées</button>
+                    <button onclick="filterCategory('boissons')" data-category="boissons"
+                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Boissons</button>
+                    <button onclick="filterCategory('desserts')" data-category="desserts"
+                        class="category-btn category-inactive-mobile flex-shrink-0 px-4 py-2 rounded-full">Desserts</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-4 pb-24">
+        <div class="mb-6">
+            <div class="bg-white rounded-2xl shadow-sm p-5 bamboo-pattern">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold bamboo-text mb-1">Bienvenue</h2>
+                        <p class="text-gray-600 text-mobile">Spécialités VIET & THAÏ</p>
+                    </div>
+                    <div class="bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2 shadow cursor-pointer active:scale-95 transition"
+                        onclick="userPhone ? openLoyaltyModal() : promptLogin()">
+                        <div class="flex items-center"><i class="fas fa-crown text-yellow-500 mr-2"></i>
+                            <div>
+                                <p class="text-xs text-gray-500">Mes Points</p>
+                                <p class="font-bold bamboo-text" id="user-points">---</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden sm:flex space-x-2 mt-6">
+                    <button onclick="filterCategory('all')" data-category="all"
+                        class="category-btn category-active flex-shrink-0 px-4 py-2 rounded-full">Tout voir</button>
+                    <button onclick="filterCategory('pho')" data-category="pho"
+                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Pho
+                        Spécialités</button>
+                    <button onclick="filterCategory('entrees')" data-category="entrees"
+                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Entrées</button>
+                    <button onclick="filterCategory('boissons')" data-category="boissons"
+                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Boissons</button>
+                    <button onclick="filterCategory('desserts')" data-category="desserts"
+                        class="category-btn category-inactive flex-shrink-0 px-4 py-2 rounded-full">Desserts</button>
+                </div>
+            </div>
+        </div>
+        <div id="menu-grid" class="menu-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <div class="fixed bottom-20 right-4 z-30">
+            <div class="flex flex-col space-y-2">
+                <button onclick="scrollToTop()"
+                    class="touch-target w-12 h-12 rounded-full bamboo-gradient text-white shadow-lg flex items-center justify-center"><i
+                        class="fas fa-arrow-up"></i></button>
+                <button onclick="showQRInfo()"
+                    class="touch-target w-12 h-12 rounded-full bg-white bamboo-border border text-gray-700 shadow-lg flex items-center justify-center"><i
+                        class="fas fa-qrcode"></i></button>
+            </div>
+        </div>
+    </main>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40">
+        <div class="container mx-auto">
+            <div class="flex justify-around items-center h-16">
+                <button onclick="filterCategory('all')"
+                    class="flex flex-col items-center justify-center touch-target px-2"><i
+                        class="fas fa-home text-lg bamboo-text"></i><span class="text-xs mt-1">Accueil</span></button>
+                <button onclick="filterCategory('pho')"
+                    class="flex flex-col items-center justify-center touch-target px-2"><i
+                        class="fas fa-bowl-food text-lg text-gray-500"></i><span
+                        class="text-xs mt-1">Pho</span></button>
+                <button onclick="toggleCart()" class="relative touch-target">
+                    <div class="flex flex-col items-center justify-center"><i
+                            class="fas fa-shopping-cart text-xl bamboo-text"></i><span
+                            class="text-xs mt-1">Panier</span></div>
+                    <div id="bottom-cart-indicator"
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
+                        <span id="bottom-cart-count">0</span>
+                    </div>
+                </button>
+                <button onclick="userPhone ? openLoyaltyModal() : promptLogin()"
+                    class="flex flex-col items-center justify-center touch-target px-2"><i
+                        class="fas fa-crown text-lg text-yellow-500"></i><span
+                        class="text-xs mt-1">Fidélité</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-sidebar"
+        class="fixed top-0 right-0 w-full sm:w-96 h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
+        <div class="h-full flex flex-col">
+            <div class="bamboo-gradient text-white p-6">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3"><button onclick="toggleCart()"
+                            class="touch-target w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10"><i
+                                class="fas fa-arrow-left"></i></button>
+                        <h3 class="text-xl font-bold">Votre Commande</h3>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm opacity-90">Table <span id="cart-table-number">---</span></p>
+                    </div>
+                </div>
+                <div class="mt-6 bg-white/10 rounded-lg p-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p id="cart-item-count" class="text-sm">0 articles</p>
+                            <p id="cart-points-earned" class="text-xs opacity-90">+0 points</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-2xl font-bold" id="cart-sidebar-total">0€</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="cart-items" class="flex-1 overflow-y-auto p-4"></div>
+            <div class="border-t p-4 bg-gray-50">
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2"><label
+                            class="text-gray-700 font-medium">Instructions spéciales</label><button
+                            onclick="showCommonInstructions()" class="text-xs bamboo-text">Suggestions</button></div>
+                    <textarea id="order-notes"
+                        class="w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                        rows="2" placeholder="Ex: Sans coriandre, extra piment, allergies..."></textarea>
+                </div>
+                <div class="space-y-3">
+                    <button onclick="checkout()"
+                        class="w-full bamboo-gradient text-white py-3 px-5 rounded-xl font-bold shadow-xl touch-target flex items-center justify-between transition-transform active:scale-95">
+                        <div class="flex items-center space-x-3"><i class="fa-brands fa-whatsapp text-3xl"></i>
+                            <div class="flex flex-col items-start text-left"><span
+                                    class="text-xs opacity-80 font-normal uppercase tracking-wide">Commander
+                                    via</span><span class="text-lg leading-none">WhatsApp</span></div>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm px-3 py-2 rounded-lg border border-white/10"><span
+                                id="checkout-total">0€</span></div>
+                    </button>
+                    <p class="text-[10px] text-gray-400 text-center leading-tight px-2">En cliquant sur Commander, vous
+                        acceptez l'envoi de votre commande via <span class="font-bold">WhatsApp</span>.<br>Vos points de
+                        fidélité sont stockés localement sur votre appareil.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="toggleCart()"></div>
+    <div id="qr-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full">
+            <div class="bamboo-gradient text-white p-6 rounded-t-2xl flex justify-between">
+                <h3 class="text-xl font-bold">Info QR Code</h3><button onclick="closeQRModal()" class="text-white"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="p-6 text-center">
+                <p>Scannez le QR code sur votre table pour définir automatiquement votre numéro de table.</p><button
+                    onclick="closeQRModal()"
+                    class="mt-4 w-full bamboo-border border text-gray-700 py-2 rounded-lg">Fermer</button>
+            </div>
+        </div>
+    </div>
+    <div id="loyalty-modal"
+        class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-end sm:items-center justify-center hidden transition-opacity duration-300">
+        <div
+            class="bg-white w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl overflow-hidden shadow-2xl transform transition-transform duration-300">
+            <div class="bamboo-gradient p-6 text-white relative">
+                <div class="bamboo-gradient p-6 text-white relative">
+                    <button onclick="logoutUser()"
+                        class="absolute top-4 left-4 text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded backdrop-blur-sm transition-colors">
+                        <i class="fas fa-sign-out-alt mr-1"></i> Changer
+                    </button>
+
+                    <button onclick="closeLoyaltyModal()"
+                        class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="flex items-center space-x-4">
+                        <div
+                            class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-inner text-yellow-500">
+                            <i class="fas fa-crown text-3xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Fidélité Pho Bamboo</h3>
+                            <p class="opacity-90 text-sm">Mangez, cumulez, profitez !</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex items-baseline"><span class="text-4xl font-bold"
+                            id="modal-points-display">0</span><span class="ml-2 text-sm opacity-80">points
+                            disponibles</span></div>
+                    <div class="mt-4">
+                        <div class="flex justify-between text-xs mb-1 opacity-90"><span>Prochaine récompense</span><span
+                                id="next-reward-points">200 pts</span></div>
+                        <div class="w-full bg-black/20 rounded-full h-2">
+                            <div id="points-progress-bar"
+                                class="bg-yellow-400 h-2 rounded-full transition-all duration-500" style="width: 0%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 bg-gray-50 max-h-[50vh] overflow-y-auto">
+                    <h4 class="font-bold text-gray-700 mb-4 flex items-center text-sm uppercase tracking-wide"><i
+                            class="fas fa-gift text-red-500 mr-2"></i> Récompenses</h4>
+                    <div id="rewards-list" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+        <div id="notification"
+            class="fixed top-4 right-4 bg-white border-l-4 border-green-500 text-gray-800 p-4 rounded-lg shadow-xl transform translate-x-full transition-transform duration-300 z-[60] max-w-sm flex items-start">
+            <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+            <div>
+                <p class="font-bold text-sm" id="notification-title">Succès</p>
+                <p id="notification-message" class="text-xs mt-1 text-gray-500"></p>
+            </div>
+        </div>
+
+        <script>
+            // ================= 配置区 =================
+            const RESTAURANT_PHONE = "33764575572"; // ⚠️ 改这里
+            const API_URL = "https://script.google.com/macros/s/AKfycbxkhu1qvkHmylGySn95Px4S89WeKmiMEAUOly8PLc4thBAyraBHxf18sapZeXrH1qw3LA/exec"; // ⚠️ 改这里，保留引号
+            // =========================================
+
+            const menuData = [
+                { id: 1, name_fr: "Pho Bœuf Traditionnel", name_vn: "Phở Bò Truyền Thống", description: "Bouillon de bœuf mijoté 24h", price: 14.90, category: "pho", image: "https://www.lestresorsduvietnam.fr/wp-content/uploads/2023/07/Le-Pho-Bo-pho-vietnamien-et-ses-epices.jpg", popular: true, spicy: false, vegan: false },
+                { id: 2, name_fr: "Pho au Poulet", name_vn: "Phở Gà", description: "Bouillon de poulet, blanc de poulet", price: 13.90, category: "pho", image: "https://images.getrecipekit.com/20250122163352-pho-20vietnamien-20au-20poulet-20et-20herbes-20fra-c3-aeches.jpg?aspect_ratio=16:9&quality=90&", popular: true, spicy: false, vegan: false },
+                { id: 3, name_fr: "Pho Végétarien", name_vn: "Phở Chay", description: "Bouillon de légumes, tofu", price: 12.90, category: "pho", image: "https://www.cuisineactuelle.fr/imgre/fit/~1~cac~2022~01~06~4126da1e-96cf-4258-b9f1-b1888eda4fae.jpeg/750x562/quality/80/crop-from/center/cr/wqkgVmVsc2JlcmcgLyBQaG90b2N1aXNpbmUJIC8gQ3Vpc2luZSBBY3R1ZWxsZQ%3D%3D/focus-point/2231%2C3302/pho-vegetarien-soupe-vietnamienne.jpeg", popular: false, spicy: false, vegan: true },
+                { id: 4, name_fr: "Nems au Porc (4 pièces)", name_vn: "Chả Giò", description: "Nems croustillants", price: 7.90, category: "entrees", image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&h=300&fit=crop&crop=center", popular: true, spicy: false, vegan: false },
+                { id: 5, name_fr: "Salade de Papaye Verte", name_vn: "Gỏi Đu Đủ", description: "Papaye verte, crevettes", price: 8.50, category: "entrees", image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop&crop=center", popular: false, spicy: true, vegan: false },
+                { id: 6, name_fr: "Café Vietnamien Glacé", name_vn: "Cà Phê Sữa Đá", description: "Café fort avec lait concentré", price: 4.50, category: "boissons", image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop&crop=center", popular: true, spicy: false, vegan: false },
+                { id: 7, name_fr: "Thé Vert Jasmin", name_vn: "Trà Lài", description: "Thé vert parfumé", price: 3.50, category: "boissons", image: "https://images.unsplash.com/photo-1561047029-3000c68339ca?w=400&h=300&fit=crop&crop=center", popular: false, spicy: false, vegan: true },
+                { id: 8, name_fr: "Che Trois Couleurs", name_vn: "Chè Ba Màu", description: "Dessert aux haricots, gelée", price: 6.50, category: "desserts", image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop&crop=center", popular: false, spicy: false, vegan: true }
+            ];
+
+            const rewardsData = [
+                { id: 901, name: "Boisson Offerte", cost: 200, icon: "fa-glass-water", color: "text-blue-500", bg: "bg-blue-100" },
+                { id: 902, name: "Nems (2 pcs)", cost: 400, icon: "fa-scroll", color: "text-orange-500", bg: "bg-orange-100" },
+                { id: 903, name: "Dessert du jour", cost: 600, icon: "fa-ice-cream", color: "text-pink-500", bg: "bg-pink-100" }
+               // ,{ id: 904, name: "-10€ sur l'addition", cost: 1000, icon: "fa-money-bill-wave", color: "text-green-600", bg: "bg-green-100" }
+            ];
+
+            let cart = JSON.parse(localStorage.getItem('phoBambooCart')) || [];
+            let currentCategory = 'all';
+            let activeAddButtons = new Set();
+            let userPhone = localStorage.getItem('phoBambooUserPhone');
+
+            document.addEventListener('DOMContentLoaded', function () {
+                initTableNumber();
+                updateCartDisplay();
+                renderMenu();
+                updateCategoryButtons();
+                checkUserLogin();
+            });
+
+            // === API 通信逻辑 ===
+            function checkUserLogin() {
+                if (!userPhone) document.getElementById('user-points').textContent = "---";
+                else fetchUserPoints();
+            }
+
+            function promptLogin() {
+                let phone = prompt("Entrez votre numéro de téléphone (ex: 0612345678):");
+
+                if (phone) {
+                    // 1. 去除所有空格
+                    phone = phone.trim().replace(/\s/g, '');
+
+                    // 2. 如果用户输了9位且不是0开头(如 612345678)，自动补0
+                    if (phone.length === 9 && !phone.startsWith('0')) {
+                        phone = '0' + phone;
+                    }
+
+                    // 3. 简单的有效性检查 (比如必须是10位)
+                    if (phone.length !== 10 || !phone.startsWith('0')) {
+                        alert("Numéro invalide. Veuillez entrer 10 chiffres (ex: 06...)");
+                        return promptLogin(); // 重新弹窗让用户输
+                    }
+
+                    userPhone = phone;
+                    localStorage.setItem('phoBambooUserPhone', userPhone);
+                    showNotification("Connexion...", "Chargement de vos points...");
+                    fetchUserPoints();
+                }
+            }
+
+            // 【新增】注销/切换号码
+            function logoutUser() {
+                if (confirm("Voulez-vous changer de numéro de téléphone ?")) {
+                    // 1. 清除本地存储
+                    localStorage.removeItem('phoBambooUserPhone');
+                    userPhone = null;
+
+                    // 2. 重置界面显示
+                    document.getElementById('user-points').textContent = "---";
+                    const modalPoints = document.getElementById('modal-points-display');
+                    if (modalPoints) modalPoints.textContent = "0";
+
+                    // 3. 关闭弹窗
+                    closeLoyaltyModal();
+
+                    // 4. 提示并可选：立即弹出登录框
+                    showNotification("Déconnecté", "Vous pouvez saisir un nouveau numéro.");
+
+                    // 延迟一点点自动弹出输入框，体验更好
+                    setTimeout(() => {
+                        promptLogin();
+                    }, 500);
+                }
+            }
+
+            function fetchUserPoints() {
+                if (!userPhone) return;
+                document.getElementById('user-points').textContent = "...";
+                fetch(`${API_URL}?action=get&phone=${userPhone}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            document.getElementById('user-points').textContent = data.points;
+                            const modalPoints = document.getElementById('modal-points-display');
+                            if (modalPoints) modalPoints.textContent = data.points;
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
+
+            function updateUserPoints(change) {
+                if (!userPhone) { if (change > 0) promptLogin(); return; }
+                let current = parseInt(document.getElementById('user-points').textContent) || 0;
+                let display = current + change;
+                if (display < 0) display = 0;
+                document.getElementById('user-points').textContent = display;
+
+                fetch(`${API_URL}?action=update&phone=${userPhone}&points=${change}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') document.getElementById('user-points').textContent = data.points;
+                    })
+                    .catch(err => console.error(err));
+            }
+
+            // === 其他功能 ===
+            function initTableNumber() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const tableParam = urlParams.get('table');
+                const tableDisplay = document.getElementById('table-number');
+                const cartTableDisplay = document.getElementById('cart-table-number');
+                if (tableParam) {
+                    const formattedTable = "T" + tableParam;
+                    tableDisplay.textContent = formattedTable;
+                    cartTableDisplay.textContent = tableParam;
+                    sessionStorage.setItem('phoBambooTable', tableParam);
+                } else {
+                    const savedTable = sessionStorage.getItem('phoBambooTable');
+                    if (savedTable) { tableDisplay.textContent = "T" + savedTable; cartTableDisplay.textContent = savedTable; }
+                    else { tableDisplay.textContent = "---"; cartTableDisplay.textContent = "---"; }
+                }
+            }
+            function manualEditTable() {
+                const currentTable = document.getElementById('table-number').textContent.replace('T', '');
+                const newTable = prompt("Veuillez entrer votre numéro de table :", currentTable === "---" ? "" : currentTable);
+                if (newTable && newTable.trim() !== "") {
+                    document.getElementById('table-number').textContent = "T" + newTable;
+                    document.getElementById('cart-table-number').textContent = newTable;
+                    sessionStorage.setItem('phoBambooTable', newTable);
+                    showNotification("Table mise à jour", `Table ${newTable}`);
+                }
+            }
+            function renderMenu() {
+                const menuGrid = document.getElementById('menu-grid');
+                menuGrid.innerHTML = '';
+                const filtered = currentCategory === 'all' ? menuData : menuData.filter(d => d.category === currentCategory);
+                if (filtered.length === 0) { menuGrid.innerHTML = `<div class="col-span-full text-center py-12 opacity-50"><p>Aucun plat</p></div>`; return; }
+                filtered.forEach(dish => {
+                    const inCart = (cart.find(i => i.id === dish.id) || {}).quantity || 0;
+                    let tags = '';
+                    if (dish.popular) tags += '<span class="bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-bold mr-2">POPULAIRE</span>';
+                    if (dish.spicy) tags += '<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold mr-2">ÉPICÉ</span>';
+                    if (dish.vegan) tags += '<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold mr-2">VÉGÉTALIEN</span>';
+                    menuGrid.innerHTML += `
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden fade-in border bamboo-border relative">
+                        <div class="relative"><img src="${dish.image}" class="w-full h-48 object-cover"><div class="absolute top-3 left-3 flex flex-wrap gap-1">${tags}</div><div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1 shadow"><span class="text-xl font-bold bamboo-text">${dish.price.toFixed(2)}€</span></div></div>
+                        <div class="p-4"><div class="mb-2"><h3 class="text-lg font-bold bamboo-text">${dish.name_fr}</h3><p class="text-sm text-gray-600 italic">${dish.name_vn}</p></div><p class="text-gray-600 text-sm mb-4 line-clamp-2">${dish.description}</p>
+                            <div class="flex items-center justify-between"><div class="text-xs text-gray-500 flex items-center"><i class="fas fa-coins text-amber-500 mr-1"></i> ${Math.floor(dish.price * 10)} pts ${inCart > 0 ? `<span data-menu-badge="${dish.id}" class="ml-2 bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">${inCart} pan.</span>` : ''}</div>
+                            <button id="add-btn-${dish.id}" onclick="addToCart(${dish.id}, 1, this)" class="add-btn touch-target bamboo-gradient text-white px-4 py-3 rounded-lg font-bold text-sm flex items-center"><i class="fas fa-plus mr-2"></i> ${inCart > 0 ? 'Ajouter +' : 'Ajouter'}</button></div></div></div>`;
+                });
+            }
+            function addToCart(id, qty, btn) {
+                const dish = menuData.find(d => d.id === id);
+                if (!dish) return;
+                if (btn) provideButtonFeedback(btn);
+                const item = cart.find(i => i.id === id && !i.isReward);
+                if (item) item.quantity += qty;
+                else cart.push({ id: dish.id, name_fr: dish.name_fr, price: dish.price, quantity: qty, image: dish.image, isReward: false });
+                saveCart(); updateCartDisplay(); updateMenuQuantityBadge(id, item ? item.quantity : qty);
+                if (!btn) showNotification('Ajouté', dish.name_fr);
+            }
+            function updateCartDisplay() {
+                const count = cart.reduce((s, i) => s + i.quantity, 0);
+                const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+                document.getElementById('cart-count').textContent = count;
+                document.getElementById('bottom-cart-count').textContent = count;
+                document.getElementById('cart-indicator-count').textContent = count > 9 ? '9+' : count;
+                document.getElementById('cart-sidebar-total').textContent = `${total.toFixed(2)}€`;
+                document.getElementById('checkout-total').textContent = `${total.toFixed(2)}€`;
+                document.getElementById('cart-item-count').textContent = `${count} article${count > 1 ? 's' : ''}`;
+                document.getElementById('cart-points-earned').textContent = `+${Math.floor(total * 10)} points`;
+                const inds = [document.getElementById('cart-indicator'), document.getElementById('bottom-cart-indicator')];
+                inds.forEach(el => count > 0 ? el.classList.remove('hidden') : el.classList.add('hidden'));
+                renderCartItems();
+            }
+            function renderCartItems() {
+                const c = document.getElementById('cart-items');
+                if (cart.length === 0) { c.innerHTML = `<div class="text-center py-12 fade-in"><div class="w-24 h-24 mx-auto mb-6 rounded-full bamboo-light-bg flex items-center justify-center"><i class="fas fa-shopping-basket text-3xl bamboo-text"></i></div><p class="bamboo-text font-bold text-lg">Panier vide</p><button onclick="toggleCart()" class="mt-4 px-6 py-2 border bamboo-border rounded-lg text-sm">Retour au menu</button></div>`; return; }
+                let h = '';
+                cart.forEach(i => {
+                    const r = i.isReward;
+                    h += `<div class="bg-gray-50 rounded-lg p-3 mb-3 fade-in flex items-center ${r ? 'border border-yellow-200 bg-yellow-50' : ''}"><img src="${i.image}" class="w-14 h-14 object-cover rounded-lg flex-shrink-0"><div class="ml-3 flex-1 min-w-0"><h4 class="font-bold text-sm bamboo-text truncate">${i.name_fr}</h4><p class="text-xs ${r ? 'text-green-600 font-bold' : 'text-gray-500'}">${r ? 'OFFERT' : i.price.toFixed(2) + '€'}</p></div><div class="flex flex-col items-end pl-2">${!r ? `<div class="flex items-center space-x-2 mb-1"><button onclick="updateCartItemQuantity(${i.id}, -1)" class="w-6 h-6 rounded-full border bg-white flex items-center justify-center"><i class="fas fa-minus text-[10px]"></i></button><span class="font-bold text-sm w-4 text-center">${i.quantity}</span><button onclick="updateCartItemQuantity(${i.id}, 1)" class="w-6 h-6 rounded-full border bg-white flex items-center justify-center"><i class="fas fa-plus text-[10px]"></i></button></div>` : '<span class="text-xs bg-yellow-200 px-2 py-1 rounded text-yellow-800 font-bold mb-1">CADEAU</span>'}<div class="flex items-center"><span class="font-bold text-sm mr-3">${(i.price * i.quantity).toFixed(2)}€</span><button onclick="removeFromCart('${i.id}')" class="text-red-400 hover:text-red-600"><i class="fas fa-trash text-xs"></i></button></div></div></div>`;
+                });
+                c.innerHTML = h;
+            }
+            function updateCartItemQuantity(id, change) {
+                const item = cart.find(i => i.id === id);
+                if (!item) return;
+                item.quantity += change;
+                if (item.quantity <= 0) removeFromCart(id);
+                else { saveCart(); updateCartDisplay(); if (!item.isReward) updateMenuQuantityBadge(id, item.quantity); }
+            }
+            function removeFromCart(id) {
+                const idx = cart.findIndex(i => i.id == id);
+                if (idx > -1) {
+                    const item = cart[idx];
+                    cart.splice(idx, 1);
+                    saveCart(); updateCartDisplay(); if (!item.isReward) updateMenuQuantityBadge(item.id, 0);
+                }
+            }
+            function openLoyaltyModal() { document.getElementById('loyalty-modal').classList.remove('hidden'); updateLoyaltyUI(); }
+            function closeLoyaltyModal() { document.getElementById('loyalty-modal').classList.add('hidden'); }
+            function updateLoyaltyUI() {
+                const pts = parseInt(document.getElementById('user-points').textContent) || 0;
+                document.getElementById('modal-points-display').textContent = pts;
+                document.getElementById('points-progress-bar').style.width = `${Math.min((pts / 1000) * 100, 100)}%`;
+                const c = document.getElementById('rewards-list'); c.innerHTML = '';
+                rewardsData.forEach(r => {
+                    const can = pts >= r.cost;
+                    c.innerHTML += `<div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between"><div class="flex items-center space-x-3"><div class="w-10 h-10 rounded-full ${r.bg} ${r.color} flex items-center justify-center flex-shrink-0"><i class="fas ${r.icon}"></i></div><div><p class="font-bold text-gray-800 text-sm">${r.name}</p><p class="text-xs font-bold ${can ? 'text-green-600' : 'text-gray-400'}">${r.cost} points</p></div></div><button onclick="redeemReward(${r.id})" ${!can ? 'disabled' : ''} class="px-3 py-2 rounded-lg font-bold text-xs transition-transform ${can ? 'bg-green-500 text-white shadow-lg active:scale-95' : 'bg-gray-200 text-gray-400'}">${can ? 'Obtenir' : 'Bloqué'}</button></div>`;
+                });
+            }
+            function redeemReward(id) {
+                const r = rewardsData.find(d => d.id === id);
+                const pts = parseInt(document.getElementById('user-points').textContent) || 0;
+                if (pts < r.cost) return;
+                if (confirm(`Utiliser ${r.cost} points pour : ${r.name} ?`)) {
+                    updateUserPoints(-r.cost);
+                    cart.push({ id: `reward-${Date.now()}`, name_fr: `🎁 ${r.name}`, price: 0, quantity: 1, image: "https://cdn-icons-png.flaticon.com/512/3209/3209955.png", isReward: true });
+                    saveCart(); updateCartDisplay(); closeLoyaltyModal(); toggleCart(); showNotification('Récompense ajoutée !', 'Points débités.');
+                }
+            }
+            function checkout() {
+                const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+                const notes = document.getElementById('order-notes').value;
+                const table = document.getElementById('table-number').textContent;
+                if (cart.length === 0) { showNotification('Panier vide', 'Ajoutez des plats'); return; }
+                let msg = `🔔 *NOUVELLE COMMANDE - ${table}*\n🗓️ ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}\n------------------------------\n`;
+                if (userPhone) msg += `📱 Client: ${userPhone}\n------------------------------\n`;
+                cart.forEach(i => msg += i.isReward ? `🎁 1x ${i.name_fr.replace('🎁 ', '')} (OFFERT)\n` : `▪️ ${i.quantity}x ${i.name_fr} (${(i.price * i.quantity).toFixed(2)}€)\n`);
+                msg += `------------------------------\n💰 *TOTAL: ${total.toFixed(2)}€*\n`;
+                if (notes) msg += `\n📝 *Note:* ${notes}\n`;
+                window.open(`https://wa.me/${RESTAURANT_PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
+                const earned = Math.floor(total * 10);
+                if (earned > 0) updateUserPoints(earned);
+                cart = []; saveCart(); updateCartDisplay(); toggleCart(); document.getElementById('order-notes').value = ''; renderMenu();
+            }
+            function provideButtonFeedback(btn) { if (!btn || activeAddButtons.has(btn.id)) return; activeAddButtons.add(btn.id); btn.classList.add('add-btn-pulse', 'add-btn-success'); const h = btn.innerHTML; btn.innerHTML = '<i class="fas fa-check"></i>'; setTimeout(() => { btn.classList.remove('add-btn-success', 'add-btn-pulse'); btn.innerHTML = h; activeAddButtons.delete(btn.id); }, 800); }
+            function updateMenuQuantityBadge(id, qty) { const btn = document.getElementById(`add-btn-${id}`); if (btn) btn.innerHTML = `<i class="fas fa-plus mr-2"></i> ${qty > 0 ? 'Ajouter +' : 'Ajouter'}`; }
+            function toggleCart() { const s = document.getElementById('cart-sidebar'); const o = document.getElementById('cart-overlay'); if (!s.classList.contains('translate-x-full')) { s.classList.add('translate-x-full'); o.classList.add('hidden'); document.body.style.overflow = ''; } else { s.classList.remove('translate-x-full'); o.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } }
+            function filterCategory(c) { currentCategory = c; updateCategoryButtons(); renderMenu(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+            function updateCategoryButtons() { document.querySelectorAll('.category-btn').forEach(b => { const a = b.dataset.category === currentCategory; const m = b.closest('#mobile-categories'); b.classList.remove('category-active', 'category-inactive', 'category-inactive-mobile'); if (a) b.classList.add('category-active'); else b.classList.add(m ? 'category-inactive-mobile' : 'category-inactive'); }); }
+            function showCommonInstructions() { const n = document.getElementById('order-notes'); const s = ["Sans coriandre", "Extra piment", "Sauce à part", "Bien cuit"]; const r = s[Math.floor(Math.random() * s.length)]; n.value = n.value ? n.value + ', ' + r : r; }
+            function saveCart() { localStorage.setItem('phoBambooCart', JSON.stringify(cart)); }
+            function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+            function showQRInfo() { document.getElementById('qr-modal').classList.remove('hidden'); }
+            function closeQRModal() { document.getElementById('qr-modal').classList.add('hidden'); }
+            function showNotification(t, m) { const e = document.getElementById('notification'); document.getElementById('notification-title').textContent = t; document.getElementById('notification-message').textContent = m; e.classList.remove('translate-x-full'); setTimeout(() => e.classList.add('translate-x-full'), 3000); }
+        </script>
+</body>
+
+</html>
