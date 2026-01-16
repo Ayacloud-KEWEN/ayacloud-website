@@ -615,7 +615,7 @@
                 })
                 .catch(error => {
                     console.error(error);
-                    alert("Erreur de connexion. Veuillez appeler le serveur.");
+                    alert("Erreur de connexion. Veuillez appeler le serveur." + error.message);
                 });
         }
 
